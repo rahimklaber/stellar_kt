@@ -1,33 +1,64 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-    kotlin("jvm") version "1.5.0"
-    application
+    kotlin("multiplatform") version "1.5.30"
+    kotlin("plugin.serialization") version "1.5.30"
+
 }
 
 group = "me.rahim"
 version = "1.0-SNAPSHOT"
 
 repositories {
-    maven(url=uri("https://jitpack.io"))
     mavenCentral()
 }
+val ktor_version = "1.6.3"
 
-dependencies {
-    implementation("com.github.stellar:java-stellar-sdk:0.24.0")
-    testImplementation(kotlin("test-junit5"))
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.0")
-}
+kotlin {
+    jvm {
+        compilations.all {
+            kotlinOptions.jvmTarget = "1.8"
+        }
+        testRuns["test"].executionTask.configure {
+            useJUnit()
+        }
+    }
+    js(LEGACY) {
+        browser {
+            commonWebpackConfig {
+                cssSupport.enabled = true
+            }
+        }
+    }
+    val hostOs = System.getProperty("os.name")
+    val isMingwX64 = hostOs.startsWith("Windows")
+    val nativeTarget = when {
+        hostOs == "Mac OS X" -> macosX64("native")
+        hostOs == "Linux" -> linuxX64("native")
+        isMingwX64 -> mingwX64("native")
+        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
+    }
 
-tasks.test {
-    useJUnitPlatform()
-}
-
-tasks.withType<KotlinCompile>() {
-    kotlinOptions.jvmTarget = "11"
-}
-
-application {
-    mainClassName = "MainKt"
+    
+    sourceSets {
+        val commonMain by getting {
+            dependencies{
+                implementation("io.ktor:ktor-client-core:$ktor_version")
+                implementation("io.ktor:ktor-client-serialization:$ktor_version")
+            }
+        }
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
+        val jvmMain by getting{
+            dependencies{
+                implementation("io.ktor:ktor-client-cio-jvm:$ktor_version")
+            }
+        }
+        val jvmTest by getting
+        val jsMain by getting
+        val jsTest by getting
+        val nativeMain by getting
+        val nativeTest by getting
+    }
 }
