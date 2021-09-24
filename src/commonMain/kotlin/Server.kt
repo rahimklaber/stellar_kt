@@ -3,8 +3,7 @@ import io.ktor.client.features.json.*
 import io.ktor.client.features.json.serializer.*
 import io.ktor.client.request.*
 import io.ktor.http.*
-
-
+import me.rahimklaber.sdk.horizon.AccountRequestBuilder
 
 
 class Server(val horizonUrl : String) {
@@ -15,5 +14,6 @@ class Server(val horizonUrl : String) {
             })
         }
     }
+    fun accounts() = AccountRequestBuilder(client,horizonUrl)
 
 }

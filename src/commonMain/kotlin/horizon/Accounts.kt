@@ -1,19 +1,39 @@
-package horizon
+package me.rahimklaber.sdk.horizon
 
+import arrow.core.Either
+import arrow.core.computations.either
 import io.ktor.client.*
 import io.ktor.client.request.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlin.native.concurrent.SharedImmutable
 
 class AccountRequestBuilder(client: HttpClient, horizonUrl: String) :
     RequestBuilder<AccountResponse>(client, horizonUrl, "accounts") {
-    fun forAccount(accountId: String): AccountRequestBuilder {
-        return addPath(accountId) as AccountRequestBuilder
+    suspend fun account(accountId: String): Either<Exception,AccountResponse> {
+        addPath(accountId)
+        return callAsync()
     }
 
-    override suspend fun callAsync(): AccountResponse {
-        return client.get(buildUrl())
+    fun forSigner(signer: String): AccountRequestBuilder {
+        check(checkQueryParam(ASSET_PARAMETER_NAME) == null) { "Cannot set both asset and signer" }
+        check(checkQueryParam(SPONSOR_PARAMETER_NAME) == null) { "Cannot set both sponsor and signer" }
+
+        addQueryParam(SIGNER_PARAMETER_NAME, signer)
+        return this
+    }
+
+
+    override suspend fun callAsync(): Either<Exception,AccountResponse> {
+        return either{
+            client.get(buildUrl())
+        }
+
+    }
+
+    companion object {
+        private const val ASSET_PARAMETER_NAME = "asset"
+        private const val SIGNER_PARAMETER_NAME = "signer"
+        private const val SPONSOR_PARAMETER_NAME = "sponsor"
     }
 }
 
@@ -22,7 +42,7 @@ data class AccountResponse(
     val id: String,
     @SerialName("account_id") val accountId: String,
     val sequence: Long,
-    @SerialName("subentry_count") val subentry_count: Long,
+    @SerialName("subentry_count") val subentryCount: Long,
     @SerialName("home_domain") val homeDomain: String? = null,
     @SerialName("last_modified_ledger") val lastModifiedLedger: Long,
     @SerialName("num_sponsoring") val numSponsoring: Long,
@@ -30,13 +50,14 @@ data class AccountResponse(
     val sponsor: String? = null,
     val thresholds: Thresholds,
     val flags: Flags,
-    val balances : Array<Balance>,
-    val signers : Array<Signer>,
-    val data : Map<String,String>
+    val balances: Array<Balance>,
+    val signers: Array<Signer>,
+    val data: Map<String, String>
 )
+
 @Serializable
 data class Signer(
-    val weight : Long,
+    val weight: Long,
     val sponsor: String? = null,
     val key: String,
     val type: String,
@@ -45,11 +66,11 @@ data class Signer(
 @Serializable
 data class Balance(
     val balance: String,
-    @SerialName("buying_liabilities") val buyingLiabilities : String,
-    @SerialName("selling_liabilities") val sellingLiabilities : String,
-    val limit : Double? = null, /*move to bigdecimal*/
-    @SerialName("asset_type") val assetType : String,
-    @SerialName("asset_code") val asset_code : String? = null,
+    @SerialName("buying_liabilities") val buyingLiabilities: String,
+    @SerialName("selling_liabilities") val sellingLiabilities: String,
+    val limit: Double? = null, /*move to bigdecimal*/
+    @SerialName("asset_type") val assetType: String,
+    @SerialName("asset_code") val asset_code: String? = null,
     @SerialName("asset_issuer") val assetIssuer: String? = null,
     val sponsor: String? = null
 )
@@ -66,6 +87,6 @@ data class Flags(
 data class Thresholds(
     @SerialName("low_threshold") val low: Long,
     @SerialName("med_threshold") val med: Long,
-    @SerialName("high_threshold")val high: Long
+    @SerialName("high_threshold") val high: Long
 )
 

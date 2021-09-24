@@ -21,7 +21,7 @@ kotlin {
             useJUnit()
         }
     }
-    js(LEGACY) {
+    js(IR) {
         browser {
             commonWebpackConfig {
                 cssSupport.enabled = true
@@ -43,6 +43,8 @@ kotlin {
             dependencies{
                 implementation("io.ktor:ktor-client-core:$ktor_version")
                 implementation("io.ktor:ktor-client-serialization:$ktor_version")
+                implementation("io.arrow-kt:arrow-fx-coroutines:1.0.0")
+                implementation("io.arrow-kt:arrow-fx-stm:1.0.0")
             }
         }
         val commonTest by getting {
