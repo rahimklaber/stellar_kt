@@ -6,6 +6,7 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.util.*
+import me.rahimklaber.sdk.base.Asset
 
 /**
  * Exception which indicates that a request is invalid.
@@ -22,6 +23,9 @@ abstract class RequestBuilder<T>(protected val client: HttpClient, horizonUrlStr
         queryParams[name] = value
     }
     protected fun checkQueryParam(name: String) : String? = queryParams[name]
+    protected fun addAssetQueryParam(asset: Asset) {
+        queryParams["asset"] = "${asset.code}:${asset.issuer}"
+    }
 
     protected fun addPath(pathFragment : String): RequestBuilder<T> {
         path.add(pathFragment)

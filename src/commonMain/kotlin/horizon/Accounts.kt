@@ -6,6 +6,7 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import me.rahimklaber.sdk.base.Asset
 
 class AccountRequestBuilder(client: HttpClient, horizonUrl: String) :
     RequestBuilder<AccountResponse>(client, horizonUrl, "accounts") {
@@ -14,20 +15,53 @@ class AccountRequestBuilder(client: HttpClient, horizonUrl: String) :
         return callAsync()
     }
 
+    /**
+     * Filter accounts by signer. All accounts which are returned have [signer] as a signer.
+     *
+     * @param signer signer to filter accounts by.
+     * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/accounts.html">Accounts</a>
+     */
     fun forSigner(signer: String): AccountRequestBuilder {
-        check(checkQueryParam(ASSET_PARAMETER_NAME) == null) { "Cannot set both asset and signer" }
-        check(checkQueryParam(SPONSOR_PARAMETER_NAME) == null) { "Cannot set both sponsor and signer" }
+        check(checkQueryParam(ASSET_PARAMETER_NAME) != null) { "Cannot set both asset and signer" }
+        check(checkQueryParam(SPONSOR_PARAMETER_NAME) != null) { "Cannot set both sponsor and signer" }
 
         addQueryParam(SIGNER_PARAMETER_NAME, signer)
         return this
     }
 
+    /**
+     * Filter accounts by asset. All accounts which are returned have a trustline to [asset].
+     *
+     * @param asset asset to filter accounts by.
+     * <a href="https://www.stellar.org/developers/horizon/reference/endpoints/accounts.html">Accounts</a>
+     */
+    fun forAsset(asset: Asset) : AccountRequestBuilder{
+        check(checkQueryParam(SIGNER_PARAMETER_NAME) != null){"Cannot set both asset and signer"}
+        check(checkQueryParam(SPONSOR_PARAMETER_NAME) != null){"Cannot set both asset and sponsor"}
+        addAssetQueryParam(asset)
+        return this
+    }
+
+    /**
+     * Filter accounts by sponsor. All accounts which are returned are sponsored by [sponsor].
+     *
+     * @param sponsor sponsor to filter accounts by.
+     * <a href="https://www.stellar.org/developers/horizon/reference/endpoints/accounts.html">Accounts</a>
+     */
+    fun forSponsor(sponsor: String) : AccountRequestBuilder{
+        check(checkQueryParam(ASSET_PARAMETER_NAME) != null) { "Cannot set both asset and sponsor" }
+        check(checkQueryParam(SIGNER_PARAMETER_NAME) != null) { "Cannot set both sponsor and signer" }
+        addQueryParam(SPONSOR_PARAMETER_NAME,sponsor)
+        return  this
+    }
+
 
     override suspend fun callAsync(): Either<Exception,AccountResponse> {
-        return either{
-            client.get(buildUrl())
+        return try {
+            Either.Right(client.get(buildUrl()))
+        }catch (e : Exception){
+            Either.Left(e)
         }
-
     }
 
     companion object {
