@@ -24,7 +24,10 @@ abstract class RequestBuilder<T>(protected val client: HttpClient, horizonUrlStr
     }
     protected fun checkQueryParam(name: String) : String? = queryParams[name]
     protected fun addAssetQueryParam(asset: Asset) {
-        queryParams["asset"] = "${asset.code}:${asset.issuer}"
+        when(asset){
+            is Asset.Native -> queryParams["asset"] = "native"
+            is Asset.CreditAlphaNum -> queryParams["asset"] = "${asset.code}:${asset.issuer}"
+        }
     }
 
     protected fun addPath(pathFragment : String): RequestBuilder<T> {
