@@ -22,8 +22,8 @@ class AccountRequestBuilder(client: HttpClient, horizonUrl: String) :
      * @see <a href="https://www.stellar.org/developers/horizon/reference/endpoints/accounts.html">Accounts</a>
      */
     fun forSigner(signer: String): AccountRequestBuilder {
-        check(checkQueryParam(ASSET_PARAMETER_NAME) != null) { "Cannot set both asset and signer" }
-        check(checkQueryParam(SPONSOR_PARAMETER_NAME) != null) { "Cannot set both sponsor and signer" }
+        check(checkQueryParam(ASSET_PARAMETER_NAME) == null) { "Cannot set both asset and signer" }
+        check(checkQueryParam(SPONSOR_PARAMETER_NAME) == null) { "Cannot set both sponsor and signer" }
 
         addQueryParam(SIGNER_PARAMETER_NAME, signer)
         return this
@@ -36,8 +36,8 @@ class AccountRequestBuilder(client: HttpClient, horizonUrl: String) :
      * <a href="https://www.stellar.org/developers/horizon/reference/endpoints/accounts.html">Accounts</a>
      */
     fun forAsset(asset: Asset) : AccountRequestBuilder{
-        check(checkQueryParam(SIGNER_PARAMETER_NAME) != null){"Cannot set both asset and signer"}
-        check(checkQueryParam(SPONSOR_PARAMETER_NAME) != null){"Cannot set both asset and sponsor"}
+        check(checkQueryParam(SIGNER_PARAMETER_NAME) == null){"Cannot set both asset and signer"}
+        check(checkQueryParam(SPONSOR_PARAMETER_NAME) == null){"Cannot set both asset and sponsor"}
         addAssetQueryParam(asset)
         return this
     }
@@ -49,8 +49,8 @@ class AccountRequestBuilder(client: HttpClient, horizonUrl: String) :
      * <a href="https://www.stellar.org/developers/horizon/reference/endpoints/accounts.html">Accounts</a>
      */
     fun forSponsor(sponsor: String) : AccountRequestBuilder{
-        check(checkQueryParam(ASSET_PARAMETER_NAME) != null) { "Cannot set both asset and sponsor" }
-        check(checkQueryParam(SIGNER_PARAMETER_NAME) != null) { "Cannot set both sponsor and signer" }
+        check(checkQueryParam(ASSET_PARAMETER_NAME) == null) { "Cannot set both asset and sponsor" }
+        check(checkQueryParam(SIGNER_PARAMETER_NAME) == null) { "Cannot set both sponsor and signer" }
         addQueryParam(SPONSOR_PARAMETER_NAME,sponsor)
         return  this
     }
