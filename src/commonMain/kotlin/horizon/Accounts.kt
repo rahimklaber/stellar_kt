@@ -55,6 +55,16 @@ class AccountRequestBuilder(client: HttpClient, horizonUrl: String) :
         return  this
     }
 
+    override fun limit(limit: Int): AccountRequestBuilder {
+        super.limit(limit)
+        return this
+    }
+
+    override fun cursor(cursor: String): AccountRequestBuilder {
+        super.cursor(cursor)
+        return this
+    }
+
 
     override suspend fun callAsync(): Either<Exception,AccountResponse> {
         return try {

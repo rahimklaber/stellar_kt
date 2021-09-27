@@ -49,6 +49,22 @@ abstract class RequestBuilder<T>(protected val client: HttpClient, horizonUrlStr
 
     abstract suspend fun callAsync() : Either<Exception,T>
 
-}
+    /**
+     * Specifies the amount of records to return.
+     * @param limit the amount of records to return.
+     */
+    open fun limit(limit: Int) : RequestBuilder<T>{
+        addQueryParam("limit","$limit")
+        return this
+    }
 
-abstract class HorizonResponse()
+    /**
+     * Request records from a certain point onwards.
+     */
+    open fun cursor(cursor : String) : RequestBuilder<T>{
+        addQueryParam("cursor",cursor)
+        return this
+    }
+
+
+}
