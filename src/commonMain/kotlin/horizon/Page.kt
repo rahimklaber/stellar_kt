@@ -19,22 +19,30 @@ import kotlinx.serialization.encoding.decodeStructure
 
 @Serializable(with = PageSerializer::class)
 data class Page<T>(@SerialName("_records") val records: List<T>, val links: Links) {
-
-    suspend fun next(server: Server): Either<Exception, Page<T>> {
-        if(links.next == null){
-            return Either.Left(Exception("Cannot get next page."))
-        }
-        return try {
-            Either.Right(server.client.get(links.next))
-        } catch (e: Exception) {
-            Either.Left(e)
-        }
-
-    }
-
     @Serializable(with = LinksSerializer::class)
     data class Links(val self: String, val next: String?, val prev: String?)
 }
+suspend inline fun <reified T> Page<T>.next(server: Server): Either<Exception, Page<T>> {
+    if(links.next == null){
+        return Either.Left(Exception("Cannot get next page."))
+    }
+    return try {
+        Either.Right(server.client.get(links.next))
+    } catch (e: Exception) {
+        Either.Left(e)
+    }
+}
+suspend inline fun <reified T> Page<T>.prev(server: Server): Either<Exception, Page<T>> {
+    if(links.prev == null){
+        return Either.Left(Exception("Cannot get previous page."))
+    }
+    return try {
+        Either.Right(server.client.get(links.prev))
+    } catch (e: Exception) {
+        Either.Left(e)
+    }
+}
+
 
 @Serializable(with = EmbeddedSerializer::class)
 class Embedded<T>(val _records: List<T>)
