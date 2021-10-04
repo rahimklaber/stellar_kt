@@ -1,4 +1,4 @@
-package me.rahimklaber.sdk.base
+package me.rahimklaber.stellar.base
 
 
 sealed class Asset(val code: String, val issuer: String) {

@@ -1,22 +1,20 @@
-package me.rahimklaber.sdk.horizon
+package me.rahimklaber.stellar.horizon
 
 import arrow.core.Either
-import arrow.core.computations.either
-import horizon.Page
 import io.ktor.client.*
 import io.ktor.client.features.*
 import io.ktor.client.request.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import me.rahimklaber.sdk.base.Asset
+import me.rahimklaber.stellar.base.Asset
 
 class AccountRequestBuilder(client: HttpClient, horizonUrl: String) :
     RequestBuilder<AccountResponse>(client, horizonUrl, "accounts") {
-    suspend fun account(accountId: String): Either<Exception,AccountResponse> {
+    suspend fun account(accountId: String): Either<Exception, AccountResponse> {
         addPath(accountId)
         return try {
             Either.Right(client.get(buildUrl()))
-        }catch (e : Exception){
+        } catch (e: Exception) {
             Either.Left(e)
         }
     }
@@ -41,9 +39,9 @@ class AccountRequestBuilder(client: HttpClient, horizonUrl: String) :
      * @param asset asset to filter accounts by.
      * <a href="https://www.stellar.org/developers/horizon/reference/endpoints/accounts.html">Accounts</a>
      */
-    fun forAsset(asset: Asset) : AccountRequestBuilder{
-        check(checkQueryParam(SIGNER_PARAMETER_NAME) == null){"Cannot set both asset and signer"}
-        check(checkQueryParam(SPONSOR_PARAMETER_NAME) == null){"Cannot set both asset and sponsor"}
+    fun forAsset(asset: Asset): AccountRequestBuilder {
+        check(checkQueryParam(SIGNER_PARAMETER_NAME) == null) { "Cannot set both asset and signer" }
+        check(checkQueryParam(SPONSOR_PARAMETER_NAME) == null) { "Cannot set both asset and sponsor" }
         addAssetQueryParam(asset)
         return this
     }
@@ -54,11 +52,11 @@ class AccountRequestBuilder(client: HttpClient, horizonUrl: String) :
      * @param sponsor sponsor to filter accounts by.
      * <a href="https://www.stellar.org/developers/horizon/reference/endpoints/accounts.html">Accounts</a>
      */
-    fun forSponsor(sponsor: String) : AccountRequestBuilder{
+    fun forSponsor(sponsor: String): AccountRequestBuilder {
         check(checkQueryParam(ASSET_PARAMETER_NAME) == null) { "Cannot set both asset and sponsor" }
         check(checkQueryParam(SIGNER_PARAMETER_NAME) == null) { "Cannot set both sponsor and signer" }
-        addQueryParam(SPONSOR_PARAMETER_NAME,sponsor)
-        return  this
+        addQueryParam(SPONSOR_PARAMETER_NAME, sponsor)
+        return this
     }
 
     override fun limit(limit: Int): AccountRequestBuilder {
@@ -75,7 +73,7 @@ class AccountRequestBuilder(client: HttpClient, horizonUrl: String) :
     override suspend fun callAsync(): Either<Exception, Page<AccountResponse>> {
         return try {
             Either.Right(client.get(buildUrl()))
-        }catch (e : Exception){
+        } catch (e: Exception) {
             Either.Left(e)
         }
     }
