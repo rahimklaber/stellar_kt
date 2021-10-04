@@ -2,6 +2,7 @@ package me.rahimklaber.sdk.horizon
 
 
 import arrow.core.Either
+import horizon.Page
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.http.*
@@ -47,7 +48,7 @@ abstract class RequestBuilder<T>(protected val client: HttpClient, horizonUrlStr
             .path(listOf(urlExtension) + path).build()
     }
 
-    abstract suspend fun callAsync() : Either<Exception,T>
+    abstract suspend fun callAsync() : Either<Exception, Page<AccountResponse>>
 
     /**
      * Specifies the amount of records to return.

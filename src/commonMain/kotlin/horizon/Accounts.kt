@@ -2,7 +2,9 @@ package me.rahimklaber.sdk.horizon
 
 import arrow.core.Either
 import arrow.core.computations.either
+import horizon.Page
 import io.ktor.client.*
+import io.ktor.client.features.*
 import io.ktor.client.request.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -12,7 +14,11 @@ class AccountRequestBuilder(client: HttpClient, horizonUrl: String) :
     RequestBuilder<AccountResponse>(client, horizonUrl, "accounts") {
     suspend fun account(accountId: String): Either<Exception,AccountResponse> {
         addPath(accountId)
-        return callAsync()
+        return try {
+            Either.Right(client.get(buildUrl()))
+        }catch (e : Exception){
+            Either.Left(e)
+        }
     }
 
     /**
@@ -66,7 +72,7 @@ class AccountRequestBuilder(client: HttpClient, horizonUrl: String) :
     }
 
 
-    override suspend fun callAsync(): Either<Exception,AccountResponse> {
+    override suspend fun callAsync(): Either<Exception, Page<AccountResponse>> {
         return try {
             Either.Right(client.get(buildUrl()))
         }catch (e : Exception){

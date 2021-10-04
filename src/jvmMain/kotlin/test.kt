@@ -8,7 +8,8 @@ data class User(val userId: Int, val id: Int, val title: String, val completed: 
 suspend fun main() {
 
     val server = Server("https://horizon-testnet.stellar.org")
-    val res = server.accounts().account("B543WLQE7P7WDSFLCYNTU74ESUUPE4HOH6JH5SMK5J26TEFRH6YLDUB")
+    val res = server.accounts().forSigner("GBMKMDDKDTFAUFEW6AUTD2GHF6YBBLEOVYYLNFMZA5I5UGCI3TUC74HY")
+        .callAsync()
     println(res)
 //    println(
 //        accountRequestBuilder.forAccount("GBAKUWF2HTJ325PH6VATZQ3UNTK2AGTATR43U52WQCYJ25JNSCF5OFUN")
