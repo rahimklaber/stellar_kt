@@ -2,10 +2,16 @@ package me.rahimklaber.stellar.horizon
 
 import arrow.core.Either
 import io.ktor.client.*
-import io.ktor.client.features.*
 import io.ktor.client.request.*
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.buildClassSerialDescriptor
+import kotlinx.serialization.encoding.CompositeDecoder
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.encoding.decodeStructure
 import me.rahimklaber.stellar.base.Asset
 
 class AccountRequestBuilder(client: HttpClient, horizonUrl: String) :
@@ -88,20 +94,95 @@ class AccountRequestBuilder(client: HttpClient, horizonUrl: String) :
 @Serializable
 data class AccountResponse(
     val id: String,
-    @SerialName("account_id") val accountId: String,
+    @SerialName("_links")
+    val links: Links,
+    @SerialName("account_id")
+    val accountId: String,
     val sequence: Long,
-    @SerialName("subentry_count") val subentryCount: Long,
-    @SerialName("home_domain") val homeDomain: String? = null,
-    @SerialName("last_modified_ledger") val lastModifiedLedger: Long,
-    @SerialName("num_sponsoring") val numSponsoring: Long,
-    @SerialName("num_sponsored") val numSponsored: Long,
+    @SerialName("subentry_count")
+    val subentryCount: Long,
+    @SerialName("home_domain")
+    val homeDomain: String? = null,
+    @SerialName("last_modified_ledger")
+    val lastModifiedLedger: Long,
+    @SerialName("num_sponsoring")
+    val numSponsoring: Long,
+    @SerialName("num_sponsored")
+    val numSponsored: Long,
     val sponsor: String? = null,
     val thresholds: Thresholds,
     val flags: Flags,
     val balances: Array<Balance>,
     val signers: Array<Signer>,
     val data: Map<String, String>
-)
+) {
+    @Serializable(with = AccountLinksSerializer::class)
+    data class Links(
+        val self: String,
+        val transactions: String,
+        val operations: String,
+        val payments: String,
+        val effects: String,
+        val offers: String,
+        val trades: String,
+        val data: String
+    )
+}
+
+class AccountLinksSerializer : KSerializer<AccountResponse.Links> {
+    val hrefSerializer = HrefSerializer()
+    override val descriptor: SerialDescriptor =
+        buildClassSerialDescriptor("links") {
+            element("self", hrefSerializer.descriptor)
+            element("transactions", hrefSerializer.descriptor)
+            element("operations", hrefSerializer.descriptor)
+            element("payments", hrefSerializer.descriptor)
+            element("effects", hrefSerializer.descriptor)
+            element("offers", hrefSerializer.descriptor)
+            element("trades", hrefSerializer.descriptor)
+            element("data", hrefSerializer.descriptor)
+        }
+    //Todo: Should I deal with templates? Don't think so.
+    override fun deserialize(decoder: Decoder): AccountResponse.Links =
+        decoder.decodeStructure(descriptor) {
+            var self: String? = null
+            var transactions : String?  = null
+            var operations : String?  = null
+            var payments : String?  = null
+            var effects : String?  = null
+            var offers : String?  = null
+            var trades : String?  = null
+            var data : String?  = null
+            while (true) {
+                when (decodeElementIndex(descriptor)) {
+                    0 -> self = decoder.decodeSerializableValue(hrefSerializer)
+                    1 -> transactions = decoder.decodeSerializableValue(hrefSerializer).split("{")[0]
+                    2 -> operations = decoder.decodeSerializableValue(hrefSerializer).split("{")[0]
+                    3 -> payments = decoder.decodeSerializableValue(hrefSerializer).split("{")[0]
+                    4 -> effects = decoder.decodeSerializableValue(hrefSerializer).split("{")[0]
+                    5 -> offers = decoder.decodeSerializableValue(hrefSerializer).split("{")[0]
+                    6 -> trades = decoder.decodeSerializableValue(hrefSerializer).split("{")[0]
+                    7 -> data = decoder.decodeSerializableValue(hrefSerializer).split("{")[0]
+                    CompositeDecoder.DECODE_DONE -> break
+                    else -> continue
+                }
+            }
+            require(self != null)
+            require(transactions != null)
+            require(operations != null)
+            require(payments != null)
+            require(effects != null)
+            require(offers != null)
+            require(trades != null)
+            require(data != null)
+            AccountResponse.Links(self, transactions, operations,payments, effects, offers, trades, data)
+        }
+
+    override fun serialize(encoder: Encoder, value: AccountResponse.Links) {
+        TODO("Not yet implemented")
+    }
+}
+
 
 @Serializable
 data class Signer(

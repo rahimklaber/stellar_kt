@@ -2,7 +2,6 @@ package me.rahimklaber.stellar.horizon
 
 import Server
 import arrow.core.Either
-import io.ktor.client.features.*
 import io.ktor.client.request.*
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
@@ -19,9 +18,13 @@ import kotlinx.serialization.encoding.decodeStructure
 
 @Serializable(with = PageSerializer::class)
 data class Page<T>(@SerialName("_records") val records: List<T>, val links: Links) {
-    @Serializable(with = LinksSerializer::class)
+    @Serializable(with = PageLinksSerializer::class)
     data class Links(val self: String, val next: String?, val prev: String?)
 }
+
+/**
+ * Get the next page.
+ */
 suspend inline fun <reified T> Page<T>.next(server: Server): Either<Exception, Page<T>> {
     if(links.next == null){
         return Either.Left(Exception("Cannot get next page."))
@@ -32,6 +35,10 @@ suspend inline fun <reified T> Page<T>.next(server: Server): Either<Exception, P
         Either.Left(e)
     }
 }
+
+/**
+ * Get the previous page.
+ */
 suspend inline fun <reified T> Page<T>.prev(server: Server): Either<Exception, Page<T>> {
     if(links.prev == null){
         return Either.Left(Exception("Cannot get previous page."))
@@ -99,7 +106,7 @@ class HrefSerializer : KSerializer<String> {
     }
 }
 
-class LinksSerializer : KSerializer<Page.Links> {
+class PageLinksSerializer : KSerializer<Page.Links> {
     val hrefSerializer = HrefSerializer()
     override val descriptor: SerialDescriptor =
         buildClassSerialDescriptor("links") {
