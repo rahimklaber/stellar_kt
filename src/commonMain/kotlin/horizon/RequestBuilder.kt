@@ -5,15 +5,8 @@ import arrow.core.Either
 import io.ktor.client.*
 import io.ktor.http.*
 import me.rahimklaber.stellar.base.Asset
-import kotlin.collections.List
 import kotlin.collections.component1
 import kotlin.collections.component2
-import kotlin.collections.forEach
-import kotlin.collections.iterator
-import kotlin.collections.listOf
-import kotlin.collections.mutableListOf
-import kotlin.collections.mutableMapOf
-import kotlin.collections.plus
 import kotlin.collections.set
 
 /**
@@ -79,5 +72,18 @@ abstract class RequestBuilder<T>(
         return this
     }
 
+    /**
+     * defines the order of the response.
+     */
+    open fun order(order: Order): RequestBuilder<T> {
+        addQueryParam("order",order.value)
+        return this
+    }
 
+
+}
+
+enum class Order(val value: String) {
+    DESC("desc"),
+    ASC("asc")
 }

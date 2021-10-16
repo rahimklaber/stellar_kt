@@ -75,6 +75,11 @@ class AccountRequestBuilder(client: HttpClient, horizonUrl: String) :
         return this
     }
 
+    override fun order(order: Order): AccountRequestBuilder {
+        super.order(order)
+        return this
+    }
+
 
     override suspend fun callAsync(): Either<Exception, Page<AccountResponse>> {
         return try {
