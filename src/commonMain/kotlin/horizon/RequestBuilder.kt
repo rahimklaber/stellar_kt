@@ -53,7 +53,7 @@ abstract class RequestBuilder<T>(
             .path(listOf(urlExtension) + path).build()
     }
 
-    abstract suspend fun callAsync(): Either<Exception, Page<AccountResponse>>
+    abstract suspend fun callAsync(): Either<Exception, Page<T>>
 
     /**
      * Specifies the amount of records to return.
