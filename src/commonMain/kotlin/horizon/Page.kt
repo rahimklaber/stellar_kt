@@ -1,7 +1,8 @@
 package me.rahimklaber.stellar.horizon
 
 import Server
-import arrow.core.Either
+import com.github.michaelbull.result.Err
+import com.github.michaelbull.result.runCatching
 import io.ktor.client.request.*
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
@@ -25,28 +26,19 @@ data class Page<T>(@SerialName("_records") val records: List<T>, val links: Link
 /**
  * Get the next page.
  */
-suspend inline fun <reified T> Page<T>.next(server: Server): Either<Exception, Page<T>> {
-    if(links.next == null){
-        return Either.Left(Exception("Cannot get next page."))
+suspend inline fun <reified T> Page<T>.next(server: Server): RequestResult<Page<T>> {
+    return runCatching {
+        server.client.get(links.next ?: throw Exception("Cannot get next page."))
     }
-    return try {
-        Either.Right(server.client.get(links.next))
-    } catch (e: Exception) {
-        Either.Left(e)
-    }
+
 }
 
 /**
  * Get the previous page.
  */
-suspend inline fun <reified T> Page<T>.prev(server: Server): Either<Exception, Page<T>> {
-    if(links.prev == null){
-        return Either.Left(Exception("Cannot get previous page."))
-    }
-    return try {
-        Either.Right(server.client.get(links.prev))
-    } catch (e: Exception) {
-        Either.Left(e)
+suspend inline fun <reified T> Page<T>.prev(server: Server): RequestResult<Page<T>> {
+    return runCatching {
+        server.client.get(links.prev ?: throw Exception("Cannot get previous page."))
     }
 }
 

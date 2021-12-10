@@ -1,13 +1,15 @@
 package me.rahimklaber.stellar.horizon
 
 
-import arrow.core.Either
+import com.github.michaelbull.result.Result
 import io.ktor.client.*
 import io.ktor.http.*
 import me.rahimklaber.stellar.base.Asset
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.collections.set
+
+typealias RequestResult<T> = Result<T, Throwable>
 
 /**
  * Exception which indicates that a request is invalid.
@@ -53,7 +55,7 @@ abstract class RequestBuilder<T>(
             .path(listOf(urlExtension) + path).build()
     }
 
-    abstract suspend fun callAsync(): Either<Exception, Page<T>>
+    abstract suspend fun callAsync(): RequestResult<Page<T>>
 
     /**
      * Specifies the amount of records to return.
