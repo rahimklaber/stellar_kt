@@ -1,12 +1,11 @@
 package me.rahimklaber.stellar.horizon
 
-import arrow.core.Either
 import io.ktor.client.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 class TransactionRequestBuilder(client: HttpClient, horizonUrl: String) :
     RequestBuilder<TransactionResponse>(client, horizonUrl, "transactions") {
-    override suspend fun callAsync(): Either<Exception, Page<TransactionResponse>> {
+    override suspend fun callAsync(): RequestResult<Page<TransactionResponse>> {
         TODO("Not yet implemented")
     }
 }

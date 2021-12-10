@@ -1,7 +1,9 @@
 package me.rahimklaber.stellar.horizon
 
-import arrow.core.Either
+import com.github.michaelbull.result.Result
+import com.github.michaelbull.result.runCatching
 import io.ktor.client.*
+import io.ktor.client.features.*
 import io.ktor.client.request.*
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
@@ -14,14 +16,13 @@ import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.encoding.decodeStructure
 import me.rahimklaber.stellar.base.Asset
 
+
 class AccountRequestBuilder(client: HttpClient, horizonUrl: String) :
     RequestBuilder<AccountResponse>(client, horizonUrl, "accounts") {
-    suspend fun account(accountId: String): Either<Exception, AccountResponse> {
+    suspend fun account(accountId: String): RequestResult<AccountResponse> {
         addPath(accountId)
-        return try {
-            Either.Right(client.get(buildUrl()))
-        } catch (e: Exception) {
-            Either.Left(e)
+       return  runCatching {
+            client.get(buildUrl())
         }
     }
 
@@ -81,11 +82,9 @@ class AccountRequestBuilder(client: HttpClient, horizonUrl: String) :
     }
 
 
-    override suspend fun callAsync(): Either<Exception, Page<AccountResponse>> {
-        return try {
-            Either.Right(client.get(buildUrl()))
-        } catch (e: Exception) {
-            Either.Left(e)
+    override suspend fun callAsync(): RequestResult<Page<AccountResponse>> {
+        return runCatching {
+            client.get(buildUrl())
         }
     }
 
