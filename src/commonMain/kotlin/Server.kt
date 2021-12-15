@@ -2,6 +2,7 @@ import io.ktor.client.*
 import io.ktor.client.features.json.*
 import io.ktor.client.features.json.serializer.*
 import me.rahimklaber.stellar.horizon.AccountRequestBuilder
+import me.rahimklaber.stellar.horizon.TransactionRequestBuilder
 
 
 class Server(val horizonUrl: String) {
@@ -14,5 +15,6 @@ class Server(val horizonUrl: String) {
     }
 
     fun accounts() = AccountRequestBuilder(client, horizonUrl)
+    fun transactions() = TransactionRequestBuilder(client,horizonUrl)
 
 }

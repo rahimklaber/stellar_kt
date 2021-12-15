@@ -1,12 +1,24 @@
 package me.rahimklaber.stellar.horizon
 
+import com.github.michaelbull.result.runCatching
 import io.ktor.client.*
+import io.ktor.client.request.*
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.buildClassSerialDescriptor
+import kotlinx.serialization.encoding.CompositeDecoder
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.encoding.decodeStructure
+
 class TransactionRequestBuilder(client: HttpClient, horizonUrl: String) :
     RequestBuilder<TransactionResponse>(client, horizonUrl, "transactions") {
     override suspend fun callAsync(): RequestResult<Page<TransactionResponse>> {
-        TODO("Not yet implemented")
+        return runCatching {
+            client.get(buildUrl())
+        }
     }
 }
 
@@ -30,9 +42,11 @@ data class TransactionResponse(
     @SerialName("result_xdr") val resultXdr : String,
     @SerialName("result_meta_xdr") val resultMetaXdr : String,
     @SerialName("fee_meta_xdr") val feeMetaXdr : String,
-    val memo : String,
+    val memo : String? = null,
     @SerialName("memo_type") val memoType : String,
     val signatures : List<String>,
-    @SerialName("valid_after") val validAfter : String,
-    @SerialName("valid_before") val validBefore : String,
+    @SerialName("valid_after") val validAfter : String? = null,
+    @SerialName("valid_before") val validBefore : String? = null,
 )
+
+
