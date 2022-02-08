@@ -1,5 +1,8 @@
+import com.github.michaelbull.result.Err
+import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.get
 import kotlinx.serialization.Serializable
+import me.rahimklaber.stellar.horizon.Order
 
 @Serializable
 data class User(val userId: Int, val id: Int, val title: String, val completed: Boolean)
@@ -11,5 +14,11 @@ suspend fun main() {
 //            .callAsync().get()
 //
 //    println(res)
-    println(server.transactions().transaction("a6ea4f092e2da0bd505faacaacc60bccc79a77ef8c14136eed91d362fff374cc"))
+    val response = server.transactions()
+        .limit(1)
+        .forLedger(906102)
+    println(when(response){
+        is Ok -> response.value
+        is Err -> response.error
+    })
 }

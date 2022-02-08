@@ -26,6 +26,33 @@ class TransactionRequestBuilder(client: HttpClient, horizonUrl: String) :
             client.get(buildUrl("accounts")) // todo create an enum with all of the endpoints.
         }
     }
+    suspend fun forLedger(ledger: Long): RequestResult<Page<TransactionResponse>> {
+        addPath("$ledger/transactions")
+        return runCatching {
+            client.get(buildUrl("ledgers")) // todo create an enum with all of the endpoints.
+        }
+    }
+
+    override fun limit(limit: Int): TransactionRequestBuilder {
+        addQueryParam("limit", "$limit")
+        return this
+    }
+
+    /**
+     * Request records from a certain point onwards.
+     */
+    override fun cursor(cursor: String): TransactionRequestBuilder {
+        addQueryParam("cursor", cursor)
+        return this
+    }
+
+    /**
+     * defines the order of the response.
+     */
+    override fun order(order: Order): TransactionRequestBuilder {
+        addQueryParam("order",order.value)
+        return this
+    }
 }
 
 /**
