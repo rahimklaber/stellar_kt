@@ -16,7 +16,8 @@ suspend fun main() {
 //    println(res)
     val response = server.transactions()
         .limit(1)
-        .forLedger(906102)
+        .order(Order.DESC)
+        .forLiquidityPool("586137aefc278a84c021895076d93342b7b1d61ee6b5e8ef87f50273412ace9a")
     println(when(response){
         is Ok -> response.value
         is Err -> response.error

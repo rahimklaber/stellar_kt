@@ -33,6 +33,13 @@ class TransactionRequestBuilder(client: HttpClient, horizonUrl: String) :
         }
     }
 
+    suspend fun forLiquidityPool(poolId: String) : RequestResult<Page<TransactionResponse>>{
+        addPath("$poolId/transactions")
+        return runCatching {
+            client.get(buildUrl("liquidity_pools")) // todo create an enum with all of the endpoints.
+        }
+    }
+
     override fun limit(limit: Int): TransactionRequestBuilder {
         addQueryParam("limit", "$limit")
         return this
