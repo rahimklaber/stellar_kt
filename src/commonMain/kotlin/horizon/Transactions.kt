@@ -3,19 +3,18 @@ package me.rahimklaber.stellar.horizon
 import com.github.michaelbull.result.runCatching
 import io.ktor.client.*
 import io.ktor.client.request.*
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.descriptors.buildClassSerialDescriptor
-import kotlinx.serialization.encoding.CompositeDecoder
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.encoding.decodeStructure
 
 class TransactionRequestBuilder(client: HttpClient, horizonUrl: String) :
     RequestBuilder<TransactionResponse>(client, horizonUrl, "transactions") {
     override suspend fun callAsync(): RequestResult<Page<TransactionResponse>> {
+        return runCatching {
+            client.get(buildUrl())
+        }
+    }
+    suspend fun transaction(transactionHash : String) : RequestResult<TransactionResponse>{
+        addPath(transactionHash)
         return runCatching {
             client.get(buildUrl())
         }
