@@ -49,10 +49,10 @@ abstract class RequestBuilder<T>(
         return parameters
     }
 
-    protected fun buildUrl(): Url {
+    protected fun buildUrl(extension : String = urlExtension): Url {
         queryParamsToParameters().forEach(urlBuilder.parameters::appendAll)
         return urlBuilder
-            .path(listOf(urlExtension) + path).build()
+            .path(listOf(extension) + path).build()
     }
 
     abstract suspend fun callAsync(): RequestResult<Page<T>>
