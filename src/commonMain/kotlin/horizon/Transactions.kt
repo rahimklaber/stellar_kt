@@ -19,6 +19,13 @@ class TransactionRequestBuilder(client: HttpClient, horizonUrl: String) :
             client.get(buildUrl())
         }
     }
+
+    suspend fun forAccount(accountId: String): RequestResult<Page<TransactionResponse>> {
+        addPath("$accountId/transactions")
+        return runCatching {
+            client.get(buildUrl("accounts")) // todo create an enum with all of the endpoints.
+        }
+    }
 }
 
 /**
