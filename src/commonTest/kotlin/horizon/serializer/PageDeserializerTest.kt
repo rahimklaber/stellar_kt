@@ -1,6 +1,5 @@
 package horizon.serializer
 
-import arrow.core.Either
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import me.rahimklaber.stellar.horizon.AccountResponse
