@@ -1,6 +1,6 @@
 plugins {
-    kotlin("multiplatform") version "1.5.30"
-    kotlin("plugin.serialization") version "1.5.30"
+    kotlin("multiplatform") version "1.6.21"
+    kotlin("plugin.serialization") version "1.6.10"
 
 }
 
@@ -45,6 +45,8 @@ kotlin {
                 implementation("io.ktor:ktor-client-core:$ktor_version")
                 implementation("io.ktor:ktor-client-serialization:$ktor_version")
                 implementation("com.michael-bull.kotlin-result:kotlin-result:1.1.13")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+
             }
         }
         val commonTest by getting {
