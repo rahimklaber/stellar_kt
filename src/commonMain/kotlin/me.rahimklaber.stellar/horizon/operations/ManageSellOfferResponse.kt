@@ -23,7 +23,8 @@ data class ManageSellOfferResponse(
     @SerialName("selling_asset_type") val sellingAssetType: String,
     @SerialName("selling_asset_code") val sellingAssetCode : String? = null,
     @SerialName("selling_asset_issuer") val sellingAssetIssuer : String? = null,
-    @SerialName("offer_id") val offerId : String? = null
+    @SerialName("offer_id") val offerId : String? = null,
+    @SerialName("_links") override val links : Links,
 ) : OperationResponse() {
 }
 @Serializable

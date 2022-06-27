@@ -1,5 +1,6 @@
 package me.rahimklaber.stellar.horizon.operations
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
@@ -20,4 +21,5 @@ sealed class OperationResponse(){
     abstract val createdAt : String
     abstract val typeI : Int
     abstract val type : String
+    abstract val links : Links
 }

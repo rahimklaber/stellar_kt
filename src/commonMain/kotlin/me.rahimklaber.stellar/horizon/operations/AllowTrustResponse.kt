@@ -17,6 +17,7 @@ data class AllowTrustResponse(
     @SerialName("asset_type") val assetType: String,
     @SerialName("asset_code") val assetCode: String,
     @SerialName("asset_issuer") val assetIssuer: String,
+    @SerialName("_links") override val links : Links,
     val authorize : Boolean, // todo: the docs show that this should be an int -> https://developers.stellar.org/api/resources/operations/object/allow-trust/
     val trustee: String,
     val trustor: String,
