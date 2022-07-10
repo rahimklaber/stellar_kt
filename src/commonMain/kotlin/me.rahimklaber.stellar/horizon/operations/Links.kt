@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializer
 import me.rahimklaber.stellar.horizon.HrefSerializer
 import me.rahimklaber.stellar.horizon.PageLinksSerializer
 
-@Serializable()
+@Serializable
 data class Links(
     @Serializable(with = HrefSerializer::class)
     val self: String,

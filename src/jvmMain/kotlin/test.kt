@@ -3,10 +3,12 @@ import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.get
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
 import me.rahimklaber.stellar.horizon.Order
 import me.rahimklaber.stellar.horizon.operations.OperationResponse
-import me.rahimklaber.stellar.horizon.operations.PaymentResponse
+//import me.rahimklaber.stellar.horizon.operations.PaymentResponse
 
 
 val testPaymentResponse = """
@@ -53,8 +55,12 @@ suspend fun main() {
 
     val server = Server("https://horizon-testnet.stellar.org")
 
+//    val decodedPaymentResponse = json.decodeFromString<OperationResponse>(OperationResponse.serializer(),testPaymentResponse)
     val decodedPaymentResponse = json.decodeFromString<OperationResponse>(testPaymentResponse)
     println(decodedPaymentResponse)
+    println(json.encodeToString(decodedPaymentResponse as OperationResponse))
+
+//    println(server.operations().callAsync())
 
 //    val res =
 //        server.accounts().forSigner("GBMKMDDKDTFAUFEW6AUTD2GHF6YBBLEOVYYLNFMZA5I5UGCI3TUC74HY")
