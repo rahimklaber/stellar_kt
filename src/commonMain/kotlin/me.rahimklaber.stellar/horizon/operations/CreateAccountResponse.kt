@@ -15,6 +15,7 @@ data class CreateAccountResponse(
     @SerialName("type_i") override val typeI: Int,
     @SerialName("type") override val type: String,
     @SerialName("starting_balance") val startingBalance: String,
+    @SerialName("_links") override val links : Links,
     val funder: String,
     val account: String, override val links: OperationResponse.Links
 ) : OperationResponse

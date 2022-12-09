@@ -13,6 +13,7 @@ data class AccountMergeResponse(
     @SerialName("created_at") override val createdAt: String,
     @SerialName("type_i") override val typeI: Int,
     @SerialName("type") override val type: String,
+    @SerialName("_links") override val links : Links,
     val account : String,
     val into : String,
     @SerialName("_links") override val links: OperationResponse.Links

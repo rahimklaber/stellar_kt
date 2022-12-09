@@ -4,8 +4,8 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-@SerialName("manage_data")
-data class ManageDataResponse(
+@SerialName("claim_claimable_balance")
+data class ClaimClaimableBalanceResponse(
     override val id: String, //long?
     @SerialName("paging_token") override val pagingToken: String,
     @SerialName("transaction_hash") override val transactionHash: String,
@@ -15,6 +15,6 @@ data class ManageDataResponse(
     @SerialName("type_i") override val typeI: Int,
     @SerialName("type") override val type: String,
     @SerialName("_links") override val links : Links,
-    val name : String,
-    val value : String, override val links: OperationResponse.Links
-) : OperationResponse
+    @SerialName("balance_id") val balanceId : String,
+    val claimant : String
+) : OperationResponse()

@@ -18,7 +18,7 @@ class InvalidRequest(message: String) : Exception(message)
 
 abstract class RequestBuilder<T>(
     protected val client: HttpClient, horizonUrlString: String,
-    private val urlExtension: String
+    protected val urlExtension: String
 ) {
     private val urlBuilder = URLBuilder(horizonUrlString)
     val queryParams = mutableMapOf<String, String>()

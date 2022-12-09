@@ -3,6 +3,7 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 import me.rahimklaber.stellar.horizon.AccountRequestBuilder
+import me.rahimklaber.stellar.horizon.OperationsRequestBuilder
 import me.rahimklaber.stellar.horizon.TransactionRequestBuilder
 
 
@@ -15,5 +16,6 @@ class Server(val horizonUrl: String) {
 
     fun accounts() = AccountRequestBuilder(client, horizonUrl)
     fun transactions() = TransactionRequestBuilder(client,horizonUrl)
+    fun operations() = OperationsRequestBuilder(client,horizonUrl)
 
 }
