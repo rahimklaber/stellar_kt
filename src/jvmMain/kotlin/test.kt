@@ -1,59 +1,67 @@
-import com.github.michaelbull.result.Err
-import com.github.michaelbull.result.Ok
-import com.github.michaelbull.result.get
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.buildClassSerialDescriptor
+import kotlinx.serialization.encoding.CompositeDecoder
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.encoding.decodeStructure
 import kotlinx.serialization.json.Json
-import me.rahimklaber.stellar.horizon.Order
+import kotlinx.serialization.json.JsonClassDiscriminator
+import me.rahimklaber.stellar.horizon.HrefSerializer
+import me.rahimklaber.stellar.horizon.Page
 import me.rahimklaber.stellar.horizon.operations.OperationResponse
-import me.rahimklaber.stellar.horizon.operations.PaymentResponse
 
 
-val testPaymentResponse = """
-    {
+val testAccountMerge = """
+{
+
       "_links": {
         "self": {
-          "href": "https://horizon.stellar.org/operations/122511124621283329"
+          "href": "https://horizon.stellar.org/operations/121887714411839489"
         },
         "transaction": {
-          "href": "https://horizon.stellar.org/transactions/452a180790caf4dbe658d996316cd727ce5573f5f0a77790da540cc49214fe80"
+          "href": "https://horizon.stellar.org/transactions/02077009a551ec94c776f83529293dcfc1c2cd5b38af043ef7f3699bf5a71f0a"
         },
         "effects": {
-          "href": "https://horizon.stellar.org/operations/122511124621283329/effects"
+          "href": "https://horizon.stellar.org/operations/121887714411839489/effects"
         },
         "succeeds": {
-          "href": "https://horizon.stellar.org/effects?order=desc\u0026cursor=122511124621283329"
+          "href": "https://horizon.stellar.org/effects?order=desc\u0026cursor=121887714411839489"
         },
         "precedes": {
-          "href": "https://horizon.stellar.org/effects?order=asc\u0026cursor=122511124621283329"
+          "href": "https://horizon.stellar.org/effects?order=asc\u0026cursor=121887714411839489"
         }
       },
-      "id": "122511124621283329",
-      "paging_token": "122511124621283329",
+      "id": "121887714411839489",
+      "paging_token": "121887714411839489",
       "transaction_successful": true,
-      "source_account": "GCAXBKU3AKYJPLQ6PEJ6L47KOATCYCBJ2NFRGAK7FUUA2DCEUC265SU2",
-      "type": "payment",
-      "type_i": 1,
-      "created_at": "2020-03-04T22:46:47Z",
-      "transaction_hash": "452a180790caf4dbe658d996316cd727ce5573f5f0a77790da540cc49214fe80",
-      "asset_type": "credit_alphanum4",
-      "asset_code": "NGNT",
-      "asset_issuer": "GAWODAROMJ33V5YDFY3NPYTHVYQG7MJXVJ2ND3AOGIHYRWINES6ACCPD",
-      "from": "GCAXBKU3AKYJPLQ6PEJ6L47KOATCYCBJ2NFRGAK7FUUA2DCEUC265SU2",
-      "to": "GC2QCKFI3DOBEYVBONPVNA2PMLU225IKKI6XPENMWR2CTWSFBAOU7T34",
-      "amount": "5.0000000"
-    }
+      "source_account": "GCVLWV5B3L3YE6DSCCMHLCK7QIB365NYOLQLW3ZKHI5XINNMRLJ6YHVX",
+      "type_i": 8,
+      "created_at": "2020-02-24T17:03:00Z",
+      "transaction_hash": "02077009a551ec94c776f83529293dcfc1c2cd5b38af043ef7f3699bf5a71f0a",
+      "account": "GCVLWV5B3L3YE6DSCCMHLCK7QIB365NYOLQLW3ZKHI5XINNMRLJ6YHVX",
+      "into": "GATL3ETTZ3XDGFXX2ELPIKCZL7S5D2HY3VK4T7LRPD6DW5JOLAEZSZBA",
+      "type": "account_merge"
+}
 """.trimIndent()
+
+
 
 private val json = Json {
     ignoreUnknownKeys = true
 }
 
-suspend fun main() {
+ fun main() {
 
-    val server = Server("https://horizon-testnet.stellar.org")
+//    println(json.decodeFromString<TestI>(testAccountMerge))
+//    println(json.decodeFromString<Links2>(links))
 
-    val decodedPaymentResponse = json.decodeFromString<OperationResponse>(testPaymentResponse)
+//    val server = Server("https://horizon-testnet.stellar.org")
+//
+    val decodedPaymentResponse = json.decodeFromString<OperationResponse>(testAccountMerge)
     println(decodedPaymentResponse)
 
 //    val res =

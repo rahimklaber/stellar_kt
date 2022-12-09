@@ -25,8 +25,9 @@ data class PathPaymentStrictReceiveResponse(
     @SerialName("source_max") val sourceMax: String,
     @SerialName("source_asset_type") val sourceAssetType: String,
     @SerialName("source_asset_code") val sourceAssetCode: String? = null,
-    @SerialName("source_asset_issuer") val sourceAssetIssuer: String? = null
-) : OperationResponse()
+    @SerialName("source_asset_issuer") val sourceAssetIssuer: String? = null,
+    override val links: OperationResponse.Links
+) : OperationResponse
 
 //todo maybe replace this by the normal asset?
 // right now this just makes it so I don't have to deal with polymorphic serialization

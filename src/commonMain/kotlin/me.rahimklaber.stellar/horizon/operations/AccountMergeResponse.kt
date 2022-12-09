@@ -2,9 +2,8 @@ package me.rahimklaber.stellar.horizon.operations
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-
-@Serializable
 @SerialName("account_merge")
+@Serializable
 data class AccountMergeResponse(
     override val id: String, //long?
     @SerialName("paging_token") override val pagingToken: String,
@@ -15,5 +14,6 @@ data class AccountMergeResponse(
     @SerialName("type_i") override val typeI: Int,
     @SerialName("type") override val type: String,
     val account : String,
-    val into : String
-) : OperationResponse()
+    val into : String,
+    @SerialName("_links") override val links: OperationResponse.Links
+) : OperationResponse

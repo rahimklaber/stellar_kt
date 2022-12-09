@@ -25,5 +25,6 @@ data class PathPaymentStrictSendResponse(
     @SerialName("destination_min") val destinationMin: String,
     @SerialName("source_asset_type") val sourceAssetType: String,
     @SerialName("source_asset_code") val sourceAssetCode: String? = null,
-    @SerialName("source_asset_issuer") val sourceAssetIssuer: String? = null
-) : OperationResponse()
+    @SerialName("source_asset_issuer") val sourceAssetIssuer: String? = null,
+    override val links: OperationResponse.Links
+) : OperationResponse

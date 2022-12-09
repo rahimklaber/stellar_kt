@@ -16,9 +16,9 @@ data class CreateClaimableBalanceResponse(
     @SerialName("type") override val type: String,
     val asset : String,
     val amount : String,
-    val claimants : List<ClaimantResponse>
+    val claimants : List<ClaimantResponse>, override val links: OperationResponse.Links
 
-) : OperationResponse()
+) : OperationResponse
 
 @Serializable
 data class ClaimantResponse(

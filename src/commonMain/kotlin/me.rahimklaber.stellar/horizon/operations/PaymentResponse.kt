@@ -24,6 +24,6 @@ data class PaymentResponse(
     @SerialName("asset_issuer") val assetIssuer: String,
     val from: String,
     val to: String,
-    val amount: String,
-) : OperationResponse()
+    val amount: String, override val links: OperationResponse.Links,
+) : OperationResponse
 

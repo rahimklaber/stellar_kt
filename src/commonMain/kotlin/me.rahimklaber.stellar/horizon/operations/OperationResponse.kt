@@ -1,6 +1,10 @@
 package me.rahimklaber.stellar.horizon.operations
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Serializer
+import kotlinx.serialization.json.JsonClassDiscriminator
+import me.rahimklaber.stellar.horizon.HrefSerializer
 
 /**
  * I am currently abusing the polymorphic serialization of kotlinx.serialization.
@@ -9,15 +13,31 @@ import kotlinx.serialization.Serializable
  *
  * Todo: Fix this.
  */
-
+@JsonClassDiscriminator("type")
 @Serializable
-sealed class OperationResponse(){
-    abstract val id : String //long?
-    abstract val pagingToken : String
-    abstract val transactionHash : String
-    abstract val transactionSuccessful : Boolean
-    abstract val sourceAccount : String
-    abstract val createdAt : String
-    abstract val typeI : Int
-    abstract val type : String
+sealed interface OperationResponse{
+    val links : Links
+    val id : String //long?
+    val pagingToken : String
+    val transactionHash : String
+    val transactionSuccessful : Boolean
+    val sourceAccount : String
+    val createdAt : String
+    val typeI : Int
+    val type : String
+
+    @Serializable
+    data class Links(
+        @Serializable(with = HrefSerializer::class)
+        val effects: String,
+        @Serializable(with = HrefSerializer::class)
+        val precedes: String,
+        @Serializable(with = HrefSerializer::class)
+        val self: String,
+        @Serializable(with = HrefSerializer::class)
+        val succeeds: String,
+        @Serializable(with = HrefSerializer::class)
+        val transaction: String
+    )
 }
+

@@ -1,6 +1,6 @@
 plugins {
-    kotlin("multiplatform") version "1.6.21"
-    kotlin("plugin.serialization") version "1.6.10"
+    kotlin("multiplatform") version "1.7.22"
+    kotlin("plugin.serialization") version "1.7.20"
 
 }
 
@@ -10,7 +10,7 @@ version = "1.0-SNAPSHOT"
 repositories {
     mavenCentral()
 }
-val ktor_version = "1.6.3"
+val ktor_version = "2.2.1"
 
 kotlin {
     jvm {
@@ -43,9 +43,10 @@ kotlin {
         val commonMain by getting {
             dependencies{
                 implementation("io.ktor:ktor-client-core:$ktor_version")
-                implementation("io.ktor:ktor-client-serialization:$ktor_version")
+                implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
                 implementation("com.michael-bull.kotlin-result:kotlin-result:1.1.13")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
 
             }
         }

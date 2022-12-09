@@ -24,5 +24,5 @@ data class SetOptionsResponse(
     @SerialName("set_flags") val setFlags: List<Int>? = null,
     @SerialName("set_flags_s") val setFlagsS: List<String>? = null,
     @SerialName("clear_flags") val clearFlags: List<Int>? = null,
-    @SerialName("clear_flags_s") val clearFlagsS: List<String>? = null,
-) : OperationResponse()
+    @SerialName("clear_flags_s") val clearFlagsS: List<String>? = null, override val links: OperationResponse.Links,
+) : OperationResponse

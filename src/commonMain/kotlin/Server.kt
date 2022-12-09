@@ -1,16 +1,15 @@
 import io.ktor.client.*
-import io.ktor.client.features.json.*
-import io.ktor.client.features.json.serializer.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.json.Json
 import me.rahimklaber.stellar.horizon.AccountRequestBuilder
 import me.rahimklaber.stellar.horizon.TransactionRequestBuilder
 
 
 class Server(val horizonUrl: String) {
     val client: HttpClient = HttpClient {
-        install(JsonFeature) {
-            serializer = KotlinxSerializer(kotlinx.serialization.json.Json {
-                ignoreUnknownKeys = true
-            })
+        install(ContentNegotiation) {
+            json()
         }
     }
 

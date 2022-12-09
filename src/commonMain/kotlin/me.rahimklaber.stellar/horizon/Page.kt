@@ -3,6 +3,7 @@ package me.rahimklaber.stellar.horizon
 import Server
 import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.runCatching
+import io.ktor.client.call.*
 import io.ktor.client.request.*
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
@@ -28,7 +29,7 @@ data class Page<T>(@SerialName("_records") val records: List<T>, val links: Link
  */
 suspend inline fun <reified T> Page<T>.next(server: Server): RequestResult<Page<T>> {
     return runCatching {
-        server.client.get(links.next ?: throw Exception("Cannot get next page."))
+        server.client.get(links.next ?: throw Exception("Cannot get next page.")).body()
     }
 
 }
@@ -38,7 +39,7 @@ suspend inline fun <reified T> Page<T>.next(server: Server): RequestResult<Page<
  */
 suspend inline fun <reified T> Page<T>.prev(server: Server): RequestResult<Page<T>> {
     return runCatching {
-        server.client.get(links.prev ?: throw Exception("Cannot get previous page."))
+        server.client.get(links.prev ?: throw Exception("Cannot get previous page.")).body()
     }
 }
 
@@ -71,37 +72,29 @@ class EmbeddedSerializer<T>(val tSerializer: KSerializer<T>) : KSerializer<Embed
     }
 }
 
-class HrefSerializer : KSerializer<String> {
+object HrefSerializer : KSerializer<String> {
 
-    override val descriptor: SerialDescriptor =
-        buildClassSerialDescriptor("hrefobj") {
-            element("href", PrimitiveSerialDescriptor("href", PrimitiveKind.STRING))
-        }
+    @Serializable
+    data class HrefObj(
+        val href: String,
+    )
 
-    override fun deserialize(decoder: Decoder): String =
-        decoder.decodeStructure(descriptor) {
-            var href = ""
-            while (true) {
-                when (decodeElementIndex(descriptor)) {
-                    0 -> href = decoder.decodeString()
-                    DECODE_DONE -> break
-                    else -> {
-                        continue
-                    }
-                }
-            }
-            href
-        }
+    override val descriptor: SerialDescriptor = HrefObj.serializer().descriptor
+
+    override fun deserialize(decoder: Decoder): String {
+        val href = HrefObj.serializer().deserialize(decoder)
+        return href.href
+    }
 
     override fun serialize(encoder: Encoder, value: String) {
-        TODO("Not yet implemented")
+        HrefObj.serializer().serialize(encoder, HrefObj(value))
     }
 }
 
 class PageLinksSerializer : KSerializer<Page.Links> {
-    val hrefSerializer = HrefSerializer()
+    val hrefSerializer = HrefSerializer
     override val descriptor: SerialDescriptor =
-        buildClassSerialDescriptor("links") {
+        buildClassSerialDescriptor("_links") {
             element("self", hrefSerializer.descriptor)
             element("prev", hrefSerializer.descriptor,isOptional = true)
             element("next", hrefSerializer.descriptor,isOptional = true)

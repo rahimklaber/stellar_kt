@@ -2,6 +2,7 @@ package me.rahimklaber.stellar.horizon
 
 import com.github.michaelbull.result.runCatching
 import io.ktor.client.*
+import io.ktor.client.call.*
 import io.ktor.client.request.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -10,33 +11,33 @@ class TransactionRequestBuilder(client: HttpClient, horizonUrl: String) :
     RequestBuilder<TransactionResponse>(client, horizonUrl, "transactions") {
     override suspend fun callAsync(): RequestResult<Page<TransactionResponse>> {
         return runCatching {
-            client.get(buildUrl())
+            client.get(buildUrl()).body()
         }
     }
     suspend fun transaction(transactionHash : String) : RequestResult<TransactionResponse>{
         addPath(transactionHash)
         return runCatching {
-            client.get(buildUrl())
+            client.get(buildUrl()).body()
         }
     }
 
     suspend fun forAccount(accountId: String): RequestResult<Page<TransactionResponse>> {
         addPath("$accountId/transactions")
         return runCatching {
-            client.get(buildUrl("accounts")) // todo create an enum with all of the endpoints.
+            client.get(buildUrl("accounts")).body() // todo create an enum with all of the endpoints.
         }
     }
     suspend fun forLedger(ledger: Long): RequestResult<Page<TransactionResponse>> {
         addPath("$ledger/transactions")
         return runCatching {
-            client.get(buildUrl("ledgers")) // todo create an enum with all of the endpoints.
+            client.get(buildUrl("ledgers")).body() // todo create an enum with all of the endpoints.
         }
     }
 
     suspend fun forLiquidityPool(poolId: String) : RequestResult<Page<TransactionResponse>>{
         addPath("$poolId/transactions")
         return runCatching {
-            client.get(buildUrl("liquidity_pools")) // todo create an enum with all of the endpoints.
+            client.get(buildUrl("liquidity_pools")).body() // todo create an enum with all of the endpoints.
         }
     }
 
