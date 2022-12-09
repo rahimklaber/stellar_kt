@@ -23,7 +23,7 @@ data class LiquidityPoolDepositResponse(
     @SerialName("max_price_r") val maxPriceR: PriceR,
     @SerialName("reserves_deposited") val reservesDeposited: List<LiquidityPoolResponseAsset>,
     @SerialName("shares_received") val sharesReceived: String
-) : OperationResponse()
+) : OperationResponse
 
 @Serializable
 data class LiquidityPoolResponseAsset(

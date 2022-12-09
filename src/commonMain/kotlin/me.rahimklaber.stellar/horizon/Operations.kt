@@ -4,6 +4,7 @@ package me.rahimklaber.stellar.horizon
 import com.github.michaelbull.result.Result
 import com.github.michaelbull.result.runCatching
 import io.ktor.client.*
+import io.ktor.client.call.*
 import io.ktor.client.request.get
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.PolymorphicSerializer
@@ -61,7 +62,7 @@ class OperationsRequestBuilder(client: HttpClient, horizonUrl: String) :
     suspend fun operation(operationId : ULong): RequestResult<OperationResponse> {
         addPath(operationId.toString())
         return runCatching {
-            client.get(buildUrl())
+            client.get(buildUrl()).body()
         }
     }
     override fun limit(limit: Int): OperationsRequestBuilder {
@@ -92,7 +93,7 @@ class OperationsRequestBuilder(client: HttpClient, horizonUrl: String) :
             else{
                 urlExtension
             }
-            client.get(buildUrl(extension))
+            client.get(buildUrl(extension)).body()
         }
     }
 

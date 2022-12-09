@@ -22,5 +22,4 @@ data class ChangeTrustResponse(
     val trustee: String? = null,
     val trustor: String,
     @SerialName("liquidity_pool_id") val liquidityPoolId: String? = null,
-    override val links: OperationResponse.Links,
 ) : OperationResponse

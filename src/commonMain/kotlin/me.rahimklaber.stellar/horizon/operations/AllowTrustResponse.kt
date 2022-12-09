@@ -20,5 +20,4 @@ data class AllowTrustResponse(
     @SerialName("_links") override val links : Links,
     val authorize : Boolean, // todo: the docs show that this should be an int -> https://developers.stellar.org/api/resources/operations/object/allow-trust/
     val trustee: String,
-    val trustor: String, override val links: OperationResponse.Links,
 ) : OperationResponse

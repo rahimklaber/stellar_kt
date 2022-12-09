@@ -25,19 +25,5 @@ sealed interface OperationResponse{
     val createdAt : String
     val typeI : Int
     val type : String
-
-    @Serializable
-    data class Links(
-        @Serializable(with = HrefSerializer::class)
-        val effects: String,
-        @Serializable(with = HrefSerializer::class)
-        val precedes: String,
-        @Serializable(with = HrefSerializer::class)
-        val self: String,
-        @Serializable(with = HrefSerializer::class)
-        val succeeds: String,
-        @Serializable(with = HrefSerializer::class)
-        val transaction: String
-    )
 }
 

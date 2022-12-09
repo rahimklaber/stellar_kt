@@ -19,4 +19,4 @@ data class LiquidityPoolWithdrawResponse(
     @SerialName("reserves_min") val reservesMin: List<LiquidityPoolResponseAsset>,
     @SerialName("reserves_received") val reservesReceived: List<LiquidityPoolResponseAsset>,
     @SerialName("shares") val shares: String
-) : OperationResponse()
+) : OperationResponse

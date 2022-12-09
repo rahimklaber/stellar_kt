@@ -24,4 +24,4 @@ data class RevokeSponsorshipResponse(
     @SerialName("trustline_asset") val trustlineAsset : String? = null,
     @SerialName("signer_account_id") val signerAccountId : String? = null,
     @SerialName("signer_key") val signerKey : String? = null
-) : OperationResponse()
+) : OperationResponse

@@ -16,4 +16,4 @@ data class EndSponsoringFutureReserves(
     @SerialName("type") override val type: String,
     @SerialName("_links") override val links : Links,
     @SerialName("begin_sponsor") val beginSponsor : String,
-) : OperationResponse()
+) : OperationResponse

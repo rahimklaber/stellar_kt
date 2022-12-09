@@ -17,4 +17,4 @@ data class ClaimClaimableBalanceResponse(
     @SerialName("_links") override val links : Links,
     @SerialName("balance_id") val balanceId : String,
     val claimant : String
-) : OperationResponse()
+) : OperationResponse
