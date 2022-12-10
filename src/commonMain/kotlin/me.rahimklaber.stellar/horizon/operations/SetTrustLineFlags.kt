@@ -1,16 +1,11 @@
 package me.rahimklaber.stellar.horizon.operations
 
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
-//Todo make it such that I don't have to duplicate all of the variables that all operatios have
-// in common.
+
+@SerialName("set_trust_line_flags")
 @Serializable
-@SerialName("payment")
-data class PaymentResponse(
+data class SetTrustLineFlags(
     override val id : String, //long?
     @SerialName("paging_token") override val pagingToken : String,
     @SerialName("transaction_hash") override val transactionHash : String,
@@ -19,12 +14,13 @@ data class PaymentResponse(
     @SerialName("created_at") override val createdAt : String,
     @SerialName("type_i") override val typeI: Int,
     @SerialName("type") override val type: String,
+    @SerialName("_links") override val links : Links,
+    val trustor: String,
+    @SerialName("set_flags") val setFlags: List<Int> = listOf(),
+    @SerialName("set_flags_s") val setFlagsS: List<String> = listOf(),
+    @SerialName("clear_flags") val clearFlags: List<Int> = listOf(),
+    @SerialName("clear_flags_s") val clearFlagsS: List<String> = listOf(),
     @SerialName("asset_type") val assetType: String,
     @SerialName("asset_code") val assetCode: String? = null,
     @SerialName("asset_issuer") val assetIssuer: String? = null,
-    val from: String,
-    val to: String,
-    val amount: String,
-    @SerialName("_links") override val links: Links,
 ) : OperationResponse
-

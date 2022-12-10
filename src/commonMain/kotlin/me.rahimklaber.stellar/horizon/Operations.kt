@@ -87,13 +87,15 @@ class OperationsRequestBuilder(client: HttpClient, horizonUrl: String) :
                 "accounts"
             }else if(forLedger){
                 "ledgers"
-            }else if(forAccount){
+            }else if(forTransaction){
                 "transactions"
             }
             else{
                 urlExtension
             }
-            client.get(buildUrl(extension)).body()
+            val url = buildUrl(extension)
+            println(url)
+            client.get(url).body()
         }
     }
 

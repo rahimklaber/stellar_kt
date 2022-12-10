@@ -1,3 +1,6 @@
+import com.github.michaelbull.result.Err
+import com.github.michaelbull.result.getError
+import com.github.michaelbull.result.unwrap
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -12,7 +15,9 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonClassDiscriminator
 import me.rahimklaber.stellar.horizon.HrefSerializer
 import me.rahimklaber.stellar.horizon.Page
+import me.rahimklaber.stellar.horizon.next
 import me.rahimklaber.stellar.horizon.operations.OperationResponse
+import kotlin.system.exitProcess
 
 
 val testAccountMerge = """
@@ -54,15 +59,33 @@ private val json = Json {
     ignoreUnknownKeys = true
 }
 
- fun main() {
+ suspend fun main() {
 
 //    println(json.decodeFromString<TestI>(testAccountMerge))
 //    println(json.decodeFromString<Links2>(links))
 
-//    val server = Server("https://horizon-testnet.stellar.org")
-//
-    val decodedPaymentResponse = json.decodeFromString<OperationResponse>(testAccountMerge)
-    println(decodedPaymentResponse)
+    val server = Server("https://horizon.stellar.org")
+
+     var operations = server.operations()
+         .forAccount("GAAUMMCT5PVLB5SP7FJYDXKZYDFJLXLJ34EXFREMDWOZLKYVE2PNVZWO")
+         .limit(200)
+         .callAsync().unwrap()
+
+
+     while (true){
+
+//         println(operations.records.first())
+         val res = operations.next(server)
+         if (res is Err<Throwable>){
+             res.getError()?.printStackTrace()
+             println(operations.links)
+             exitProcess(0)
+         }
+         operations = res.unwrap()
+     }
+
+//    val decodedPaymentResponse = json.decodeFromString<OperationResponse>(testAccountMerge)
+//    println(decodedPaymentResponse)
 
 //    val res =
 //        server.accounts().forSigner("GBMKMDDKDTFAUFEW6AUTD2GHF6YBBLEOVYYLNFMZA5I5UGCI3TUC74HY")

@@ -1,7 +1,6 @@
 package me.rahimklaber.stellar.horizon
 
 import Server
-import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.runCatching
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -9,8 +8,6 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.buildClassSerialDescriptor
 import kotlinx.serialization.encoding.CompositeDecoder.Companion.DECODE_DONE
@@ -20,8 +17,12 @@ import kotlinx.serialization.encoding.decodeStructure
 
 @Serializable(with = PageSerializer::class)
 data class Page<T>(@SerialName("_records") val records: List<T>, val links: Links) {
-    @Serializable(with = PageLinksSerializer::class)
-    data class Links(val self: String, val next: String?, val prev: String?)
+    @Serializable
+    data class Links(
+        @Serializable(with = HrefSerializer::class) val self: String,
+        @Serializable(with = HrefSerializer::class) val next: String? = null,
+        @Serializable(with = HrefSerializer::class) val prev: String? = null,
+    )
 }
 
 /**
@@ -91,39 +92,6 @@ object HrefSerializer : KSerializer<String> {
     }
 }
 
-class PageLinksSerializer : KSerializer<Page.Links> {
-    val hrefSerializer = HrefSerializer
-    override val descriptor: SerialDescriptor =
-        buildClassSerialDescriptor("_links") {
-            element("self", hrefSerializer.descriptor)
-            element("prev", hrefSerializer.descriptor,isOptional = true)
-            element("next", hrefSerializer.descriptor,isOptional = true)
-        }
-
-    override fun deserialize(decoder: Decoder): Page.Links =
-        decoder.decodeStructure(descriptor) {
-            var self: String? = null
-            var prev: String? = null
-            var next: String? = null
-            while (true) {
-                when (decodeElementIndex(descriptor)) {
-                    0 -> self = decoder.decodeSerializableValue(hrefSerializer)
-                    1 -> prev = decoder.decodeSerializableValue(hrefSerializer)
-                    2 -> next = decoder.decodeSerializableValue(hrefSerializer)
-                    DECODE_DONE -> break
-                    else -> continue
-                }
-            }
-            require(self != null)
-            require(next != null)
-            require(prev != null)
-            Page.Links(self, next, prev)
-        }
-
-    override fun serialize(encoder: Encoder, value: Page.Links) {
-        TODO("Not yet implemented")
-    }
-}
 
 
 class PageSerializer<T>(val tSerializer: KSerializer<T>) : KSerializer<Page<T>> {

@@ -1,9 +1,14 @@
 package me.rahimklaber.stellar.base
 
 
-sealed class Asset(val code: String, val issuer: String) {
-    class Native: Asset("XLM","")
-    sealed class CreditAlphaNum(code: String, issuer: String): Asset(code, issuer)
-    class CreditAlphaNum4(code: String,issuer: String) : CreditAlphaNum(code, issuer)
-    class CreditAlphaNum12(code: String,issuer: String) : CreditAlphaNum(code, issuer)
+sealed interface Asset {
+    val code: String
+    val issuer: String
+    class Native: Asset {
+        override val code: String = "XLM"
+        override val issuer: String = ""
+    }
+    sealed class CreditAlphaNum(override val code: String, override val issuer: String): Asset
+    class CreditAlphaNum4(override val code: String,override val issuer: String) : CreditAlphaNum(code, issuer)
+    class CreditAlphaNum12(override val code: String,override val issuer: String) : CreditAlphaNum(code, issuer)
 }

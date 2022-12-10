@@ -19,6 +19,7 @@ data class CreateClaimableBalanceResponse(
     val asset : String,
     val amount : String,
     val claimants : List<ClaimantResponse>,
+    val sponsor: String? = null,
 
 ) : OperationResponse
 
@@ -34,7 +35,7 @@ data class Predicate(
     val and : List<Predicate>? = null,
     val or : List<Predicate>? = null,
     val not : Predicate? = null,
-    val absBefore : String? = null, //todo should I use a datetime class for this?
-    val absBeforeEpoch : String? = null,
-    val relBefore : String? = null
+    @SerialName("abs_before") val absBefore : String? = null, //todo should I use a datetime class for this?
+    @SerialName("abs_before_epoch") val absBeforeEpoch : String? = null,
+    @SerialName("rel_before") val relBefore : String? = null
 )
