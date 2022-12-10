@@ -26,7 +26,7 @@ data class PathPaymentStrictReceiveResponse(
     @SerialName("source_asset_type") val sourceAssetType: String,
     @SerialName("source_asset_code") val sourceAssetCode: String? = null,
     @SerialName("source_asset_issuer") val sourceAssetIssuer: String? = null,
-    override val links: Links
+    @SerialName("_links") override val links: Links
 ) : OperationResponse
 
 //todo maybe replace this by the normal asset?

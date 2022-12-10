@@ -15,5 +15,5 @@ data class BumpSequenceResponse (
     @SerialName("type_i") override val typeI: Int,
     @SerialName("type") override val type: String,
     @SerialName("bump_to") val bumpTo : String,
-    override val links: Links
+    @SerialName("_links") override val links: Links
 ) : OperationResponse

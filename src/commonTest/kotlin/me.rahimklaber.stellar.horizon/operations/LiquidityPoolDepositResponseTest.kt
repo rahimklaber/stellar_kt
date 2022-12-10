@@ -1,11 +1,7 @@
-package horizon.operations
+package me.rahimklaber.stellar.horizon.operations
 
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import me.rahimklaber.stellar.horizon.operations.LiquidityPoolDepositResponse
-import me.rahimklaber.stellar.horizon.operations.LiquidityPoolWithdrawResponse
-import me.rahimklaber.stellar.horizon.operations.LiquidityPoolResponseAsset
-import me.rahimklaber.stellar.horizon.operations.PriceR
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

@@ -25,6 +25,6 @@ data class PaymentResponse(
     val from: String,
     val to: String,
     val amount: String,
-    override val links: Links,
+    @SerialName("_links") override val links: Links,
 ) : OperationResponse
 

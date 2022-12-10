@@ -16,4 +16,5 @@ data class ManageDataResponse(
     @SerialName("type") override val type: String,
     @SerialName("_links") override val links : Links,
     val name : String,
+    val value: String,
 ) : OperationResponse

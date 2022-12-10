@@ -1,19 +1,20 @@
-package horizon.operations
+package me.rahimklaber.stellar.horizon.operations
 
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import me.rahimklaber.stellar.horizon.operations.BeginSponsoringFutureReservesResponse
-import me.rahimklaber.stellar.horizon.operations.ClaimClaimableBalanceResponse
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class BeginSponsoringFutureReservesTest {
+class ClaimClaimableBalanceResponseTest {
     val json = Json { ignoreUnknownKeys = true }
 
     @Test
     fun basic() {
-        val decoded = json.decodeFromString<BeginSponsoringFutureReservesResponse>(basicResponse)
-        assertEquals("GC3C4AKRBQLHOJ45U4XG35ESVWRDECWO5XLDGYADO6DPR3L7KIDVUMML",decoded.sponsoredId)
+        val decoded = json.decodeFromString<ClaimClaimableBalanceResponse>(basicResponse)
+        assertEquals("000000000102030000000000000000000000000000000000000000000000000000000000",
+        decoded.balanceId)
+        assertEquals("GC3C4AKRBQLHOJ45U4XG35ESVWRDECWO5XLDGYADO6DPR3L7KIDVUMML",decoded.claimant)
+
     }
 
     val basicResponse = """
@@ -39,11 +40,12 @@ class BeginSponsoringFutureReservesTest {
           "paging_token": "124922916260433921",
           "transaction_successful": true,
           "source_account": "GAYOLLLUIZE4DZMBB2ZBKGBUBZLIOYU6XFLW37GBP2VZD3ABNXCW4BVA",
-          "type": "begin_sponsoring_future_reserves",
-          "type_i": 16,
+          "type": "claim_claimable_balance",
+          "type_i": 15,
           "created_at": "2020-04-09T00:14:11Z",
           "transaction_hash": "f94c338370839a598753221714de0b0193d4fc56ea369db6efe88f18669cc5a1",
-          "sponsored_id": "GC3C4AKRBQLHOJ45U4XG35ESVWRDECWO5XLDGYADO6DPR3L7KIDVUMML"
+          "balance_id": "000000000102030000000000000000000000000000000000000000000000000000000000",
+          "claimant": "GC3C4AKRBQLHOJ45U4XG35ESVWRDECWO5XLDGYADO6DPR3L7KIDVUMML"
         }
     """.trimIndent()
 }

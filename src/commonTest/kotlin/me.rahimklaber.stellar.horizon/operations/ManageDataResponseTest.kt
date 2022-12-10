@@ -1,12 +1,7 @@
-package horizon.operations
+package me.rahimklaber.stellar.horizon.operations
 
-import io.ktor.util.InternalAPI
-import io.ktor.util.decodeBase64String
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import me.rahimklaber.stellar.horizon.operations.CreatePassiveSellOfferResponse
-import me.rahimklaber.stellar.horizon.operations.ManageDataResponse
-import me.rahimklaber.stellar.horizon.operations.PriceR
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

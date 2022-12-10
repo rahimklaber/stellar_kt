@@ -1,9 +1,7 @@
-package horizon.operations
+package me.rahimklaber.stellar.horizon.operations
 
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import me.rahimklaber.stellar.horizon.operations.BumpSequenceResponse
-import me.rahimklaber.stellar.horizon.operations.ChangeTrustResponse
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

@@ -24,7 +24,7 @@ data class ManageSellOfferResponse(
     @SerialName("selling_asset_code") val sellingAssetCode : String? = null,
     @SerialName("selling_asset_issuer") val sellingAssetIssuer : String? = null,
     @SerialName("offer_id") val offerId : String? = null,
-    override val links: Links
+    @SerialName("_links") override val links: Links
 ) : OperationResponse
 @Serializable
 data class PriceR(val n : Long, val d: Long)

@@ -1,9 +1,7 @@
-package horizon.operations
+package me.rahimklaber.stellar.horizon.operations
 
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import me.rahimklaber.stellar.horizon.operations.AccountMergeResponse
-import me.rahimklaber.stellar.horizon.operations.AllowTrustResponse
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
