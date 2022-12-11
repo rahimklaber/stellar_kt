@@ -1,4 +1,4 @@
-package horizon.serializer
+package me.rahimklaber.stellar.horizon
 
 val accountResponses1 = """
     {

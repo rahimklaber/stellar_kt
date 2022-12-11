@@ -18,7 +18,7 @@ class InvalidRequest(message: String) : Exception(message)
 
 abstract class RequestBuilder<T>(
     protected val client: HttpClient, horizonUrlString: String,
-    private val urlExtension: String
+    protected val urlExtension: String
 ) {
     private val urlBuilder = URLBuilder(horizonUrlString)
     val queryParams = mutableMapOf<String, String>()
@@ -51,8 +51,9 @@ abstract class RequestBuilder<T>(
 
     protected fun buildUrl(extension : String = urlExtension): Url {
         queryParamsToParameters().forEach(urlBuilder.parameters::appendAll)
-        return urlBuilder
-            .path(listOf(extension) + path).build()
+         urlBuilder
+            .path(extension, *path.toTypedArray())
+        return urlBuilder.build()
     }
 
     abstract suspend fun callAsync(): RequestResult<Page<T>>

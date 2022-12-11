@@ -3,7 +3,7 @@ package me.rahimklaber.stellar.horizon
 import com.github.michaelbull.result.Result
 import com.github.michaelbull.result.runCatching
 import io.ktor.client.*
-import io.ktor.client.features.*
+import io.ktor.client.call.*
 import io.ktor.client.request.*
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
@@ -22,7 +22,7 @@ class AccountRequestBuilder(client: HttpClient, horizonUrl: String) :
     suspend fun account(accountId: String): RequestResult<AccountResponse> {
         addPath(accountId)
        return  runCatching {
-            client.get(buildUrl())
+            client.get(buildUrl()).body()
         }
     }
 
@@ -84,7 +84,7 @@ class AccountRequestBuilder(client: HttpClient, horizonUrl: String) :
 
     override suspend fun callAsync(): RequestResult<Page<AccountResponse>> {
         return runCatching {
-            client.get(buildUrl())
+            client.get(buildUrl()).body()
         }
     }
 
@@ -134,9 +134,9 @@ data class AccountResponse(
 }
 
 class AccountLinksSerializer : KSerializer<AccountResponse.Links> {
-    val hrefSerializer = HrefSerializer()
+    val hrefSerializer = HrefSerializer
     override val descriptor: SerialDescriptor =
-        buildClassSerialDescriptor("links") {
+        buildClassSerialDescriptor("_links") {
             element("self", hrefSerializer.descriptor)
             element("transactions", hrefSerializer.descriptor)
             element("operations", hrefSerializer.descriptor)

@@ -1,16 +1,12 @@
-package horizon.serializer
+package me.rahimklaber.stellar.horizon
 
-import arrow.core.Either
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import me.rahimklaber.stellar.horizon.AccountResponse
-import me.rahimklaber.stellar.horizon.Page
 import kotlin.test.Test
-import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
 
-class PageSerializerTest {
+class PageDeserializerTest {
     val json = Json { ignoreUnknownKeys = true }
 
     @Test
