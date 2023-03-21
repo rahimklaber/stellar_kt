@@ -16,7 +16,7 @@ data class Uint256(val byteArray: ByteArray) : XdrElement {
         if (this === other) return true
         if (other == null || this::class != other::class) return false
 
-        other as Hash
+        other as Uint256
 
         if (!byteArray.contentEquals(other.byteArray)) return false
 

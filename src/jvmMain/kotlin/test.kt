@@ -1,23 +1,6 @@
-import com.github.michaelbull.result.Err
-import com.github.michaelbull.result.getError
-import com.github.michaelbull.result.unwrap
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.descriptors.buildClassSerialDescriptor
-import kotlinx.serialization.encoding.CompositeDecoder
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.encoding.decodeStructure
+import io.ktor.util.*
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonClassDiscriminator
-import me.rahimklaber.stellar.horizon.HrefSerializer
-import me.rahimklaber.stellar.horizon.Page
-import me.rahimklaber.stellar.horizon.next
-import me.rahimklaber.stellar.horizon.operations.OperationResponse
-import kotlin.system.exitProcess
+import me.rahimklaber.stellar.base.xdr.*
 
 
 val testAccountMerge = """
@@ -64,25 +47,41 @@ private val json = Json {
 //    println(json.decodeFromString<TestI>(testAccountMerge))
 //    println(json.decodeFromString<Links2>(links))
 
-    val server = Server("https://horizon.stellar.org")
+//    val server = Server("https://horizon.stellar.org")
+//
+//     var operations = server.operations()
+//         .forAccount("GAAUMMCT5PVLB5SP7FJYDXKZYDFJLXLJ34EXFREMDWOZLKYVE2PNVZWO")
+//         .limit(200)
+//         .callAsync().unwrap()
+//
+//
+//     while (true){
+//
+////         println(operations.records.first())
+//         val res = operations.next(server)
+//         if (res is Err<Throwable>){
+//             res.getError()?.printStackTrace()
+//             println(operations.links)
+//             exitProcess(0)
+//         }
+//         operations = res.unwrap()
+//     }
 
-     var operations = server.operations()
-         .forAccount("GAAUMMCT5PVLB5SP7FJYDXKZYDFJLXLJ34EXFREMDWOZLKYVE2PNVZWO")
-         .limit(200)
-         .callAsync().unwrap()
+     val entry = LedgerEntry.LedgerEntryData(
+         lastModifiedLedgerSeq = 1u,
+         data = DataEntry(
+             AccountID(PublicKey.PublicKeyEd25519(Uint256(ByteArray(32)))),
+             dataName = String64("hello".toByteArray()),
+             dataValue = DataValue("hello".toByteArray()),
+             discriminant = 0
+         ),
+         discriminant = 0,
+         extensionV1 = null
+     )
+     val stream = XdrStream()
+     entry.encode(stream)
 
-
-     while (true){
-
-//         println(operations.records.first())
-         val res = operations.next(server)
-         if (res is Err<Throwable>){
-             res.getError()?.printStackTrace()
-             println(operations.links)
-             exitProcess(0)
-         }
-         operations = res.unwrap()
-     }
+     println(stream.buffer.readByteArray().encodeBase64())
 
 //    val decodedPaymentResponse = json.decodeFromString<OperationResponse>(testAccountMerge)
 //    println(decodedPaymentResponse)

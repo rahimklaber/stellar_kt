@@ -5,9 +5,13 @@ package me.rahimklaber.stellar.base.xdr
 ///////////////////////////////////////////////////////////////////////////
 data class SignatureHint(
     val bytes: ByteArray
-) {
+) : XdrElement{
     init {
-        require(bytes.size <= 4)
+        require(bytes.size == 4)
+    }
+
+    override fun encode(stream: XdrStream) {
+        stream.writeBytes(bytes)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -23,5 +27,11 @@ data class SignatureHint(
 
     override fun hashCode(): Int {
         return bytes.contentHashCode()
+    }
+    companion object : XdrElementDecoder<SignatureHint> {
+        override fun decode(stream: XdrStream): SignatureHint {
+            val bytes = stream.readBytes(4)
+            return SignatureHint(bytes)
+        }
     }
 }
