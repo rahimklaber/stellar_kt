@@ -19,13 +19,13 @@ package me.rahimklaber.stellar.base.xdr
 //};
 ///////////////////////////////////////////////////////////////////////////
 sealed class TrustLineAsset(val assetType: AssetType) : XdrElement{
-    data class AlphaNum4(val alphaNum4: Asset.AlphaNum.AlphaNum4): TrustLineAsset(AssetType.ASSET_TYPE_CREDIT_ALPHANUM4){
+    data class AlphaNum4(val alphaNum4: me.rahimklaber.stellar.base.xdr.AlphaNum4): TrustLineAsset(AssetType.ASSET_TYPE_CREDIT_ALPHANUM4){
         override fun encode(stream: XdrStream) {
             super.encode(stream)
             alphaNum4.encode(stream)
         }
     }
-    data class AlphaNum12(val alphaNum12: Asset.AlphaNum.AlphaNum12) : TrustLineAsset(AssetType.ASSET_TYPE_CREDIT_ALPHANUM12){
+    data class AlphaNum12(val alphaNum12: me.rahimklaber.stellar.base.xdr.AlphaNum12) : TrustLineAsset(AssetType.ASSET_TYPE_CREDIT_ALPHANUM12){
         override fun encode(stream: XdrStream) {
             super.encode(stream)
             alphaNum12.encode(stream)
@@ -46,12 +46,12 @@ sealed class TrustLineAsset(val assetType: AssetType) : XdrElement{
         override fun decode(stream: XdrStream): TrustLineAsset {
             return when(val type = AssetType.decode(stream)){
                 AssetType.ASSET_TYPE_CREDIT_ALPHANUM4 -> {
-                    val asset = Asset.decode(stream)
-                    AlphaNum4(asset as Asset.AlphaNum.AlphaNum4)
+                    val asset = me.rahimklaber.stellar.base.xdr.AlphaNum4.decode(stream)
+                    AlphaNum4(asset)
                 }
                 AssetType.ASSET_TYPE_CREDIT_ALPHANUM12 -> {
-                    val asset = Asset.decode(stream)
-                    AlphaNum12(asset as Asset.AlphaNum.AlphaNum12)
+                    val asset = me.rahimklaber.stellar.base.xdr.AlphaNum12.decode(stream)
+                    AlphaNum12(asset)
                 }
                 AssetType.ASSET_TYPE_POOL_SHARE -> {
                     LiquidityPool(PoolID.decode(stream))

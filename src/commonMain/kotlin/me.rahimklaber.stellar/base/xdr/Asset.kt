@@ -24,26 +24,20 @@ sealed class Asset(
 
     object Native : Asset(AssetType.ASSET_TYPE_NATIVE)
 
-    sealed class AlphaNum(type: AssetType) :
-        Asset(type) {
-        abstract val assetCode: AssetCode
-        abstract val issuer: AccountID
+    sealed class AlphaNum(type: AssetType): Asset(type)
 
+    data class AlphaNum4(val alphaNum4: me.rahimklaber.stellar.base.xdr.AlphaNum4) : Asset(AssetType.ASSET_TYPE_CREDIT_ALPHANUM4){
         override fun encode(stream: XdrStream) {
             super.encode(stream)
-            assetCode.encode(stream)
-            issuer.encode(stream)
+            alphaNum4.encode(stream)
         }
+    }
 
-        data class AlphaNum4(
-            override val assetCode: AssetCode.AssetCode4,
-            override val issuer: AccountID,
-        ) : AlphaNum(AssetType.ASSET_TYPE_CREDIT_ALPHANUM4)
-
-        data class AlphaNum12(
-            override val assetCode: AssetCode.AssetCode12,
-            override val issuer: AccountID,
-        ) : AlphaNum(AssetType.ASSET_TYPE_CREDIT_ALPHANUM12)
+    data class AlphaNum12(val alphaNum12: me.rahimklaber.stellar.base.xdr.AlphaNum12) : Asset(AssetType.ASSET_TYPE_CREDIT_ALPHANUM12){
+        override fun encode(stream: XdrStream) {
+            super.encode(stream)
+            alphaNum12.encode(stream)
+        }
     }
 
     companion object : XdrElementDecoder<Asset>{
@@ -51,14 +45,10 @@ sealed class Asset(
             return when(AssetType.decode(stream)){
                 AssetType.ASSET_TYPE_NATIVE -> Native
                 AssetType.ASSET_TYPE_CREDIT_ALPHANUM4 -> {
-                    val code = AssetCode.AssetCode4.decode(stream)
-                    val issuer = AccountID.decode(stream)
-                    AlphaNum.AlphaNum4(code,issuer)
+                    AlphaNum4(me.rahimklaber.stellar.base.xdr.AlphaNum4.decode(stream))
                 }
                 AssetType.ASSET_TYPE_CREDIT_ALPHANUM12 -> {
-                    val code = AssetCode.AssetCode12.decode(stream)
-                    val issuer = AccountID.decode(stream)
-                    AlphaNum.AlphaNum12(code,issuer)
+                    AlphaNum12(me.rahimklaber.stellar.base.xdr.AlphaNum12.decode(stream))
                 }
                 // TODO: should I handle pool shares?
                 else -> throw IllegalArgumentException("cannot decode bytes as Asset")

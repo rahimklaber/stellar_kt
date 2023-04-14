@@ -66,22 +66,22 @@ private val json = Json {
 //         }
 //         operations = res.unwrap()
 //     }
-
-     val entry = LedgerEntry.LedgerEntryData(
-         lastModifiedLedgerSeq = 1u,
-         data = DataEntry(
-             AccountID(PublicKey.PublicKeyEd25519(Uint256(ByteArray(32)))),
-             dataName = String64("hello".toByteArray()),
-             dataValue = DataValue("hello".toByteArray()),
-             discriminant = 0
-         ),
-         discriminant = 0,
-         extensionV1 = null
-     )
+     val uint256 = Uint256(ByteArray(32))
+    val account = AccountID(PublicKey.PublicKeyEd25519(Uint256(ByteArray(32))))
+     val asset =  Asset.Native
+     val entry = Memo.Text(String32("hi".encodeToByteArray()))
      val stream = XdrStream()
      entry.encode(stream)
 
      println(stream.buffer.readByteArray().encodeBase64())
+
+     val stream2 = XdrStream()
+     val xdrbase64 = "AAAAAQAAAAJoaQAA".decodeBase64Bytes()
+    stream2.writeBytes(xdrbase64)
+
+     val decoded = Memo.decode(stream2)
+
+     println("they are equal ${entry == decoded}")
 
 //    val decodedPaymentResponse = json.decodeFromString<OperationResponse>(testAccountMerge)
 //    println(decodedPaymentResponse)

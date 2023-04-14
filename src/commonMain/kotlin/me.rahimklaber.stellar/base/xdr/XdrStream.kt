@@ -1,10 +1,9 @@
 package me.rahimklaber.stellar.base.xdr
 
 import okio.Buffer
-import okio.BufferedSink
 
 
-interface XdrOutputStream{
+interface IXdrStream{
     //only write the lower 8 bits
 //    fun writeByte(value: Int)
 //    fun writeByte(value: Byte)
@@ -23,7 +22,42 @@ interface XdrOutputStream{
     fun readBytes(length: Int) : ByteArray
 }
 
-class XdrStream : XdrOutputStream{
+fun IXdrStream.readIntNullable(): Int? {
+    return if (readInt() == 1){
+        readInt()
+    }else{
+        null
+    }
+}
+
+fun IXdrStream.readLongNullable(): Long? {
+    return if (readInt() == 1){
+        readLong()
+    }else{
+        null
+    }
+}
+
+fun IXdrStream.writeIntNullable(value: Int?){
+    if(value == null){
+        writeInt(0)
+    }else{
+        writeInt(1)
+        writeInt(value)
+    }
+}
+
+fun IXdrStream.writeLongNullable(value: Long?){
+    if(value == null){
+        writeInt(0)
+    }else{
+        writeInt(1)
+        writeLong(value)
+    }
+}
+
+
+class XdrStream : IXdrStream{
     val buffer = Buffer()
 //    override fun writeByte(value: Int) {
 //        buffer.writeByte(value)

@@ -100,7 +100,7 @@ data class TrustLineExtension(
     override fun encode(stream: XdrStream) {
         liabilities.encode(stream)
         stream.writeInt(discriminant)
-        trustLineExtensionV2.encode(stream)
+        trustLineExtensionV2?.encode(stream)
     }
 
     companion object: XdrElementDecoder<TrustLineExtension>{

@@ -100,7 +100,7 @@ data class AccountEntry(
         stream.writeLong(balance)
         stream.writeLong(sequenceNumber)
         stream.writeInt(numSubEntries.toInt())
-        inflationDest.encode(stream)
+        inflationDest.encodeNullable(stream)
         stream.writeInt(flags.toInt())
         homeDomain.encode(stream)
         thresholds.encode(stream)
