@@ -1,23 +1,6 @@
-import com.github.michaelbull.result.Err
-import com.github.michaelbull.result.getError
-import com.github.michaelbull.result.unwrap
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.descriptors.buildClassSerialDescriptor
-import kotlinx.serialization.encoding.CompositeDecoder
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.encoding.decodeStructure
+import io.ktor.util.*
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonClassDiscriminator
-import me.rahimklaber.stellar.horizon.HrefSerializer
-import me.rahimklaber.stellar.horizon.Page
-import me.rahimklaber.stellar.horizon.next
-import me.rahimklaber.stellar.horizon.operations.OperationResponse
-import kotlin.system.exitProcess
+import me.rahimklaber.stellar.base.xdr.*
 
 
 val testAccountMerge = """
@@ -64,25 +47,41 @@ private val json = Json {
 //    println(json.decodeFromString<TestI>(testAccountMerge))
 //    println(json.decodeFromString<Links2>(links))
 
-    val server = Server("https://horizon.stellar.org")
+//    val server = Server("https://horizon.stellar.org")
+//
+//     var operations = server.operations()
+//         .forAccount("GAAUMMCT5PVLB5SP7FJYDXKZYDFJLXLJ34EXFREMDWOZLKYVE2PNVZWO")
+//         .limit(200)
+//         .callAsync().unwrap()
+//
+//
+//     while (true){
+//
+////         println(operations.records.first())
+//         val res = operations.next(server)
+//         if (res is Err<Throwable>){
+//             res.getError()?.printStackTrace()
+//             println(operations.links)
+//             exitProcess(0)
+//         }
+//         operations = res.unwrap()
+//     }
+     val uint256 = Uint256(ByteArray(32))
+    val account = AccountID(PublicKey.PublicKeyEd25519(Uint256(ByteArray(32))))
+     val asset =  Asset.Native
+     val entry = Memo.Text(String32("hi".encodeToByteArray()))
+     val stream = XdrStream()
+     entry.encode(stream)
 
-     var operations = server.operations()
-         .forAccount("GAAUMMCT5PVLB5SP7FJYDXKZYDFJLXLJ34EXFREMDWOZLKYVE2PNVZWO")
-         .limit(200)
-         .callAsync().unwrap()
+     println(stream.buffer.readByteArray().encodeBase64())
 
+     val stream2 = XdrStream()
+     val xdrbase64 = "AAAAAQAAAAJoaQAA".decodeBase64Bytes()
+    stream2.writeBytes(xdrbase64)
 
-     while (true){
+     val decoded = Memo.decode(stream2)
 
-//         println(operations.records.first())
-         val res = operations.next(server)
-         if (res is Err<Throwable>){
-             res.getError()?.printStackTrace()
-             println(operations.links)
-             exitProcess(0)
-         }
-         operations = res.unwrap()
-     }
+     println("they are equal ${entry == decoded}")
 
 //    val decodedPaymentResponse = json.decodeFromString<OperationResponse>(testAccountMerge)
 //    println(decodedPaymentResponse)

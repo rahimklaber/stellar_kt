@@ -1,7 +1,6 @@
 plugins {
     kotlin("multiplatform") version "1.7.22"
     kotlin("plugin.serialization") version "1.7.20"
-
 }
 
 group = "me.rahim"
@@ -11,7 +10,7 @@ repositories {
     mavenCentral()
 }
 val ktor_version = "2.2.1"
-
+val okioVersion = "3.2.0"
 kotlin {
     jvm {
         compilations.all {
@@ -48,6 +47,7 @@ kotlin {
                 implementation("com.michael-bull.kotlin-result:kotlin-result:1.1.13")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
 
+                implementation("com.squareup.okio:okio:$okioVersion")
             }
         }
         val commonTest by getting {
