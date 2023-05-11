@@ -1,6 +1,11 @@
+import com.ionspin.kotlin.crypto.signature.Signature
 import io.ktor.util.*
 import kotlinx.serialization.json.Json
-import me.rahimklaber.stellar.base.xdr.*
+import me.rahimklaber.stellar.base.*
+import me.rahimklaber.stellar.base.operations.Operation
+import me.rahimklaber.stellar.base.operations.Payment
+import me.rahimklaber.stellar.base.xdr.XdrStream
+import kotlin.random.Random
 
 
 val testAccountMerge = """
@@ -37,12 +42,11 @@ val testAccountMerge = """
 """.trimIndent()
 
 
-
 private val json = Json {
     ignoreUnknownKeys = true
 }
 
- suspend fun main() {
+suspend fun main() {
 
 //    println(json.decodeFromString<TestI>(testAccountMerge))
 //    println(json.decodeFromString<Links2>(links))
@@ -65,39 +69,44 @@ private val json = Json {
 //             exitProcess(0)
 //         }
 //         operations = res.unwrap()
-//     }
-     val uint256 = Uint256(ByteArray(32))
-    val account = AccountID(PublicKey.PublicKeyEd25519(Uint256(ByteArray(32))))
-     val asset =  Asset.Native
-     val entry = Memo.Text(String32("hi".encodeToByteArray()))
-     val stream = XdrStream()
-     entry.encode(stream)
 
-     println(stream.buffer.readByteArray().encodeBase64())
+    KeyPair.random()
+    val kp = Signature.keypair()
+//     Signature.init()
+    val msg = Random.nextBytes(32).toUByteArray()
+    val signature = Signature.sign(msg, kp.secretKey)
 
-     val stream2 = XdrStream()
-     val xdrbase64 = "AAAAAQAAAAJoaQAA".decodeBase64Bytes()
-    stream2.writeBytes(xdrbase64)
+    val account = "GAPXFBCUZVX4YJ6D5JDUSAVHPZVAX4PPDM3V7HE5YH4Z7PSACDNYEXOS"
+    val keypair = KeyPair.fromSecretSeed("SDCIQUQKNIIDWSX4E46GQCO7ZR6PC4X7EA7D2LRQYMIFSZ6BGZV4I3YN")
+    println(keypair.accountId)
+    val stream = XdrStream()
 
-     val decoded = Memo.decode(stream2)
+    val transaction = Transaction(
+        sourceAccount = account,
+        fee = 1000u,
+        sequenceNumber = 3327611811921923,
+        preconditions = Preconditions.None,
+        memo = Memo.None,
+        operations = listOf(
+            Payment(
+                destination = account,
+                asset = Asset.Native,
+                amount = 1_000_000_0,
+            )
+        ),
+        network = Network.TESTNET
 
-     println("they are equal ${entry == decoded}")
+    )
+    transaction.sign(keypair)
 
-//    val decodedPaymentResponse = json.decodeFromString<OperationResponse>(testAccountMerge)
-//    println(decodedPaymentResponse)
+    transaction.toEnvelopeXdr().encode(stream)
+    val xdr = stream.buffer.snapshot().toByteArray().encodeBase64()
+    println(xdr)
+//     println("privkey: ${kp.secretKey.toHexString()}")
+//     println("pubkey: ${kp.publicKey.toHexString()}")
+//     println("msg: ${msg.toHexString()}")
+//     println("signature: ${signature/*.take(64).toUByteArray()*/.toHexString()}")
+//     println("signature: ${signature.size}")
 
-//    val res =
-//        server.accounts().forSigner("GBMKMDDKDTFAUFEW6AUTD2GHF6YBBLEOVYYLNFMZA5I5UGCI3TUC74HY")
-//            .callAsync().get()
-//
-//    println(res)
-//    val response = server.transactions()
-//        .limit(1)
-//        .order(Order.DESC)
-//        .forLiquidityPool("586137aefc278a84c021895076d93342b7b1d61ee6b5e8ef87f50273412ace9a")
-//    println(when(response){
-//        is Ok -> response.value
-//        is Err -> response.error
-//    })
 
 }

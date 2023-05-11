@@ -8,9 +8,11 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    maven("https://jitpack.io")
 }
 val ktor_version = "2.2.1"
 val okioVersion = "3.2.0"
+var encoding = "1.2.1"
 kotlin {
     jvm {
         compilations.all {
@@ -48,6 +50,9 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
 
                 implementation("com.squareup.okio:okio:$okioVersion")
+                implementation("com.ionspin.kotlin:multiplatform-crypto-libsodium-bindings:0.8.9")
+                implementation("io.matthewnelson.kotlin-components:encoding-base32:$encoding")
+
             }
         }
         val commonTest by getting {

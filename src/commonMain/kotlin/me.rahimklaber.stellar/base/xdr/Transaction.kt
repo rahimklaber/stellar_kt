@@ -42,7 +42,7 @@ data class Transaction(
     val cond: Preconditions,
     val memo: Memo,
     val operations: List<Operation>,
-    private val discriminant: Int
+    private val discriminant: Int = 0
 ) : XdrElement {
     override fun encode(stream: XdrStream) {
         sourceAccount.encode(stream)
