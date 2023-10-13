@@ -20,6 +20,7 @@ interface IXdrStream{
     fun readByte(): Byte
 
     fun readBytes(length: Int) : ByteArray
+    fun readAllBytes() : ByteArray
 }
 
 fun IXdrStream.readIntNullable(): Int? {
@@ -102,6 +103,10 @@ class XdrStream : IXdrStream{
         val padAmount = (4 -( length % 4)) % 4
         readPad(padAmount)
         return byteBuffer
+    }
+
+    override fun readAllBytes(): ByteArray {
+        return buffer.readByteArray()
     }
 
     private fun pad(amount: Int){

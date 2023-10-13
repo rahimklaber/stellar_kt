@@ -1,6 +1,6 @@
 plugins {
-    kotlin("multiplatform") version "1.7.22"
-    kotlin("plugin.serialization") version "1.7.20"
+    kotlin("multiplatform") version "1.8.21"
+    kotlin("plugin.serialization") version "1.8.21"
 }
 
 group = "me.rahim"
@@ -8,9 +8,11 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    maven("https://jitpack.io")
 }
-val ktor_version = "2.2.1"
+val ktor_version = "2.3.0"
 val okioVersion = "3.2.0"
+var encoding = "1.2.1"
 kotlin {
     jvm {
         compilations.all {
@@ -20,11 +22,11 @@ kotlin {
             useJUnit()
         }
     }
-    js(LEGACY) {
+    js(IR) {
         browser {
-            commonWebpackConfig {
-                cssSupport.enabled = true
-            }
+//            commonWebpackConfig {
+//                cssSupport.enabled = true
+//            }
         }
         nodejs()
     }
@@ -45,14 +47,19 @@ kotlin {
                 implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
                 implementation("com.michael-bull.kotlin-result:kotlin-result:1.1.13")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
 
                 implementation("com.squareup.okio:okio:$okioVersion")
+                implementation("com.ionspin.kotlin:multiplatform-crypto-libsodium-bindings:0.8.9")
+                implementation("io.matthewnelson.kotlin-components:encoding-base16:$encoding")
+                implementation("io.matthewnelson.kotlin-components:encoding-base32:$encoding")
+
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
             }
         }
         val jvmMain by getting{
@@ -61,7 +68,11 @@ kotlin {
             }
         }
         val jvmTest by getting
-        val jsMain by getting
+        val jsMain by getting{
+            dependencies{
+                implementation("io.ktor:ktor-client-js:$ktor_version")
+            }
+        }
         val jsTest by getting
         val nativeMain by getting
         val nativeTest by getting
