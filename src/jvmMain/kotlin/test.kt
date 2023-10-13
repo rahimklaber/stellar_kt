@@ -1,7 +1,9 @@
 import com.ionspin.kotlin.crypto.signature.Signature
 import io.ktor.util.*
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import me.rahimklaber.stellar.base.*
+import me.rahimklaber.stellar.base.operations.CreateAccount
 import me.rahimklaber.stellar.base.operations.Operation
 import me.rahimklaber.stellar.base.operations.Payment
 import me.rahimklaber.stellar.base.xdr.XdrStream
@@ -47,7 +49,6 @@ private val json = Json {
 }
 
 suspend fun main() {
-
 //    println(json.decodeFromString<TestI>(testAccountMerge))
 //    println(json.decodeFromString<Links2>(links))
 
@@ -84,14 +85,13 @@ suspend fun main() {
     val transaction = Transaction(
         sourceAccount = account,
         fee = 1000u,
-        sequenceNumber = 3327611811921923,
+        sequenceNumber = 3327611811921924,
         preconditions = Preconditions.None,
         memo = Memo.None,
         operations = listOf(
-            Payment(
-                destination = account,
-                asset = Asset.Native,
-                amount = 1_000_000_0,
+            CreateAccount(
+                destination = "GACFUVM3XTBUWPRPQXXD2CLSLTKBWLWO37P5JIRMJHYSXJU6UM5GWZ6Q",
+                startingBalance = tokenAmount(1_000_000_0),
             )
         ),
         network = Network.TESTNET

@@ -8,6 +8,7 @@ import me.rahimklaber.stellar.base.xdr.PaymentOp
 import me.rahimklaber.stellar.base.xdr.toUint256
 
 sealed interface Operation {
+    val sourceAccount: String?
     fun toXdr(): me.rahimklaber.stellar.base.xdr.Operation
 
 

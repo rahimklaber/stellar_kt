@@ -2,31 +2,29 @@ package me.rahimklaber.stellar.base.operations
 
 import me.rahimklaber.stellar.base.Asset
 import me.rahimklaber.stellar.base.StrKey
-import me.rahimklaber.stellar.base.decodeAccountId
+import me.rahimklaber.stellar.base.encodeToAccountIDXDR
 import me.rahimklaber.stellar.base.encodeToMuxedAccountXDR
-import me.rahimklaber.stellar.base.xdr.MuxedAccount
-import me.rahimklaber.stellar.base.xdr.PaymentOp
-import me.rahimklaber.stellar.base.xdr.toUint256
+import me.rahimklaber.stellar.base.xdr.SetTrustLineFlagsOp
 
-data class Payment(
+data class SetTrustLineFlags(
     override val sourceAccount: String? = null,
-    val destination: String,
+    val trustor: String,
     val asset: Asset,
-    val amount: Long,
-) : Operation {
-
+    val clearFlags: UInt, //TrustLineFlags
+    val setFlags: UInt, //TrustLineFlags
+): Operation {
     override fun toXdr(): me.rahimklaber.stellar.base.xdr.Operation {
         val source = sourceAccount?.let {
             StrKey.encodeToMuxedAccountXDR(it)
         }
-        return me.rahimklaber.stellar.base.xdr.Operation.Payment(
+        return me.rahimklaber.stellar.base.xdr.Operation.SetTrustlineFlags(
             sourceAccount = source,
-            PaymentOp(
-                destination = StrKey.encodeToMuxedAccountXDR(destination),
+            SetTrustLineFlagsOp(
+                trustor = StrKey.encodeToAccountIDXDR(trustor),
                 asset = asset.toXdr(),
-                amount = amount
+                clearFlags = clearFlags,
+                setFlags = setFlags
             )
         )
-
     }
 }

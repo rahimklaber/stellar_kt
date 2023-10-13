@@ -3,6 +3,8 @@ package me.rahimklaber.stellar.base
 import io.matthewnelson.encoding.builders.Base32Default
 import io.matthewnelson.encoding.core.Decoder.Companion.decodeToByteArray
 import io.matthewnelson.encoding.core.Encoder.Companion.encodeToCharArray
+import me.rahimklaber.stellar.base.xdr.*
+import me.rahimklaber.stellar.base.xdr.MuxedAccount
 import okio.Buffer
 
 //This file was ported from the java sdk
@@ -52,8 +54,37 @@ private val base32Encoding = Base32Default {
 }
 //doing it like this to add some context
 object StrKey
+
+fun StrKey.encodeToAccountIDXDR(account: String) : AccountID {
+    return AccountID(PublicKey.PublicKeyEd25519(decodeAccountId(account).toUint256()))
+}
+
+/**
+ * Encode either a AccountId or MuxedAccountId to an XDR object
+ */
+fun StrKey.encodeToMuxedAccountXDR(account: String): MuxedAccount {
+
+    return when(decodeVersionByte(account)){
+        VersionByte.ACCOUNT_ID -> MuxedAccount.Ed25519(decodeAccountId(account).toUint256())
+        VersionByte.MUXED -> {
+            val stream = XdrStream()
+
+            stream.writeBytes(decodeMuxedAccountId(account))
+
+            val muxedAccount = MuxedAccount.decode(stream)
+            require(muxedAccount is MuxedAccount.MuxedEd25519){"should be muxed"}
+            muxedAccount
+        }
+        else -> throw IllegalArgumentException("could not decode $account as MuxedAccountXDR")
+
+    }
+}
 fun StrKey.decodeAccountId(account: String) : ByteArray{
     return decodeCheck(VersionByte.ACCOUNT_ID, account.toCharArray())
+}
+
+fun StrKey.decodeMuxedAccountId(account: String) : ByteArray{
+    return decodeCheck(VersionByte.MUXED, account.toCharArray())
 }
 
 fun StrKey.decodeSecretSeed(secretSeed: String): ByteArray{
@@ -63,6 +94,13 @@ fun StrKey.decodeSecretSeed(secretSeed: String): ByteArray{
 fun StrKey.encodeAccountId(pubkey: ByteArray): String {
     return encodeCheck(VersionByte.ACCOUNT_ID, pubkey)
 }
+
+fun StrKey.decodeVersionByte(data: String): VersionByte? {
+    val byte = data.decodeToByteArray(base32Encoding)[0]
+
+    return VersionByte.findByValue(byte)
+}
+
 fun StrKey.decodeCheck(versionByte: VersionByte, encoded: CharArray): ByteArray {
     val bytes = ByteArray(encoded.size)
     for (i in encoded.indices) {
