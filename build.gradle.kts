@@ -1,6 +1,6 @@
 plugins {
-    kotlin("multiplatform") version "1.8.21"
-    kotlin("plugin.serialization") version "1.8.21"
+    kotlin("multiplatform") version "1.9.10"
+    kotlin("plugin.serialization") version "1.9.10"
 }
 
 group = "me.rahim"
@@ -47,7 +47,7 @@ kotlin {
                 implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
                 implementation("com.michael-bull.kotlin-result:kotlin-result:1.1.13")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
                 implementation("com.squareup.okio:okio:$okioVersion")
                 implementation("com.ionspin.kotlin:multiplatform-crypto-libsodium-bindings:0.8.9")
