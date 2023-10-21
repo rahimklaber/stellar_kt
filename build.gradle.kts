@@ -1,6 +1,7 @@
 plugins {
     kotlin("multiplatform") version "1.9.10"
     kotlin("plugin.serialization") version "1.9.10"
+    `maven-publish`
 }
 
 group = "me.rahim"
@@ -10,8 +11,8 @@ repositories {
     mavenCentral()
     maven("https://jitpack.io")
 }
-val ktor_version = "2.3.0"
-val okioVersion = "3.2.0"
+val ktor_version = "2.3.5"
+val okioVersion = "3.6.0"
 var encoding = "1.2.1"
 kotlin {
     jvm {
@@ -39,10 +40,12 @@ kotlin {
         else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
     }
 
-    
+
     sourceSets {
         val commonMain by getting {
-            dependencies{
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+
                 implementation("io.ktor:ktor-client-core:$ktor_version")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
@@ -62,19 +65,23 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
             }
         }
-        val jvmMain by getting{
-            dependencies{
+        val jvmMain by getting {
+            dependencies {
                 implementation("io.ktor:ktor-client-cio-jvm:$ktor_version")
             }
         }
         val jvmTest by getting
-        val jsMain by getting{
-            dependencies{
+        val jsMain by getting {
+            dependencies {
                 implementation("io.ktor:ktor-client-js:$ktor_version")
             }
         }
         val jsTest by getting
-        val nativeMain by getting
+        val nativeMain by getting{
+            dependencies {
+                implementation("io.ktor:ktor-client-winhttp:$ktor_version")
+            }
+        }
         val nativeTest by getting
     }
 }
