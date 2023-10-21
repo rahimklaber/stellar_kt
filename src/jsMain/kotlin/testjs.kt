@@ -1,4 +1,5 @@
 import com.github.michaelbull.result.unwrap
+import me.rahimklaber.stellar.horizon.Server
 
 suspend fun main() {
     val server = Server("https://horizon.stellar.org")

@@ -14,6 +14,7 @@ import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.encoding.decodeStructure
+import me.rahimklaber.stellar.base.Account
 import me.rahimklaber.stellar.base.Asset
 
 
@@ -131,6 +132,10 @@ data class AccountResponse(
         val trades: String,
         val data: String
     )
+}
+
+fun AccountResponse.toAccount(): Account {
+    return Account(accountId, sequence)
 }
 
 class AccountLinksSerializer : KSerializer<AccountResponse.Links> {

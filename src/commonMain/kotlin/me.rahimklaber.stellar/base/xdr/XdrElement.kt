@@ -1,5 +1,9 @@
 package me.rahimklaber.stellar.base.xdr
 
+import io.matthewnelson.encoding.core.Encoder.Companion.encodeToString
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
+
 interface XdrElement {
     fun encode(stream: XdrStream)
 }
@@ -35,4 +39,12 @@ fun <T: XdrElement> XdrElementDecoder<T>.decodeNullable(stream: XdrStream) : T? 
     }else{
         null
     }
+}
+
+@OptIn(ExperimentalEncodingApi::class)
+fun XdrElement.toXdrString(): String {
+    val stream = XdrStream()
+    this.encode(stream)
+
+   return Base64.encode(stream.readAllBytes())
 }

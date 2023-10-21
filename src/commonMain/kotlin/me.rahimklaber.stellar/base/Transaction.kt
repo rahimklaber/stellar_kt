@@ -33,7 +33,7 @@ class Transaction(
     val network: Network
 ){
     private val _signatures: MutableList<DecoratedSignature> = mutableListOf()
-    val signature: List<DecoratedSignature>
+    val signatures: List<DecoratedSignature>
         get() = _signatures
     fun toV1Xdr(): Transaction {
         return Transaction(

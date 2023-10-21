@@ -1,6 +1,5 @@
 package me.rahimklaber.stellar.horizon
 
-import Server
 import com.github.michaelbull.result.runCatching
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -78,6 +77,7 @@ object HrefSerializer : KSerializer<String> {
     @Serializable
     data class HrefObj(
         val href: String,
+        val templated: Boolean? = null,
     )
 
     override val descriptor: SerialDescriptor = HrefObj.serializer().descriptor

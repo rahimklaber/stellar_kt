@@ -1,12 +1,10 @@
+import com.github.michaelbull.result.orElseThrow
 import com.ionspin.kotlin.crypto.signature.Signature
-import io.ktor.util.*
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import me.rahimklaber.stellar.base.*
-import me.rahimklaber.stellar.base.operations.CreateAccount
-import me.rahimklaber.stellar.base.operations.Operation
 import me.rahimklaber.stellar.base.operations.Payment
-import me.rahimklaber.stellar.base.xdr.XdrStream
+import me.rahimklaber.stellar.horizon.Server
+import me.rahimklaber.stellar.horizon.toAccount
 import kotlin.random.Random
 
 
@@ -52,7 +50,7 @@ suspend fun main() {
 //    println(json.decodeFromString<TestI>(testAccountMerge))
 //    println(json.decodeFromString<Links2>(links))
 
-//    val server = Server("https://horizon.stellar.org")
+    val server = Server("https://horizon-testnet.stellar.org")
 //
 //     var operations = server.operations()
 //         .forAccount("GAAUMMCT5PVLB5SP7FJYDXKZYDFJLXLJ34EXFREMDWOZLKYVE2PNVZWO")
@@ -80,33 +78,36 @@ suspend fun main() {
     val account = "GAPXFBCUZVX4YJ6D5JDUSAVHPZVAX4PPDM3V7HE5YH4Z7PSACDNYEXOS"
     val keypair = KeyPair.fromSecretSeed("SDCIQUQKNIIDWSX4E46GQCO7ZR6PC4X7EA7D2LRQYMIFSZ6BGZV4I3YN")
     println(keypair.accountId)
-    val stream = XdrStream()
 
-    val transaction = Transaction(
-        sourceAccount = account,
-        fee = 1000u,
-        sequenceNumber = 3327611811921924,
-        preconditions = Preconditions.None,
-        memo = Memo.None,
-        operations = listOf(
-            CreateAccount(
-                destination = "GACFUVM3XTBUWPRPQXXD2CLSLTKBWLWO37P5JIRMJHYSXJU6UM5GWZ6Q",
-                startingBalance = tokenAmount(1_000_000_0),
+//    val transaction = Transaction(
+//        sourceAccount = account,
+//        fee = 1000u,
+//        sequenceNumber = server.accounts().account(account).orElseThrow().value.sequence + 1,
+//        preconditions = Preconditions.None,
+//        memo = Memo.None,
+//        operations = listOf(
+//            Payment(
+//                destination = "GAPXFBCUZVX4YJ6D5JDUSAVHPZVAX4PPDM3V7HE5YH4Z7PSACDNYEXOS",
+//                amount = tokenAmount(1_000_000_0),
+//                asset = Asset.Native
+//            )
+//        ),
+//        network = Network.TESTNET
+//
+//    )
+
+    val source = server.accounts().account(account).orElseThrow().value.toAccount()
+    val transaction = transactionBuilder(source, Network.TESTNET) {
+        addOperation(
+            Payment(
+                destination = source.accountId,
+                amount = tokenAmount(1_000_000_0),
+                asset = Asset.Native
             )
-        ),
-        network = Network.TESTNET
+        )
+    }
 
-    )
     transaction.sign(keypair)
 
-    transaction.toEnvelopeXdr().encode(stream)
-    val xdr = stream.buffer.snapshot().toByteArray().encodeBase64()
-    println(xdr)
-//     println("privkey: ${kp.secretKey.toHexString()}")
-//     println("pubkey: ${kp.publicKey.toHexString()}")
-//     println("msg: ${msg.toHexString()}")
-//     println("signature: ${signature/*.take(64).toUByteArray()*/.toHexString()}")
-//     println("signature: ${signature.size}")
-
-
+    println(server.submitTransaction(transaction))
 }

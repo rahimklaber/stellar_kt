@@ -1,9 +1,7 @@
 import com.github.michaelbull.result.unwrap
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import me.rahimklaber.stellar.horizon.Order
-import me.rahimklaber.stellar.horizon.operations.OperationResponse
+import me.rahimklaber.stellar.horizon.Server
 import me.rahimklaber.stellar.horizon.operations.PaymentResponse
 import kotlin.test.Test
 
