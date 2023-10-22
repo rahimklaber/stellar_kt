@@ -1,6 +1,7 @@
 package me.rahimklaber.stellar.horizon
 
 import io.ktor.client.*
+import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
@@ -28,12 +29,12 @@ class Server(val horizonUrl: String) {
     fun transactions() = TransactionRequestBuilder(client, horizonUrl)
     fun operations() = OperationsRequestBuilder(client, horizonUrl)
 
-    suspend fun submitTransaction(transaction: Transaction): String/*: SubmitTransactionResponse*/ {
+    suspend fun submitTransaction(transaction: Transaction): SubmitTransactionResponse {
         val transactionXdr = transaction.toEnvelopeXdr().toXdrString()
         return submitTransactionXdr(transactionXdr)
     }
 
-    suspend fun submitTransactionXdr(xdr: String): String/*: SubmitTransactionResponse*/ {
+    suspend fun submitTransactionXdr(xdr: String): SubmitTransactionResponse {
         val url = URLBuilder(horizonUrl)
         url.path("/transactions")
 
@@ -46,7 +47,7 @@ class Server(val horizonUrl: String) {
                         }
                     )
                 )
-            }.bodyAsText()
+            }.body()
     }
 
 }
