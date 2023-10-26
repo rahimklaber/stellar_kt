@@ -10,7 +10,6 @@ import io.ktor.utils.io.*
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.json.Json
 import me.rahimklaber.stellar.base.Asset
-import me.rahimklaber.stellar.horizon.operations.OperationResponse
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.collections.set
@@ -22,7 +21,7 @@ typealias RequestResult<T> = Result<T, Throwable>
  */
 class InvalidRequest(message: String) : Exception(message)
 
-abstract class RequestBuilder<T: Response>(
+abstract class RequestBuilder<T : Response>(
     protected val client: HttpClient, horizonUrlString: String,
     protected val urlExtension: String,
     protected val json: Json = Json { ignoreUnknownKeys = true }
@@ -56,16 +55,16 @@ abstract class RequestBuilder<T: Response>(
         return parameters
     }
 
-    protected fun buildUrl(extension : String = urlExtension): Url {
+    protected fun buildUrl(extension: String = urlExtension): Url {
         val cloned = urlBuilder.clone()
         queryParamsToParameters().forEach(cloned.parameters::appendAll)
-         return cloned
+        return cloned
             .appendPathSegments(extension, *path.toTypedArray())
-             .build()
+            .build()
     }
 
-    protected suspend inline fun <reified T: Response>  inlineStream() = flow {
-        var bodyChannel = `access$client`.get(`access$buildUrl`()) {
+    protected suspend inline fun <reified T : Response> inlineStream() = flow {
+        var bodyChannel = accessxclient.get(accessxbuildUrl()) {
             header("Accept", ContentType.Text.EventStream)
 
         }.bodyAsChannel()
@@ -76,23 +75,25 @@ abstract class RequestBuilder<T: Response>(
             bodyChannel.awaitContent()
             val line = bodyChannel.readUTF8Line() ?: error("expected a line")
 
-            when{
+            when {
                 line.startsWith("event") -> {
-                    if (line.startsWith("event: close")){
+                    if (line.startsWith("event: close")) {
                         cursor(latestCursor.toString())
-                        bodyChannel = `access$client`.get(`access$buildUrl`()) {
+                        bodyChannel = accessxclient.get(accessxbuildUrl()) {
                             header("Accept", ContentType.Text.EventStream)
 
                         }.bodyAsChannel()
                     }
                 }
+
                 line.startsWith("id") -> {}
                 // length check to filter out "data: hello"
                 line.startsWith("data") && line.length > 20 -> {
-                    val data = `access$json`.decodeFromString<T>(line.drop(6))
+                    val data = accessxjson.decodeFromString<T>(line.drop(6))
                     latestCursor = data.pagingToken
                     emit(data)
                 }
+
                 else -> {
                     //todo add logging and log that we are ignoring the input
                 }
@@ -125,19 +126,19 @@ abstract class RequestBuilder<T: Response>(
      * defines the order of the response.
      */
     open fun order(order: Order): RequestBuilder<T> {
-        addQueryParam("order",order.value)
+        addQueryParam("order", order.value)
         return this
     }
 
     @PublishedApi
-    internal val `access$client`: HttpClient
+    internal val accessxclient: HttpClient
         get() = client
 
     @PublishedApi
-    internal fun `access$buildUrl`(extension: String = urlExtension) = buildUrl(extension)
+    internal fun accessxbuildUrl(extension: String = urlExtension) = buildUrl(extension)
 
     @PublishedApi
-    internal val `access$json`: Json
+    internal val accessxjson: Json
         get() = json
 
 
