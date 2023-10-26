@@ -1,7 +1,6 @@
 package me.rahimklaber.stellar.horizon
 
 import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 //TODO need to check which fields are optional.

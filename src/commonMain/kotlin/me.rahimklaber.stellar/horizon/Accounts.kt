@@ -98,11 +98,13 @@ class AccountRequestBuilder(client: HttpClient, horizonUrl: String) :
 
 @Serializable
 data class AccountResponse(
-    val id: String,
+    override val id: String,
     @SerialName("_links")
     val links: Links,
     @SerialName("account_id")
     val accountId: String,
+    @SerialName("paging_token")
+    override val pagingToken: String,
     val sequence: Long,
     @SerialName("subentry_count")
     val subentryCount: Long,
@@ -119,8 +121,8 @@ data class AccountResponse(
     val flags: Flags,
     val balances: Array<Balance>,
     val signers: Array<Signer>,
-    val data: Map<String, String>
-) {
+    val data: Map<String, String>,
+): Response {
     @Serializable(with = AccountLinksSerializer::class)
     data class Links(
         val self: String,

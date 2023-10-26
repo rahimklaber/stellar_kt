@@ -1,9 +1,13 @@
 import com.github.michaelbull.result.orElseThrow
 import com.ionspin.kotlin.crypto.signature.Signature
+import io.ktor.utils.io.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
 import kotlinx.serialization.json.Json
 import me.rahimklaber.stellar.base.*
 import me.rahimklaber.stellar.base.operations.Payment
 import me.rahimklaber.stellar.horizon.Server
+import me.rahimklaber.stellar.horizon.TransactionResponse
 import me.rahimklaber.stellar.horizon.toAccount
 import kotlin.random.Random
 
@@ -109,5 +113,19 @@ suspend fun main() {
 
     transaction.sign(keypair)
 
-    println(server.submitTransaction(transaction))
+    server
+        .transactions()
+        .stream()
+        .collect{
+            println("""
+                ledger: ${it.ledger}
+                ledger: ${it.hash}
+                pagingToken: ${it.pagingToken}
+            """.trimIndent())
+        }
+
+//
+//    println(
+//        server.submitTransaction(transaction)
+//    )
 }

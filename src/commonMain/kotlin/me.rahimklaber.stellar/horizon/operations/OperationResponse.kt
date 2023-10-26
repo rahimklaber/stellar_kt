@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Serializer
 import kotlinx.serialization.json.JsonClassDiscriminator
 import me.rahimklaber.stellar.horizon.HrefSerializer
+import me.rahimklaber.stellar.horizon.Response
 
 /**
  * I am currently abusing the polymorphic serialization of kotlinx.serialization.
@@ -15,10 +16,10 @@ import me.rahimklaber.stellar.horizon.HrefSerializer
  */
 @JsonClassDiscriminator("type")
 @Serializable
-sealed interface OperationResponse{
+sealed interface OperationResponse : Response{
     val links : Links
-    val id : String //long?
-    val pagingToken : String
+    override val id : String //long?
+    override val pagingToken : String
     val transactionHash : String
     val transactionSuccessful : Boolean
     val sourceAccount : String
