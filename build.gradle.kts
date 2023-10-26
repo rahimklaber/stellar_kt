@@ -24,7 +24,9 @@ kotlin {
         }
     }
     js(IR) {
+        binaries.library()
         browser {
+
 //            commonWebpackConfig {
 //                cssSupport.enabled = true
 //            }
