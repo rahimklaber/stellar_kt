@@ -4,32 +4,39 @@ import me.rahimklaber.stellar.base.Asset
 import me.rahimklaber.stellar.base.StrKey
 import me.rahimklaber.stellar.base.TokenAmount
 import me.rahimklaber.stellar.base.encodeToMuxedAccountXDR
-import me.rahimklaber.stellar.base.xdr.*
+import me.rahimklaber.stellar.base.xdr.ChangeTrustOp
+import me.rahimklaber.stellar.base.xdr.LiquidityPoolConstantProductParameters
+import me.rahimklaber.stellar.base.xdr.LiquidityPoolParameters
 
-sealed class ChangeTrustAsset{
-    data class AlphaNum(val asset: Asset.CreditAlphaNum): ChangeTrustAsset() {
+sealed class ChangeTrustAsset {
+    data class AlphaNum(val asset: Asset.AlphaNum) : ChangeTrustAsset() {
         override fun toXdr(): me.rahimklaber.stellar.base.xdr.ChangeTrustAsset {
-            return when(asset){
-                is Asset.CreditAlphaNum4 -> {
-                    val alphaNum4 = (asset.toXdr() as me.rahimklaber.stellar.base.xdr.Asset.AlphaNum4).alphaNum4
+            return when (val assetXdr = asset.toXdr()) {
+                is me.rahimklaber.stellar.base.xdr.Asset.AlphaNum4 -> {
                     me.rahimklaber.stellar.base.xdr.ChangeTrustAsset.AlphaNum4(
-                            alphaNum4
+                        (assetXdr.alphaNum4)
                     )
                 }
-                is Asset.CreditAlphaNum12 -> {
-                    val alphaNum12= (asset.toXdr() as me.rahimklaber.stellar.base.xdr.Asset.AlphaNum12).alphaNum12
+
+                is me.rahimklaber.stellar.base.xdr.Asset.AlphaNum12 -> {
                     me.rahimklaber.stellar.base.xdr.ChangeTrustAsset.AlphaNum12(
-                        alphaNum12
+                        assetXdr.alphaNum12
                     )
                 }
             }
         }
     }
 
-    data class LiquidityPoolConstantProduct(val assetA: Asset, val assetB: Asset, val fee : Int) : ChangeTrustAsset() {
+    data class LiquidityPoolConstantProduct(val assetA: Asset, val assetB: Asset, val fee: Int) : ChangeTrustAsset() {
         override fun toXdr(): me.rahimklaber.stellar.base.xdr.ChangeTrustAsset {
             return me.rahimklaber.stellar.base.xdr.ChangeTrustAsset.PoolShare(
-               LiquidityPoolParameters.ConstantProduct( LiquidityPoolConstantProductParameters(assetA.toXdr(), assetB.toXdr(), fee))
+                LiquidityPoolParameters.ConstantProduct(
+                    LiquidityPoolConstantProductParameters(
+                        assetA.toXdr(),
+                        assetB.toXdr(),
+                        fee
+                    )
+                )
             )
         }
 
@@ -37,6 +44,7 @@ sealed class ChangeTrustAsset{
 
     abstract fun toXdr(): me.rahimklaber.stellar.base.xdr.ChangeTrustAsset
 }
+
 data class ChangeTrust(
     override val sourceAccount: String? = null,
     val line: ChangeTrustAsset,

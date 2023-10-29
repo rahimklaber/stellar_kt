@@ -7,7 +7,7 @@ suspend fun main() {
      val operations = server.operations()
          .forAccount("GAAUMMCT5PVLB5SP7FJYDXKZYDFJLXLJ34EXFREMDWOZLKYVE2PNVZWO")
          .limit(200)
-         .callAsync().unwrap()
+         .call().unwrap()
     operations.records.forEach {
         println(it)
     }

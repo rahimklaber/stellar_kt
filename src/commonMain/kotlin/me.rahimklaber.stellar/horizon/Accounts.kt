@@ -83,7 +83,7 @@ class AccountRequestBuilder(client: HttpClient, horizonUrl: String) :
     }
 
 
-    override suspend fun callAsync(): RequestResult<Page<AccountResponse>> {
+    override suspend fun call(): RequestResult<Page<AccountResponse>> {
         return runCatching {
             client.get(buildUrl()).body()
         }

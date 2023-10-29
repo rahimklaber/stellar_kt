@@ -22,18 +22,18 @@ sealed class Asset(
         type.encode(stream)
     }
 
-    object Native : Asset(AssetType.ASSET_TYPE_NATIVE)
+    data object Native : Asset(AssetType.ASSET_TYPE_NATIVE)
 
     sealed class AlphaNum(type: AssetType): Asset(type)
 
-    data class AlphaNum4(val alphaNum4: me.rahimklaber.stellar.base.xdr.AlphaNum4) : Asset(AssetType.ASSET_TYPE_CREDIT_ALPHANUM4){
+    data class AlphaNum4(val alphaNum4: me.rahimklaber.stellar.base.xdr.AlphaNum4) : AlphaNum(AssetType.ASSET_TYPE_CREDIT_ALPHANUM4){
         override fun encode(stream: XdrStream) {
             super.encode(stream)
             alphaNum4.encode(stream)
         }
     }
 
-    data class AlphaNum12(val alphaNum12: me.rahimklaber.stellar.base.xdr.AlphaNum12) : Asset(AssetType.ASSET_TYPE_CREDIT_ALPHANUM12){
+    data class AlphaNum12(val alphaNum12: me.rahimklaber.stellar.base.xdr.AlphaNum12) : AlphaNum(AssetType.ASSET_TYPE_CREDIT_ALPHANUM12){
         override fun encode(stream: XdrStream) {
             super.encode(stream)
             alphaNum12.encode(stream)

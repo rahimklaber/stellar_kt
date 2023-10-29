@@ -15,7 +15,7 @@ class ServerTest{
                 .forAccount("GAAUMMCT5PVLB5SP7FJYDXKZYDFJLXLJ34EXFREMDWOZLKYVE2PNVZWO")
                 .limit(200)
                 .order(Order.DESC)
-                .callAsync().unwrap()
+                .call().unwrap()
 
             println("hi")
             operations.records.filterIsInstance<PaymentResponse>()

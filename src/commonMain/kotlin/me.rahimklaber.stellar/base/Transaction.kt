@@ -92,8 +92,8 @@ class Transaction(
     val signatures: List<DecoratedSignature>
         get() = _signatures
 
-    fun toV1Xdr(): Transaction {
-        return Transaction(
+    fun toV1Xdr(): Transaction =
+        Transaction(
             sourceAccount = MuxedAccount.Ed25519(StrKey.decodeAccountId(sourceAccount).toUint256()),
             fee = fee,
             seqNum = sequenceNumber,
@@ -101,7 +101,6 @@ class Transaction(
             memo = memo.toXdr(),
             operations = operations.map(Operation::toXdr)
         )
-    }
 
     fun toEnvelopeXdr(): TransactionEnvelope {
         return TransactionEnvelope.TxV1(

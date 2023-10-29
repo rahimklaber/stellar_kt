@@ -22,8 +22,9 @@ typealias RequestResult<T> = Result<T, Throwable>
 class InvalidRequest(message: String) : Exception(message)
 
 abstract class RequestBuilder<T : Response>(
-    protected val client: HttpClient, horizonUrlString: String,
-    protected val urlExtension: String,
+    protected val client: HttpClient,
+    horizonUrlString: String,
+    internal var urlExtension: String,
     protected val json: Json = Json { ignoreUnknownKeys = true }
 ) {
     private val urlBuilder = URLBuilder(horizonUrlString)
@@ -38,11 +39,11 @@ abstract class RequestBuilder<T : Response>(
     protected fun addAssetQueryParam(asset: Asset) {
         when (asset) {
             is Asset.Native -> queryParams["asset"] = "native"
-            is Asset.CreditAlphaNum -> queryParams["asset"] = "${asset.code}:${asset.issuer}"
+            is Asset.AlphaNum -> queryParams["asset"] = "${asset.code}:${asset.issuer}"
         }
     }
 
-    protected fun addPath(pathFragment: String): RequestBuilder<T> {
+    internal fun addPath(pathFragment: String): RequestBuilder<T> {
         path.add(pathFragment)
         return this
     }
@@ -103,7 +104,7 @@ abstract class RequestBuilder<T : Response>(
 
     }
 
-    abstract suspend fun callAsync(): RequestResult<Page<T>>
+    abstract suspend fun call(): RequestResult<Page<T>>
 
     /**
      * Specifies the amount of records to return.

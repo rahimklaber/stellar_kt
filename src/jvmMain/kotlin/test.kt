@@ -1,13 +1,14 @@
-import com.github.michaelbull.result.orElseThrow
+import com.github.michaelbull.result.*
 import com.ionspin.kotlin.crypto.signature.Signature
-import io.ktor.utils.io.*
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.collectIndexed
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import me.rahimklaber.stellar.base.*
+import me.rahimklaber.stellar.base.operations.PathPaymentStrictReceive
 import me.rahimklaber.stellar.base.operations.Payment
 import me.rahimklaber.stellar.horizon.Server
-import me.rahimklaber.stellar.horizon.TransactionResponse
 import me.rahimklaber.stellar.horizon.toAccount
 import kotlin.random.Random
 
@@ -50,28 +51,12 @@ private val json = Json {
     ignoreUnknownKeys = true
 }
 
+@OptIn(ExperimentalStdlibApi::class)
 suspend fun main() {
 //    println(json.decodeFromString<TestI>(testAccountMerge))
 //    println(json.decodeFromString<Links2>(links))
 
     val server = Server("https://horizon-testnet.stellar.org")
-//
-//     var operations = server.operations()
-//         .forAccount("GAAUMMCT5PVLB5SP7FJYDXKZYDFJLXLJ34EXFREMDWOZLKYVE2PNVZWO")
-//         .limit(200)
-//         .callAsync().unwrap()
-//
-//
-//     while (true){
-//
-////         println(operations.records.first())
-//         val res = operations.next(server)
-//         if (res is Err<Throwable>){
-//             res.getError()?.printStackTrace()
-//             println(operations.links)
-//             exitProcess(0)
-//         }
-//         operations = res.unwrap()
 
     KeyPair.random()
     val kp = Signature.keypair()
@@ -87,7 +72,7 @@ suspend fun main() {
 //        sourceAccount = account,
 //        fee = 1000u,
 //        sequenceNumber = server.accounts().account(account).orElseThrow().value.sequence + 1,
-//        preconditions = Preconditions.None,
+//        preconditions = TransactionPreconditions.None,
 //        memo = Memo.None,
 //        operations = listOf(
 //            Payment(
@@ -102,29 +87,49 @@ suspend fun main() {
 
     val source = server.accounts().account(account).orElseThrow().value.toAccount()
     val transaction = transactionBuilder(source, Network.TESTNET) {
-        addOperation(
-            Payment(
-                destination = source.accountId,
-                amount = tokenAmount(1_000_000_0),
-                asset = Asset.Native
-            )
-        )
+        Payment(
+            destination = source.accountId,
+            amount = tokenAmount(1_000_000_0),
+            asset = Asset.Native
+        ).add()
+
+        Memo.Text("Hello world!").add()
     }
 
     transaction.sign(keypair)
+    val transaction1 = transactionOfOne(
+        source, Network.TESTNET,
+        PathPaymentStrictReceive(
+            sendAsset = Asset.Native,
+            sendMax = TokenAmount(1_000_000_0),
+            destination = source.accountId,
+            destAsset = Asset.Native,
+            destAmount = TokenAmount(1_000_000)
+        )
+    )
 
-    server
-        .transactions()
-        .stream()
-        .collect{
-            println("""
-                ledger: ${it.ledger}
-                ledger: ${it.hash}
-                pagingToken: ${it.pagingToken}
-            """.trimIndent())
-        }
+    println(
+        server.transactions()
+            .forAccount(source.accountId)
+            .call()
+            .unwrap()
+
+
+    )
+
+//    serverff
+//        .transactions()
+//        .stream()
+//        .collect{
+//            println("""
+//                ledger: ${it.ledger}
+//                ledger: ${it.hash}
+//                pagingToken: ${it.pagingToken}
+//            """.trimIndent())
+//        }
 
 //
+//    println("transaction hash: ${transaction.hash().toHexString()}")
 //    println(
 //        server.submitTransaction(transaction)
 //    )

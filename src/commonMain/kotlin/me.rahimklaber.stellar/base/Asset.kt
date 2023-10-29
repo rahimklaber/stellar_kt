@@ -12,7 +12,7 @@ sealed interface Asset {
 
     fun toXdr() : me.rahimklaber.stellar.base.xdr.Asset
 
-    object Native: Asset {
+    data object Native: Asset {
         override val code: String = "XLM"
         override val issuer: String = ""
 
@@ -21,23 +21,21 @@ sealed interface Asset {
             return me.rahimklaber.stellar.base.xdr.Asset.Native
         }
     }
-    sealed class CreditAlphaNum(override val code: String, override val issuer: String): Asset
-    data class CreditAlphaNum4(override val code: String,override val issuer: String) : CreditAlphaNum(code, issuer){
-        override fun toXdr(): me.rahimklaber.stellar.base.xdr.Asset {
-            return me.rahimklaber.stellar.base.xdr.Asset.AlphaNum4(AlphaNum4(
-                AssetCode4(code.encodeToByteArray()),
-                StrKey.encodeToAccountIDXDR(issuer)
-            ))
-        }
-    }
-    data class CreditAlphaNum12(override val code: String,override val issuer: String) : CreditAlphaNum(code, issuer){
-        override fun toXdr(): me.rahimklaber.stellar.base.xdr.Asset {
-            return me.rahimklaber.stellar.base.xdr.Asset.AlphaNum12(
-                AlphaNum12(
-                AssetCode12(code.encodeToByteArray()),
-                StrKey.encodeToAccountIDXDR(issuer)
-            )
-            )
+    data class AlphaNum(override val code: String, override val issuer: String): Asset{
+        override fun toXdr(): me.rahimklaber.stellar.base.xdr.Asset.AlphaNum {
+            return if(code.length > 4){
+                me.rahimklaber.stellar.base.xdr.Asset.AlphaNum12(
+                    AlphaNum12(
+                        AssetCode12(code.encodeToByteArray()),
+                        StrKey.encodeToAccountIDXDR(issuer)
+                    )
+                )
+            }else{
+                me.rahimklaber.stellar.base.xdr.Asset.AlphaNum4(AlphaNum4(
+                    AssetCode4(code.encodeToByteArray()),
+                    StrKey.encodeToAccountIDXDR(issuer)
+                ))
+            }
         }
     }
 }

@@ -4,24 +4,35 @@ import com.github.michaelbull.result.runCatching
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
-import io.ktor.utils.io.*
-import kotlinx.coroutines.awaitCancellation
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.flow.cancel
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-class TransactionRequestBuilder(client: HttpClient, horizonUrl: String) :
-    RequestBuilder<TransactionResponse>(client, horizonUrl, "transactions") {
-    override suspend fun callAsync(): RequestResult<Page<TransactionResponse>> {
+class TransactionRequestBuilder(
+    client: HttpClient,
+    horizonUrl: String,
+) : RequestBuilder<TransactionResponse>(client, horizonUrl, "transactions") {
+
+    override suspend fun call(): RequestResult<Page<TransactionResponse>> {
         return runCatching {
             client.get(buildUrl()).body()
         }
+    }
+
+    fun forAccount(accountId: String) = apply{
+        addPath(accountId)
+        addPath("transactions")
+        urlExtension = "accounts"
+    }
+
+    fun forLedger(ledger: ULong) = apply{
+        addPath(ledger.toString())
+        addPath("transactions")
+        urlExtension = "ledgers"
+    }
+
+    fun forLiquidityPool(poolId: String) = apply{
+        addPath("$poolId/transactions")
+        urlExtension = "liquidity_pools"
     }
 
     suspend fun stream() = inlineStream<TransactionResponse>()
@@ -30,27 +41,6 @@ class TransactionRequestBuilder(client: HttpClient, horizonUrl: String) :
         addPath(transactionHash)
         return runCatching {
             client.get(buildUrl()).body()
-        }
-    }
-
-    suspend fun forAccount(accountId: String): RequestResult<Page<TransactionResponse>> {
-        addPath("$accountId/transactions")
-        return runCatching {
-            client.get(buildUrl("accounts")).body() // todo create an enum with all of the endpoints.
-        }
-    }
-
-    suspend fun forLedger(ledger: Long): RequestResult<Page<TransactionResponse>> {
-        addPath("$ledger/transactions")
-        return runCatching {
-            client.get(buildUrl("ledgers")).body() // todo create an enum with all of the endpoints.
-        }
-    }
-
-    suspend fun forLiquidityPool(poolId: String): RequestResult<Page<TransactionResponse>> {
-        addPath("$poolId/transactions")
-        return runCatching {
-            client.get(buildUrl("liquidity_pools")).body() // todo create an enum with all of the endpoints.
         }
     }
 
@@ -86,7 +76,8 @@ data class TransactionResponse(
     val successful: Boolean,
     val hash: String,
     val ledger: Long, // is long ok?
-    val created_at: String,
+    @SerialName("created_at")
+    val createdAt: String,
     @SerialName("source_account") val sourceAccount: String,
     @SerialName("source_account_sequence") val sourceAccountSequence: String,
     @SerialName("fee_charged") val feeCharged: Long, // long ok?
@@ -101,6 +92,6 @@ data class TransactionResponse(
     val signatures: List<String>,
     @SerialName("valid_after") val validAfter: String? = null,
     @SerialName("valid_before") val validBefore: String? = null,
-): Response
+) : Response
 
 
