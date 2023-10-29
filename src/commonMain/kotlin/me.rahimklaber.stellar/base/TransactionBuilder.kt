@@ -7,12 +7,18 @@ class TransactionBuilder(
     val source: IAccount,
     val network: Network
 ) {
-    private val operations = mutableListOf<Operation>()
-    private var fee = 100u
-    private var memo: Memo = Memo.None
-    private var preconditions: Preconditions = Preconditions.None
+    private val _operations = mutableListOf<Operation>()
 
-    fun setPreconditions(preconditions: Preconditions) = apply {
+    val operations : List<Operation>
+        get () = _operations.toList()
+    var fee = 100u
+        private set
+    var memo: Memo = Memo.None
+        private set
+    var preconditions: TransactionPreconditions = TransactionPreconditions.None
+        private set
+
+    fun setPreconditions(preconditions: TransactionPreconditions) = apply {
         this.preconditions = preconditions
     }
 
@@ -25,7 +31,11 @@ class TransactionBuilder(
     }
 
     fun addOperation(operation: Operation) = apply {
-        operations.add(operation)
+        _operations.add(operation)
+    }
+
+    fun setFee(fee: UInt) = apply {
+        this.fee = fee
     }
 
     fun build(): Transaction {
@@ -36,7 +46,7 @@ class TransactionBuilder(
             sequenceNumber = source.sequenceNumber,
             preconditions = preconditions,
             memo = memo,
-            operations = operations.toList(),
+            operations = _operations.toList(),
             network = network
         )
     }
@@ -46,4 +56,31 @@ fun transactionBuilder(source: Account, network: Network, block: TransactionBuil
     val builder = TransactionBuilder(source, network)
     builder.block()
     return builder.build()
+}
+
+fun transactionOfOne(source: Account, network: Network, operation: Operation): Transaction {
+    val builder = TransactionBuilder(source, network)
+    builder.addOperation(operation)
+    return builder.build()
+}
+
+context(TransactionBuilder)
+fun Operation.add(){
+    addOperation(
+        this
+    )
+}
+
+context(TransactionBuilder)
+fun TransactionPreconditions.add(){
+    setPreconditions(
+        this
+    )
+}
+
+context(TransactionBuilder)
+fun Memo.add(){
+    setMemo(
+        this
+    )
 }

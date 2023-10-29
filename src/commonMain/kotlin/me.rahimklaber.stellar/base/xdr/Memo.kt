@@ -20,7 +20,7 @@ sealed class Memo(val type: MemoType) : XdrElement {
         type.encode(stream)
     }
 
-    object None : Memo(MemoType.MEMO_NONE)
+    data object None : Memo(MemoType.MEMO_NONE)
     data class Text(val text: String32/*todo: its actually 28 and not 32 chars*/) : Memo(MemoType.MEMO_TEXT) {
         override fun encode(stream: XdrStream) {
             super.encode(stream)

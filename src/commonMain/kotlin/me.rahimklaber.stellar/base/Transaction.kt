@@ -8,33 +8,90 @@ import me.rahimklaber.stellar.base.xdr.Transaction
 sealed interface Memo {
     fun toXdr(): me.rahimklaber.stellar.base.xdr.Memo
 
-    object None : Memo {
+    data object None : Memo {
         override fun toXdr(): me.rahimklaber.stellar.base.xdr.Memo {
             return me.rahimklaber.stellar.base.xdr.Memo.None
         }
     }
+
+    data class Text(val text: String) : Memo {
+        override fun toXdr(): me.rahimklaber.stellar.base.xdr.Memo {
+            return me.rahimklaber.stellar.base.xdr.Memo.Text(String32(text.encodeToByteArray()))
+        }
+
+    }
+
+    data class Id(val id: ULong) : Memo {
+        override fun toXdr(): me.rahimklaber.stellar.base.xdr.Memo {
+            return me.rahimklaber.stellar.base.xdr.Memo.Id(id)
+        }
+    }
+
 }
 
-sealed interface Preconditions{
-    fun toXdr(): me.rahimklaber.stellar.base.xdr.Preconditions
-    object None: Preconditions {
-        override fun toXdr(): me.rahimklaber.stellar.base.xdr.Preconditions{
-            return me.rahimklaber.stellar.base.xdr.Preconditions.None
+sealed interface TransactionPreconditions {
+    fun toXdr(): Preconditions
+
+    data object None : TransactionPreconditions {
+        override fun toXdr(): Preconditions {
+            return Preconditions.None
+        }
+    }
+
+    //confusing naming
+    //todo: Create classess instead of using xdr directly?
+    data class V2(
+        val minSequenceAge: ULong,
+        val minSequenceLedgerGap: UInt,
+        val extraSigners: List<SignerKey>,
+        val timeBounds: TimeBounds? = null,
+        val ledgerBounds: LedgerBounds? = null,
+        val minSequenceNumber: Long? = null,
+    ) : TransactionPreconditions {
+        override fun toXdr(): Preconditions {
+            return Preconditions.V2(
+                PreconditionsV2(
+                    timeBounds,
+                    ledgerBounds,
+                    minSequenceNumber,
+                    minSequenceAge,
+                    minSequenceLedgerGap,
+                    extraSigners
+                )
+            )
         }
     }
 }
+
+fun preconditions(
+    minSequenceAge: ULong,
+    minSequenceLedgerGap: UInt,
+    extraSigners: List<SignerKey>,
+    timeBounds: TimeBounds? = null,
+    ledgerBounds: LedgerBounds? = null,
+    minSequenceNumber: Long? = null,
+) = TransactionPreconditions.V2(
+    minSequenceAge,
+    minSequenceLedgerGap,
+    extraSigners,
+    timeBounds,
+    ledgerBounds,
+    minSequenceNumber,
+)
+
 class Transaction(
     val sourceAccount: String,
     val fee: UInt,
     val sequenceNumber: Long,
-    val preconditions: Preconditions,
+    val preconditions: TransactionPreconditions,
     val memo: Memo,
     val operations: List<Operation>,
     val network: Network
-){
+) {
     private val _signatures: MutableList<DecoratedSignature> = mutableListOf()
     val signatures: List<DecoratedSignature>
         get() = _signatures
+
     fun toV1Xdr(): Transaction {
         return Transaction(
             sourceAccount = MuxedAccount.Ed25519(StrKey.decodeAccountId(sourceAccount).toUint256()),
@@ -45,7 +102,8 @@ class Transaction(
             operations = operations.map(Operation::toXdr)
         )
     }
-    fun toEnvelopeXdr() : TransactionEnvelope{
+
+    fun toEnvelopeXdr(): TransactionEnvelope {
         return TransactionEnvelope.TxV1(
             TransactionV1Envelope(
                 toV1Xdr(),
@@ -67,7 +125,7 @@ class Transaction(
         return com.ionspin.kotlin.crypto.hash.Hash.sha256(payloadBytes.toUByteArray()).toByteArray()
     }
 
-    fun sign(keyPair: KeyPair){
+    fun sign(keyPair: KeyPair) {
         _signatures.add(keyPair.signDecorated(hash()))
     }
 }

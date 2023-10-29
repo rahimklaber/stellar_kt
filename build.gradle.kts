@@ -14,6 +14,10 @@ repositories {
 val ktor_version = "2.3.5"
 val okioVersion = "3.6.0"
 var encoding = "1.2.1"
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).all {
+    kotlinOptions.freeCompilerArgs = listOf("-Xcontext-receivers")
+}
 kotlin {
     jvm {
         compilations.all {

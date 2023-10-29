@@ -1,7 +1,7 @@
 package me.rahimklaber.stellar.base.xdr
 
 ///////////////////////////////////////////////////////////////////////////
-// union Preconditions switch (PreconditionType type)
+// union TransactionPreconditions switch (PreconditionType type)
 //{
 //case PRECOND_NONE:
 //    void;
@@ -16,7 +16,7 @@ sealed class Preconditions(val type: PreconditionType): XdrElement{
     override fun encode(stream: XdrStream) {
         type.encode(stream)
     }
-    object None: Preconditions(PreconditionType.PRECOND_NONE)
+    data object None: Preconditions(PreconditionType.PRECOND_NONE)
     data class Time(val timeBounds: TimeBounds): Preconditions(PreconditionType.PRECOND_TIME){
         override fun encode(stream: XdrStream) {
             super.encode(stream)

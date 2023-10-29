@@ -20,7 +20,7 @@ package me.rahimklaber.stellar.base.xdr
 //    SequenceNumber seqNum;
 //
 //    // validity conditions
-//    Preconditions cond;
+//    TransactionPreconditions cond;
 //
 //    Memo memo;
 //

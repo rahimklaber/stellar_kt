@@ -4,13 +4,13 @@ import me.rahimklaber.stellar.base.*
 import me.rahimklaber.stellar.base.xdr.PathPaymentStrictReceiveOp
 
 data class PathPaymentStrictReceive(
-    override val sourceAccount: String?,
     val sendAsset: Asset,
     val sendMax: TokenAmount,
     val destination: String,
     val destAsset: Asset,
     val destAmount: TokenAmount,
-    val path: List<Asset>
+    val path: List<Asset> = emptyList(),
+    override val sourceAccount: String? = null,
 ): Operation{
     override fun toXdr(): me.rahimklaber.stellar.base.xdr.Operation {
         return me.rahimklaber.stellar.base.xdr.Operation.PathPaymentStrictReceive(
