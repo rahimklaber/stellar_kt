@@ -95,7 +95,7 @@ kotlin {
         val jsTest by getting
         val nativeMain by getting{
             dependencies {
-                implementation("io.ktor:ktor-client-winhttp:$ktor_version")
+//                implementation("io.ktor:ktor-client-winhttp:$ktor_version")
             }
         }
         val nativeTest by getting
