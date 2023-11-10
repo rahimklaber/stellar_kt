@@ -64,23 +64,23 @@ fun transactionOfOne(source: Account, network: Network, operation: Operation): T
     return builder.build()
 }
 
-context(TransactionBuilder)
-fun Operation.add(){
-    addOperation(
-        this
-    )
-}
-
-context(TransactionBuilder)
-fun TransactionPreconditions.add(){
-    setPreconditions(
-        this
-    )
-}
-
-context(TransactionBuilder)
-fun Memo.add(){
-    setMemo(
-        this
-    )
-}
+//context(TransactionBuilder)
+//fun Operation.add(){
+//    addOperation(
+//        this
+//    )
+//}
+//
+//context(TransactionBuilder)
+//fun TransactionPreconditions.add(){
+//    setPreconditions(
+//        this
+//    )
+//}
+//
+//context(TransactionBuilder)
+//fun Memo.add(){
+//    setMemo(
+//        this
+//    )
+//}

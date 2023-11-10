@@ -18,6 +18,14 @@ var encoding = "1.2.1"
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).all {
     kotlinOptions.freeCompilerArgs = listOf("-Xcontext-receivers")
 }
+publishing {
+    repositories {
+        maven {
+        }
+    }
+}
+
+
 kotlin {
     jvm {
         compilations.all {
