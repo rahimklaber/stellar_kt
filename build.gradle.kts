@@ -1,11 +1,14 @@
+import java.net.URI
+
 plugins {
     kotlin("multiplatform") version "1.9.10"
     kotlin("plugin.serialization") version "1.9.10"
     `maven-publish`
+    signing
 }
 
-group = "me.rahim"
-version = "1.0-SNAPSHOT"
+group = "me.rahimklaber"
+version = "0.0.1"
 
 repositories {
     mavenCentral()
@@ -18,12 +21,129 @@ var encoding = "1.2.1"
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).all {
     kotlinOptions.freeCompilerArgs = listOf("-Xcontext-receivers")
 }
-publishing {
-    repositories {
-        maven {
+//
+
+
+
+tasks.withType<AbstractPublishToMaven>{
+    doLast {
+        require(this is AbstractPublishToMaven)
+        println("running renaming magic...")
+        this.outputs
+            .files
+            .forEach { file ->
+                println(file)
+                val name = file.name
+                val regex = Regex("1.0-[0-9]+.[0-9]+-1")
+                if(name.contains(regex)){
+                    val newName = name.replace(regex, "1.0-SNAPSHOT")
+                    val newFile = File(file.parentFile, newName)
+                    file.renameTo(newFile)
+                }
+
+            }
+    }
+}
+
+afterEvaluate {
+
+    extensions.findByType<PublishingExtension>()?.apply {
+        repositories {
+            mavenLocal()
+//            maven{
+//                url = URI.create("https://central.sonatype.org/")
+//                credentials {
+//                }
+//            }
+        }
+
+
+        publications.withType<MavenPublication>().configureEach {
+            val publication = this
+            val javadocJar = tasks.register("${publication.name}JavadocJar", Jar::class) {
+                archiveClassifier.set("javadoc")
+                archiveBaseName.set("${archiveBaseName.get()}-${publication.name}")
+            }
+            artifact(javadocJar)
+            pom {
+                name = "Kotlin Multiplatform Stellar SDK"
+                description = "A multiplatform SDK for the Stellar Blockchain"
+                url = "https://github.com/rahimklaber/stellar_kt"
+                developers {
+                    developer {
+                        id = "rahim"
+                        name = "Rahim Klabér"
+                        email = "rahimklaber2@gmail.com"
+                    }
+                }
+
+                licenses {
+                    license {
+                        name = "The Apache License, Version 2.0"
+                        url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+                    }
+                }
+
+
+                scm {
+                    url = "https://github.com/rahimklaber/stellar_kt"
+                }
+            }
+        }
+        extensions.findByType<SigningExtension>()!!.apply sc@{
+            val publishing = extensions.findByType<PublishingExtension>() ?: return@sc
+            val key = properties["signingKey"]?.toString()?.replace("\\n", "\n")
+            val password = properties["signingPassword"]?.toString()
+
+            useInMemoryPgpKeys(key, password)
+            sign(publishing.publications)
         }
     }
 }
+
+//publishing {
+//    publications {
+//        repositories {
+//           maven{
+//               url = URI.create("https://central.sonatype.org/")
+//               credentials {
+//                   username = ""
+//                   password = ""
+//               }
+//           }
+//        }
+//        create<MavenPublication>("sonatype") {
+//            val publication = this
+//            val javadocJar = tasks.register("${publication.name}JavadocJar", Jar::class) {
+//                archiveClassifier.set("javadoc")
+//                archiveBaseName.set("${archiveBaseName.get()}-${publication.name}")
+//            }
+//            artifact(javadocJar)
+//            pom {
+//                developers {
+//                    developer {
+//                        id = "rahim"
+//                        name = "Rahim Klabér"
+//                        email = "rahimklaber2@gmail.com"
+//                    }
+//                }
+//
+//                licenses {
+//                    license {
+//                        name = "The Apache License, Version 2.0"
+//                        url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+//                    }
+//                }
+//
+//                scm {
+//                    url = "https://github.com/rahimklaber/stellar_kt"
+//                }
+//            }
+//
+//        }
+//    }
+//
+//}
 
 
 kotlin {
