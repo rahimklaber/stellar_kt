@@ -40,6 +40,9 @@ class KeyPair internal constructor(
         init {
             LibsodiumInitializer.initializeWithCallback {}
         }
+
+        val isInit: Boolean
+            get() =  LibsodiumInitializer.isInitialized()
     }
 
 }

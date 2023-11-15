@@ -87,13 +87,13 @@ suspend fun main() {
 
     val source = server.accounts().account(account).orElseThrow().value.toAccount()
     val transaction = transactionBuilder(source, Network.TESTNET) {
-        Payment(
-            destination = source.accountId,
-            amount = tokenAmount(1_000_000_0),
-            asset = Asset.Native
-        ).add()
-
-        Memo.Text("Hello world!").add()
+//        Payment(
+//            destination = source.accountId,
+//            amount = tokenAmount(1_000_000_0),
+//            asset = Asset.Native
+//        ).add()
+//
+//        Memo.Text("Hello world!").add()
     }
 
     transaction.sign(keypair)

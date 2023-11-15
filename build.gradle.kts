@@ -1,4 +1,6 @@
+import org.jetbrains.kotlin.gradle.utils.loadPropertyFromResources
 import java.net.URI
+import java.util.*
 
 plugins {
     kotlin("multiplatform") version "1.9.10"
@@ -8,7 +10,7 @@ plugins {
 }
 
 group = "me.rahimklaber"
-version = "0.0.1"
+version = "0.0.3"
 
 repositories {
     mavenCentral()
@@ -18,32 +20,17 @@ val ktor_version = "2.3.5"
 val okioVersion = "3.6.0"
 var encoding = "1.2.1"
 
+
+val localProperties = Properties()
+
+localProperties.load(File("local.properties").inputStream())
+
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).all {
     kotlinOptions.freeCompilerArgs = listOf("-Xcontext-receivers")
 }
 //
 
 
-
-tasks.withType<AbstractPublishToMaven>{
-    doLast {
-        require(this is AbstractPublishToMaven)
-        println("running renaming magic...")
-        this.outputs
-            .files
-            .forEach { file ->
-                println(file)
-                val name = file.name
-                val regex = Regex("1.0-[0-9]+.[0-9]+-1")
-                if(name.contains(regex)){
-                    val newName = name.replace(regex, "1.0-SNAPSHOT")
-                    val newFile = File(file.parentFile, newName)
-                    file.renameTo(newFile)
-                }
-
-            }
-    }
-}
 
 afterEvaluate {
 
@@ -92,58 +79,14 @@ afterEvaluate {
         }
         extensions.findByType<SigningExtension>()!!.apply sc@{
             val publishing = extensions.findByType<PublishingExtension>() ?: return@sc
-            val key = properties["signingKey"]?.toString()?.replace("\\n", "\n")
-            val password = properties["signingPassword"]?.toString()
+            val key = localProperties["signingKey"]?.toString()?.replace("\\n", "\n")
+            val password = localProperties["signingPassword"]?.toString()
 
             useInMemoryPgpKeys(key, password)
             sign(publishing.publications)
         }
     }
 }
-
-//publishing {
-//    publications {
-//        repositories {
-//           maven{
-//               url = URI.create("https://central.sonatype.org/")
-//               credentials {
-//                   username = ""
-//                   password = ""
-//               }
-//           }
-//        }
-//        create<MavenPublication>("sonatype") {
-//            val publication = this
-//            val javadocJar = tasks.register("${publication.name}JavadocJar", Jar::class) {
-//                archiveClassifier.set("javadoc")
-//                archiveBaseName.set("${archiveBaseName.get()}-${publication.name}")
-//            }
-//            artifact(javadocJar)
-//            pom {
-//                developers {
-//                    developer {
-//                        id = "rahim"
-//                        name = "Rahim Klabér"
-//                        email = "rahimklaber2@gmail.com"
-//                    }
-//                }
-//
-//                licenses {
-//                    license {
-//                        name = "The Apache License, Version 2.0"
-//                        url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
-//                    }
-//                }
-//
-//                scm {
-//                    url = "https://github.com/rahimklaber/stellar_kt"
-//                }
-//            }
-//
-//        }
-//    }
-//
-//}
 
 
 kotlin {
@@ -178,17 +121,17 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
+                api("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
 
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+                api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 
-                implementation("io.ktor:ktor-client-core:$ktor_version")
+                api("io.ktor:ktor-client-core:$ktor_version")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
-                implementation("com.michael-bull.kotlin-result:kotlin-result:1.1.13")
+                api("com.michael-bull.kotlin-result:kotlin-result:1.1.13")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
-                implementation("com.squareup.okio:okio:$okioVersion")
+                api("com.squareup.okio:okio:$okioVersion")
                 implementation("com.ionspin.kotlin:multiplatform-crypto-libsodium-bindings:0.8.9")
                 implementation("io.matthewnelson.kotlin-components:encoding-base16:$encoding")
                 implementation("io.matthewnelson.kotlin-components:encoding-base32:$encoding")
