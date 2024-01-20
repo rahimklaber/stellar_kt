@@ -1,9 +1,6 @@
 package me.rahimklaber.stellar.base.xdr.soroban
 
-import me.rahimklaber.stellar.base.xdr.AccountID
-import me.rahimklaber.stellar.base.xdr.Hash
-import me.rahimklaber.stellar.base.xdr.XdrElement
-import me.rahimklaber.stellar.base.xdr.XdrStream
+import me.rahimklaber.stellar.base.xdr.*
 
 sealed class ScAddress(val type: ScAddressType): XdrElement {
 
@@ -21,5 +18,16 @@ sealed class ScAddress(val type: ScAddressType): XdrElement {
             super.encode(stream)
             contractId.encode(stream)
         }
+    }
+
+    companion object: XdrElementDecoder<ScAddress>{
+        override fun decode(stream: XdrStream): ScAddress {
+            return when(val type = ScAddressType.decode(stream)){
+                ScAddressType.SC_ADDRESS_TYPE_ACCOUNT -> Account(AccountID.decode(stream))
+                ScAddressType.SC_ADDRESS_TYPE_CONTRACT -> Contract(Hash.decode(stream))
+                else -> throw IllegalArgumentException("Cannot decode ScAddress for type: $type")
+            }
+        }
+
     }
 }

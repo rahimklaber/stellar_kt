@@ -5,25 +5,21 @@ import me.rahimklaber.stellar.base.xdr.XdrElementDecoder
 import me.rahimklaber.stellar.base.xdr.XdrStream
 
 ///////////////////////////////////////////////////////////////////////////
-// struct Uint256Parts {
-//    uint64 hi_hi;
-//    uint64 hi_lo;
-//    uint64 lo_hi;
-//    uint64 lo_lo;
+// struct SCNonceKey {
+//    int64 nonce;
 //};
 ///////////////////////////////////////////////////////////////////////////
-data class UInt256Parts(
-    val hi: UInt128Parts,
-    val lo: UInt128Parts
+data class SCNonceKey(
+    val nonce: Long
 ): XdrElement {
     override fun encode(stream: XdrStream) {
-        hi.encode(stream)
-        lo.encode(stream)
+        stream.writeLong(nonce)
     }
 
-    companion object : XdrElementDecoder<UInt256Parts > {
-        override fun decode(stream: XdrStream): UInt256Parts  {
-            return UInt256Parts (UInt128Parts.decode(stream), UInt128Parts.decode(stream))
+    companion object: XdrElementDecoder<SCNonceKey>{
+        override fun decode(stream: XdrStream): SCNonceKey {
+            return SCNonceKey(stream.readLong() )
         }
+
     }
 }

@@ -5,6 +5,15 @@ import me.rahimklaber.stellar.base.xdr.XdrElement
 import me.rahimklaber.stellar.base.xdr.XdrElementDecoder
 import me.rahimklaber.stellar.base.xdr.XdrStream
 
+///////////////////////////////////////////////////////////////////////////
+// union ContractExecutable switch (ContractExecutableType type)
+//{
+//case CONTRACT_EXECUTABLE_WASM:
+//    Hash wasm_hash;
+//case CONTRACT_EXECUTABLE_STELLAR_ASSET:
+//    void;
+//};
+///////////////////////////////////////////////////////////////////////////
 sealed class ContractExecutable(val type: ContractExecutableType): XdrElement {
 
     override fun encode(stream: XdrStream) {

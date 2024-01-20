@@ -15,6 +15,7 @@ version = "0.0.3"
 repositories {
     mavenCentral()
     maven("https://jitpack.io")
+    maven("https://repo.kotlin.link")
 }
 val ktor_version = "2.3.5"
 val okioVersion = "3.6.0"
@@ -147,6 +148,9 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-cio-jvm:$ktor_version")
+
+                implementation("com.squareup:kotlinpoet:1.14.2")
+                api("space.kscience:kmath-core:0.3.1")
             }
         }
         val jvmTest by getting

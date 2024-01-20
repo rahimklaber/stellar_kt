@@ -1,16 +1,13 @@
-import com.github.michaelbull.result.*
-import com.ionspin.kotlin.crypto.signature.Signature
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectIndexed
-import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import me.rahimklaber.stellar.base.*
-import me.rahimklaber.stellar.base.operations.PathPaymentStrictReceive
-import me.rahimklaber.stellar.base.operations.Payment
-import me.rahimklaber.stellar.horizon.Server
-import me.rahimklaber.stellar.horizon.toAccount
-import kotlin.random.Random
+import me.rahimklaber.stellar.base.xdr.AccountID
+import me.rahimklaber.stellar.base.xdr.XdrStream
+import me.rahimklaber.stellar.base.xdr.soroban.*
+import me.rahimklaber.stellar.base.xdr.sorobanspec.SCSpecEntry
+import me.rahimklaber.stellar.base.xdr.toXdrString
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 
 val testAccountMerge = """
@@ -51,86 +48,57 @@ private val json = Json {
     ignoreUnknownKeys = true
 }
 
-@OptIn(ExperimentalStdlibApi::class)
+public data class SplitRecipientContract(
+    public val address: me.rahimklaber.stellar.base.xdr.soroban.SCVal.Address,
+    public val args: kotlin.collections.List<kotlin.Any>,
+    public val function: kotlin.String,
+) {
+    public fun toScVal(): me.rahimklaber.stellar.base.xdr.soroban.SCVal {
+        return SCVal.Map(
+            SCMap(
+                listOf(
+                    SCMapEntry(SCVal.Symbol(SCSymbol("address")), address.toScVal()),
+                    SCMapEntry(SCVal.Symbol(SCSymbol("args")), args.toScVal()),
+                    SCMapEntry(SCVal.Symbol(SCSymbol("function")), function.toScVal(me.rahimklaber.stellar.base.xdr.sorobanspec.SCSpecTypeDef.Symbol)),
+
+                    )
+            )
+        )
+    }
+}
+@OptIn(ExperimentalStdlibApi::class, ExperimentalEncodingApi::class)
 suspend fun main() {
-//    println(json.decodeFromString<TestI>(testAccountMerge))
-//    println(json.decodeFromString<Links2>(links))
 
-    val server = Server("https://horizon-testnet.stellar.org")
+    val specbase64 = "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"
 
-    KeyPair.random()
-    val kp = Signature.keypair()
-//     Signature.init()
-    val msg = Random.nextBytes(32).toUByteArray()
-    val signature = Signature.sign(msg, kp.secretKey)
+    val stream = XdrStream()
+    stream.writeBytes(Base64.decode(specbase64))
+    val specs = mutableListOf<SCSpecEntry>()
 
-    val account = "GAPXFBCUZVX4YJ6D5JDUSAVHPZVAX4PPDM3V7HE5YH4Z7PSACDNYEXOS"
-    val keypair = KeyPair.fromSecretSeed("SDCIQUQKNIIDWSX4E46GQCO7ZR6PC4X7EA7D2LRQYMIFSZ6BGZV4I3YN")
-    println(keypair.accountId)
+    do{
+        try {
+            specs.add(SCSpecEntry.decode(stream))
+        }catch (e: Exception){
+            println(e)
+            break
+        }
+    }while (true)
 
-//    val transaction = Transaction(
-//        sourceAccount = account,
-//        fee = 1000u,
-//        sequenceNumber = server.accounts().account(account).orElseThrow().value.sequence + 1,
-//        preconditions = TransactionPreconditions.None,
-//        memo = Memo.None,
-//        operations = listOf(
-//            Payment(
-//                destination = "GAPXFBCUZVX4YJ6D5JDUSAVHPZVAX4PPDM3V7HE5YH4Z7PSACDNYEXOS",
-//                amount = tokenAmount(1_000_000_0),
-//                asset = Asset.Native
-//            )
-//        ),
-//        network = Network.TESTNET
-//
-//    )
-
-    val source = server.accounts().account(account).orElseThrow().value.toAccount()
-    val transaction = transactionBuilder(source, Network.TESTNET) {
-//        Payment(
-//            destination = source.accountId,
-//            amount = tokenAmount(1_000_000_0),
-//            asset = Asset.Native
-//        ).add()
-//
-//        Memo.Text("Hello world!").add()
+    while (!KeyPair.isInit){
+        delay(200)
     }
 
-    transaction.sign(keypair)
-    val transaction1 = transactionOfOne(
-        source, Network.TESTNET,
-        PathPaymentStrictReceive(
-            sendAsset = Asset.Native,
-            sendMax = TokenAmount(1_000_000_0),
-            destination = source.accountId,
-            destAsset = Asset.Native,
-            destAmount = TokenAmount(1_000_000)
-        )
-    )
-
-    println(
-        server.transactions()
-            .forAccount(source.accountId)
-            .call()
-            .unwrap()
-
-
-    )
-
-//    serverff
-//        .transactions()
-//        .stream()
-//        .collect{
-//            println("""
-//                ledger: ${it.ledger}
-//                ledger: ${it.hash}
-//                pagingToken: ${it.pagingToken}
-//            """.trimIndent())
-//        }
-
-//
-//    println("transaction hash: ${transaction.hash().toHexString()}")
 //    println(
-//        server.submitTransaction(transaction)
+//        SplitRecipientContract(
+//            SCVal.Address(ScAddress.Account(StrKey.encodeToAccountIDXDR(KeyPair.random().accountId))),
+//            listOf(SCVal.Symbol(SCSymbol("hi"))),
+//            "test"
+//        ).toScVal()
+//            .toXdrString()
 //    )
+
+    println(wrapperForSpecEntry(specs.first()))
+
+
+
 }
