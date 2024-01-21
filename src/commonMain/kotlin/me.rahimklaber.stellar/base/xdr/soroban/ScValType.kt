@@ -24,7 +24,7 @@ import me.rahimklaber.stellar.base.xdr.XdrStream
 //    SCV_TIMEPOINT = 7,
 //    SCV_DURATION = 8,
 //
-//    // 128 bits is naturally supported by Rust and we use it for Soroban
+//    // 128 bits is naturally supported by Rust and we use it for SorobanClient
 //    // fixed-point arithmetic prices / balances / similar "quantities". These
 //    // are represented in XDR as a pair of 2 u64s.
 //    SCV_U128 = 9,

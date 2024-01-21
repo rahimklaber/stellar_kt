@@ -7,8 +7,8 @@ import me.rahimklaber.stellar.base.xdr.XdrStream
 ///////////////////////////////////////////////////////////////////////////
 // // Smart contract errors are split into a type (SCErrorType) and a code. When an
 //// error is of type SCE_CONTRACT it carries a user-defined uint32 code that
-//// Soroban assigns no specific meaning to. In all other cases, the type
-//// specifies a subsystem of the Soroban host where the error originated, and the
+//// SorobanClient assigns no specific meaning to. In all other cases, the type
+//// specifies a subsystem of the SorobanClient host where the error originated, and the
 //// accompanying code is an SCErrorCode, each of which specifies a slightly more
 //// precise class of errors within that subsystem.
 ////
@@ -16,7 +16,7 @@ import me.rahimklaber.stellar.base.xdr.XdrStream
 //// precision and flexibility in the implementation, and the granularity here is
 //// chosen to be adequate for most purposes while not placing a burden on future
 //// system evolution and maintenance. When additional precision is needed for
-//// debugging, Soroban can be run with diagnostic events enabled.
+//// debugging, SorobanClient can be run with diagnostic events enabled.
 //
 //union SCError switch (SCErrorType type)
 //{

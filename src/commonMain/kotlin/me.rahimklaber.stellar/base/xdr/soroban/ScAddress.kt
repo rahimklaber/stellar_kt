@@ -25,7 +25,6 @@ sealed class ScAddress(val type: ScAddressType): XdrElement {
             return when(val type = ScAddressType.decode(stream)){
                 ScAddressType.SC_ADDRESS_TYPE_ACCOUNT -> Account(AccountID.decode(stream))
                 ScAddressType.SC_ADDRESS_TYPE_CONTRACT -> Contract(Hash.decode(stream))
-                else -> throw IllegalArgumentException("Cannot decode ScAddress for type: $type")
             }
         }
 
