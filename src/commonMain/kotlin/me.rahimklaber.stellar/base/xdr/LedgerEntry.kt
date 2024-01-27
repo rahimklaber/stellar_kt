@@ -19,6 +19,14 @@ package me.rahimklaber.stellar.base.xdr
 //        ClaimableBalanceEntry claimableBalance;
 //    case LIQUIDITY_POOL:
 //        LiquidityPoolEntry liquidityPool;
+//    case CONTRACT_DATA:
+//        ContractDataEntry contractData;
+//    case CONTRACT_CODE:
+//        ContractCodeEntry contractCode;
+//    case CONFIG_SETTING:
+//        ConfigSettingEntry configSetting;
+//    case TTL:
+//        TTLEntry ttl;
 //    }
 //    data;
 //
@@ -36,82 +44,82 @@ package me.rahimklaber.stellar.base.xdr
 sealed class LedgerEntry(val type: LedgerEntryType): XdrElement {
     abstract val lastModifiedLedgerSeq: UInt
 
-    // the entries would come here
-    abstract val discriminant: Int
     abstract val extensionV1: LedgerEntryExtensionV1?
 
     data class LedgerEntryAccount(
         override val lastModifiedLedgerSeq: UInt, val account: AccountEntry,
-        override val discriminant: Int, override val extensionV1: LedgerEntryExtensionV1?
+        override val extensionV1: LedgerEntryExtensionV1?
     ) : LedgerEntry(LedgerEntryType.ACCOUNT)
 
     data class LedgerEntryTrustline(
         override val lastModifiedLedgerSeq: UInt,
         val trustLine: TrustLineEntry,
-        override val discriminant: Int,
         override val extensionV1: LedgerEntryExtensionV1?
     ) : LedgerEntry(LedgerEntryType.TRUSTLINE){
         override fun encode(stream: XdrStream) {
             super.encode(stream)
             trustLine.encode(stream)
-            stream.writeInt(discriminant)
-            extensionV1?.encode(stream)
+            extensionV1.encodeNullable(stream)
         }
     }
 
     data class LedgerEntryOffer(
         override val lastModifiedLedgerSeq: UInt,
         val offer: OfferEntry,
-        override val discriminant: Int,
         override val extensionV1: LedgerEntryExtensionV1?
     ) : LedgerEntry(LedgerEntryType.OFFER){
         override fun encode(stream: XdrStream) {
             super.encode(stream)
             offer.encode(stream)
-            stream.writeInt(discriminant)
-            extensionV1?.encode(stream)
+            extensionV1.encodeNullable(stream)
         }
     }
 
     data class LedgerEntryData(
         override val lastModifiedLedgerSeq: UInt,
         val data: DataEntry,
-        override val discriminant: Int,
         override val extensionV1: LedgerEntryExtensionV1?
     ) : LedgerEntry(LedgerEntryType.DATA){
         override fun encode(stream: XdrStream) {
             super.encode(stream)
             data.encode(stream)
-            stream.writeInt(discriminant)
-            extensionV1?.encode(stream)
+            extensionV1.encodeNullable(stream)
         }
     }
 
     data class LedgerEntryClaimableBalance(
         override val lastModifiedLedgerSeq: UInt,
         val claimableBalance: ClaimableBalanceEntry,
-        override val discriminant: Int,
         override val extensionV1: LedgerEntryExtensionV1?
     ) : LedgerEntry(LedgerEntryType.CLAIMABLE_BALANCE){
         override fun encode(stream: XdrStream) {
             super.encode(stream)
             claimableBalance.encode(stream)
-            stream.writeInt(discriminant)
-            extensionV1?.encode(stream)
+            extensionV1.encodeNullable(stream)
         }
     }
 
     data class LedgerEntryLiquidityPool(
         override val lastModifiedLedgerSeq: UInt,
         val liquidityPool: LiquidityPoolEntry,
-        override val discriminant: Int,
         override val extensionV1: LedgerEntryExtensionV1?
     ) : LedgerEntry(LedgerEntryType.LIQUIDITY_POOL){
         override fun encode(stream: XdrStream) {
             super.encode(stream)
             liquidityPool.encode(stream)
-            stream.writeInt(discriminant)
-            extensionV1?.encode(stream)
+            extensionV1.encodeNullable(stream)
+        }
+    }
+
+    data class ContractData(
+        override val lastModifiedLedgerSeq: UInt,
+        val contractData: ContractDataEntry,
+        override val extensionV1: LedgerEntryExtensionV1?
+    ): LedgerEntry(LedgerEntryType.CONTRACT_DATA){
+        override fun encode(stream: XdrStream) {
+            super.encode(stream)
+            contractData.encode(stream)
+            extensionV1.encodeNullable(stream)
         }
     }
 
@@ -132,7 +140,7 @@ sealed class LedgerEntry(val type: LedgerEntryType): XdrElement {
                     }else{
                         null
                     }
-                    LedgerEntryAccount(lastModifiedLedgerSeq, account, discriminant, extensionV1)
+                    LedgerEntryAccount(lastModifiedLedgerSeq, account, extensionV1)
                 }
                 LedgerEntryType.TRUSTLINE -> {
                     val trustline = TrustLineEntry.decode(stream)
@@ -142,7 +150,7 @@ sealed class LedgerEntry(val type: LedgerEntryType): XdrElement {
                     }else{
                         null
                     }
-                    LedgerEntryTrustline(lastModifiedLedgerSeq, trustline, discriminant, extensionV1)
+                    LedgerEntryTrustline(lastModifiedLedgerSeq, trustline, extensionV1)
                 }
                 LedgerEntryType.OFFER -> {
                     val offer = OfferEntry.decode(stream)
@@ -152,7 +160,7 @@ sealed class LedgerEntry(val type: LedgerEntryType): XdrElement {
                     }else{
                         null
                     }
-                    LedgerEntryOffer(lastModifiedLedgerSeq, offer, discriminant, extensionV1)
+                    LedgerEntryOffer(lastModifiedLedgerSeq, offer, extensionV1)
                 }
                 LedgerEntryType.DATA ->  {
                     val data = DataEntry.decode(stream)
@@ -162,7 +170,7 @@ sealed class LedgerEntry(val type: LedgerEntryType): XdrElement {
                     }else{
                         null
                     }
-                    LedgerEntryData(lastModifiedLedgerSeq, data, discriminant, extensionV1)
+                    LedgerEntryData(lastModifiedLedgerSeq, data, extensionV1)
                 }
                 LedgerEntryType.CLAIMABLE_BALANCE -> {
                     val claimableBalance = ClaimableBalanceEntry.decode(stream)
@@ -172,7 +180,7 @@ sealed class LedgerEntry(val type: LedgerEntryType): XdrElement {
                     }else{
                         null
                     }
-                    LedgerEntryClaimableBalance(lastModifiedLedgerSeq, claimableBalance, discriminant, extensionV1)
+                    LedgerEntryClaimableBalance(lastModifiedLedgerSeq, claimableBalance, extensionV1)
                 }
                 LedgerEntryType.LIQUIDITY_POOL -> {
                     val liquidityPool = LiquidityPoolEntry.decode(stream)
@@ -182,9 +190,19 @@ sealed class LedgerEntry(val type: LedgerEntryType): XdrElement {
                     }else{
                         null
                     }
-                    LedgerEntryLiquidityPool(lastModifiedLedgerSeq, liquidityPool, discriminant, extensionV1)
+                    LedgerEntryLiquidityPool(lastModifiedLedgerSeq, liquidityPool, extensionV1)
                 }
-                else -> throw  IllegalArgumentException("Could not decode LedgerEntry for type: $type")
+
+                LedgerEntryType.CONTRACT_DATA -> {
+                    return ContractData(
+                        lastModifiedLedgerSeq,
+                        ContractDataEntry.decode(stream),
+                        LedgerEntryExtensionV1.decodeNullable(stream)
+                    )
+                }
+                LedgerEntryType.CONTRACT_CODE -> TODO()
+                LedgerEntryType.CONFIG_SETTING -> TODO()
+                LedgerEntryType.TTL -> TODO()
             }
         }
     }

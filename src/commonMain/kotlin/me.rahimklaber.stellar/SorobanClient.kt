@@ -86,7 +86,19 @@ data class JsonRpcRequest(
 
 interface SorobanClient {
     suspend fun getLatestLedger(): LatestLedgerResponse
+    suspend fun simulateTransaction(): SimulateTransactionResponse
 }
+
+data class SimulateTransactionResponse(
+    val transactionData: String,
+    val minResourceFee: String,
+    val events: List<String>,
+    val results: List<Any>,
+    val cost: SorobanCost,
+    val latestLedger: Int,
+)
+
+data class SorobanCost(val cpuInstructions: String, val memBytes: String)
 
 internal class SorobanClientImpl(
     val client: JsonRpcClient
@@ -94,6 +106,10 @@ internal class SorobanClientImpl(
     override suspend fun getLatestLedger(): LatestLedgerResponse {
         val response = client.executeRequest(JsonRpcRequest("getLatestLedger"))
         return createLatestLedgerResponse(response)
+    }
+
+    override suspend fun simulateTransaction(): SimulateTransactionResponse {
+        TODO("Not yet implemented")
     }
 
 }

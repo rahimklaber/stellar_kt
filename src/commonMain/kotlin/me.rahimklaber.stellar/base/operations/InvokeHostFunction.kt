@@ -1,5 +1,18 @@
 package me.rahimklaber.stellar.base.operations
 
-data class InvokeHostFunction(
+import me.rahimklaber.stellar.base.StrKey
+import me.rahimklaber.stellar.base.encodeToMuxedAccountXDR
+import me.rahimklaber.stellar.base.xdr.InvokeHostFunctionOp
 
-)
+data class InvokeHostFunction(val xdr: InvokeHostFunctionOp, override val sourceAccount: String? = null): Operation {
+    override fun toXdr(): me.rahimklaber.stellar.base.xdr.Operation {
+        val source = sourceAccount?.let {
+            StrKey.encodeToMuxedAccountXDR(it)
+        }
+
+        return me.rahimklaber.stellar.base.xdr.Operation.InvokeHostFunction(
+            source,
+            xdr
+        )
+    }
+}
