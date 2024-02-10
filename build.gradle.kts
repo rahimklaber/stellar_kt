@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "me.rahimklaber"
-version = "0.0.3"
+version = "0.0.4"
 
 repositories {
     mavenCentral()
@@ -24,7 +24,9 @@ var encoding = "1.2.1"
 
 val localProperties = Properties()
 
-localProperties.load(File("local.properties").inputStream())
+try {
+    localProperties.load(File("local.properties").inputStream())
+}catch (e: Throwable){}
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).all {
     kotlinOptions.freeCompilerArgs = listOf("-Xcontext-receivers")
@@ -50,7 +52,7 @@ afterEvaluate {
             val publication = this
             val javadocJar = tasks.register("${publication.name}JavadocJar", Jar::class) {
                 archiveClassifier.set("javadoc")
-                archiveBaseName.set("${archiveBaseName.get()}-${publication.name}")
+                archiveAppendix.set(name)
             }
             artifact(javadocJar)
             pom {
