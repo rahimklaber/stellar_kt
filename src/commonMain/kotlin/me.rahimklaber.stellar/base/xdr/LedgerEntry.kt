@@ -123,6 +123,18 @@ sealed class LedgerEntry(val type: LedgerEntryType): XdrElement {
         }
     }
 
+    data class TTL(
+        override val lastModifiedLedgerSeq: UInt,
+        val ttl: TTLEntry,
+        override val extensionV1: LedgerEntryExtensionV1?
+    ): LedgerEntry(LedgerEntryType.TTL){
+        override fun encode(stream: XdrStream) {
+            super.encode(stream)
+            ttl.encode(stream)
+            extensionV1.encodeNullable(stream)
+        }
+    }
+
     override fun encode(stream: XdrStream) {
         stream.writeInt(lastModifiedLedgerSeq.toInt())
         type.encode(stream)
@@ -202,7 +214,7 @@ sealed class LedgerEntry(val type: LedgerEntryType): XdrElement {
                 }
                 LedgerEntryType.CONTRACT_CODE -> TODO()
                 LedgerEntryType.CONFIG_SETTING -> TODO()
-                LedgerEntryType.TTL -> TODO()
+                LedgerEntryType.TTL -> TTL(lastModifiedLedgerSeq, TTLEntry.decode(stream), LedgerEntryExtensionV1.decodeNullable(stream))
             }
         }
     }

@@ -117,6 +117,16 @@ data class Transaction(
     fun withSorobanData(sorobanData: SorobanTransactionData): me.rahimklaber.stellar.base.Transaction =
         copy(sorobanData = sorobanData)
 
+    fun withAuthEntry(authorizationEntry: SorobanAuthorizationEntry): me.rahimklaber.stellar.base.Transaction {
+        val op = operations.first() as InvokeHostFunction
+
+        val newOp = op.copy(
+            op.xdr.copy(auth = op.xdr.auth + authorizationEntry)
+        )
+
+        return copy(operations = listOf(newOp))
+    }
+
     // data to sign to create a valid signature
     fun hash(): ByteArray {
         val payload = TransactionSignaturePayload.Tx(

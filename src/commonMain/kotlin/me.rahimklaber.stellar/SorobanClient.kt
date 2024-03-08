@@ -91,6 +91,7 @@ interface SorobanClient {
     suspend fun getTransaction(hash: String): GetTransactionResponse
 }
 
+@Serializable
 data class GetTransactionResponse(
     val status: String,
     val latestLedger: Int,

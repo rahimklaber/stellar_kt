@@ -131,7 +131,6 @@ kotlin {
                 api("io.ktor:ktor-client-core:$ktor_version")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
-                api("com.michael-bull.kotlin-result:kotlin-result:1.1.13")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
                 api("com.squareup.okio:okio:$okioVersion")
