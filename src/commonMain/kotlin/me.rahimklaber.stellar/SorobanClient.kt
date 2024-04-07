@@ -89,7 +89,20 @@ interface SorobanClient {
     suspend fun simulateTransaction(txXdr: String): SimulateTransactionResponse
     suspend fun sendTransaction(txXdr: String): SendTransactionResponse
     suspend fun getTransaction(hash: String): GetTransactionResponse
+    suspend fun getLedgerEntries(keys: List<String>): GetLedgerEntriesResponse
 }
+
+@Serializable
+data class LedgerEntryResponse(
+    val key: String,
+    val xdr: String,
+    val lastModifiedLedgerSeq: Long
+)
+
+@Serializable
+data class GetLedgerEntriesResponse(
+    val entries: List<LedgerEntryResponse>
+)
 
 @Serializable
 data class GetTransactionResponse(
@@ -173,6 +186,16 @@ internal class SorobanClientImpl(
         val response = client.executeRequest(JsonRpcRequest("getTransaction", params))
 
         return json.decodeFromJsonElement<GetTransactionResponse>(response["result"]!!)
+    }
+
+    override suspend fun getLedgerEntries(keys: List<String>): GetLedgerEntriesResponse {
+        val params = buildJsonObject {
+            put("keys", JsonArray(keys.map{ JsonPrimitive(it)}))
+        }
+
+        val response = client.executeRequest(JsonRpcRequest("getLedgerEntries", params))
+
+        return json.decodeFromJsonElement(response["result"]!!)
     }
 
 }

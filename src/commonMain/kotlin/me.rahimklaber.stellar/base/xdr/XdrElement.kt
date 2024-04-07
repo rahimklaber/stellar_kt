@@ -88,3 +88,10 @@ fun XdrElement.toXdrString(): String {
 
    return Base64.encode(stream.readAllBytes())
 }
+
+fun XdrElement.encodeToByteArray() = run{
+    val stream = XdrStream()
+    this.encode(stream)
+
+    stream.readAllBytes()
+}

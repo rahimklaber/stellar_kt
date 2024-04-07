@@ -14,7 +14,7 @@ sealed class ContractIDPreimage(val type: ContractIDPreimageType): XdrElement {
             salt.encode(stream)
         }
     }
-    data class PreimageFromAsset(val asset: Asset): ContractIDPreimage(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS){
+    data class PreimageFromAsset(val asset: Asset): ContractIDPreimage(ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ASSET){
         override fun encode(stream: XdrStream) {
             super.encode(stream)
             asset.encode(stream)

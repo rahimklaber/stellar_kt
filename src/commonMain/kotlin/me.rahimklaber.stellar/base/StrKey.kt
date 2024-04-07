@@ -102,6 +102,10 @@ fun StrKey.encodeAccountId(pubkey: ByteArray): String {
     return encodeCheck(ACCOUNT_ID, pubkey)
 }
 
+fun StrKey.encodeContract(hash: ByteArray): String{
+    return encodeCheck(CONTRACT, hash)
+}
+
 fun StrKey.decodeVersionByte(data: String): VersionByte? {
     val byte = data.decodeToByteArray(base32Encoding)[0]
 
