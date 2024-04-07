@@ -18,9 +18,7 @@ data class Hash(val byteArray: ByteArray) : XdrElement {
 
         other as Hash
 
-        if (!byteArray.contentEquals(other.byteArray)) return false
-
-        return true
+        return byteArray.contentEquals(other.byteArray)
     }
 
     override fun hashCode(): Int {

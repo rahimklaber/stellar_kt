@@ -19,6 +19,14 @@ package me.rahimklaber.stellar.base.xdr
 //        ClaimableBalanceEntry claimableBalance;
 //    case LIQUIDITY_POOL:
 //        LiquidityPoolEntry liquidityPool;
+//    case CONTRACT_DATA:
+//        ContractDataEntry contractData;
+//    case CONTRACT_CODE:
+//        ContractCodeEntry contractCode;
+//    case CONFIG_SETTING:
+//        ConfigSettingEntry configSetting;
+//    case TTL:
+//        TTLEntry ttl;
 //    }
 //    data;
 //
@@ -33,162 +41,128 @@ package me.rahimklaber.stellar.base.xdr
 //    ext;
 //};
 ///////////////////////////////////////////////////////////////////////////
-sealed class LedgerEntry(val type: LedgerEntryType): XdrElement {
-    abstract val lastModifiedLedgerSeq: UInt
+data class LedgerEntry(
+    val lastModifiedLedgerSeq: UInt,
+    val data: LedgerEntryData,
+    val extensionV1: LedgerEntryExtensionV1? // this not actually nullable but the switch
+): XdrElement {
 
-    // the entries would come here
-    abstract val discriminant: Int
-    abstract val extensionV1: LedgerEntryExtensionV1?
 
-    data class LedgerEntryAccount(
-        override val lastModifiedLedgerSeq: UInt, val account: AccountEntry,
-        override val discriminant: Int, override val extensionV1: LedgerEntryExtensionV1?
-    ) : LedgerEntry(LedgerEntryType.ACCOUNT)
-
-    data class LedgerEntryTrustline(
-        override val lastModifiedLedgerSeq: UInt,
-        val trustLine: TrustLineEntry,
-        override val discriminant: Int,
-        override val extensionV1: LedgerEntryExtensionV1?
-    ) : LedgerEntry(LedgerEntryType.TRUSTLINE){
-        override fun encode(stream: XdrStream) {
-            super.encode(stream)
-            trustLine.encode(stream)
-            stream.writeInt(discriminant)
-            extensionV1?.encode(stream)
-        }
-    }
-
-    data class LedgerEntryOffer(
-        override val lastModifiedLedgerSeq: UInt,
-        val offer: OfferEntry,
-        override val discriminant: Int,
-        override val extensionV1: LedgerEntryExtensionV1?
-    ) : LedgerEntry(LedgerEntryType.OFFER){
-        override fun encode(stream: XdrStream) {
-            super.encode(stream)
-            offer.encode(stream)
-            stream.writeInt(discriminant)
-            extensionV1?.encode(stream)
-        }
-    }
-
-    data class LedgerEntryData(
-        override val lastModifiedLedgerSeq: UInt,
-        val data: DataEntry,
-        override val discriminant: Int,
-        override val extensionV1: LedgerEntryExtensionV1?
-    ) : LedgerEntry(LedgerEntryType.DATA){
-        override fun encode(stream: XdrStream) {
-            super.encode(stream)
-            data.encode(stream)
-            stream.writeInt(discriminant)
-            extensionV1?.encode(stream)
-        }
-    }
-
-    data class LedgerEntryClaimableBalance(
-        override val lastModifiedLedgerSeq: UInt,
-        val claimableBalance: ClaimableBalanceEntry,
-        override val discriminant: Int,
-        override val extensionV1: LedgerEntryExtensionV1?
-    ) : LedgerEntry(LedgerEntryType.CLAIMABLE_BALANCE){
-        override fun encode(stream: XdrStream) {
-            super.encode(stream)
-            claimableBalance.encode(stream)
-            stream.writeInt(discriminant)
-            extensionV1?.encode(stream)
-        }
-    }
-
-    data class LedgerEntryLiquidityPool(
-        override val lastModifiedLedgerSeq: UInt,
-        val liquidityPool: LiquidityPoolEntry,
-        override val discriminant: Int,
-        override val extensionV1: LedgerEntryExtensionV1?
-    ) : LedgerEntry(LedgerEntryType.LIQUIDITY_POOL){
-        override fun encode(stream: XdrStream) {
-            super.encode(stream)
-            liquidityPool.encode(stream)
-            stream.writeInt(discriminant)
-            extensionV1?.encode(stream)
-        }
-    }
 
     override fun encode(stream: XdrStream) {
         stream.writeInt(lastModifiedLedgerSeq.toInt())
-        type.encode(stream)
+        data.encode(stream)
+        extensionV1.encodeNullable(stream)
     }
 
     companion object: XdrElementDecoder<LedgerEntry> {
         override fun decode(stream: XdrStream): LedgerEntry {
             val lastModifiedLedgerSeq= stream.readInt().toUInt()
-            return when(val type= LedgerEntryType.decode(stream)){
-                LedgerEntryType.ACCOUNT -> {
-                    val account = AccountEntry.decode(stream)
-                    val discriminant = stream.readInt()
-                    val extensionV1 = if (discriminant == 1){
-                        LedgerEntryExtensionV1.decode(stream)
-                    }else{
-                        null
-                    }
-                    LedgerEntryAccount(lastModifiedLedgerSeq, account, discriminant, extensionV1)
-                }
-                LedgerEntryType.TRUSTLINE -> {
-                    val trustline = TrustLineEntry.decode(stream)
-                    val discriminant = stream.readInt()
-                    val extensionV1 = if (discriminant == 1){
-                        LedgerEntryExtensionV1.decode(stream)
-                    }else{
-                        null
-                    }
-                    LedgerEntryTrustline(lastModifiedLedgerSeq, trustline, discriminant, extensionV1)
-                }
-                LedgerEntryType.OFFER -> {
-                    val offer = OfferEntry.decode(stream)
-                    val discriminant = stream.readInt()
-                    val extensionV1 = if (discriminant == 1){
-                        LedgerEntryExtensionV1.decode(stream)
-                    }else{
-                        null
-                    }
-                    LedgerEntryOffer(lastModifiedLedgerSeq, offer, discriminant, extensionV1)
-                }
-                LedgerEntryType.DATA ->  {
-                    val data = DataEntry.decode(stream)
-                    val discriminant = stream.readInt()
-                    val extensionV1 = if (discriminant == 1){
-                        LedgerEntryExtensionV1.decode(stream)
-                    }else{
-                        null
-                    }
-                    LedgerEntryData(lastModifiedLedgerSeq, data, discriminant, extensionV1)
-                }
-                LedgerEntryType.CLAIMABLE_BALANCE -> {
-                    val claimableBalance = ClaimableBalanceEntry.decode(stream)
-                    val discriminant = stream.readInt()
-                    val extensionV1 = if (discriminant == 1){
-                        LedgerEntryExtensionV1.decode(stream)
-                    }else{
-                        null
-                    }
-                    LedgerEntryClaimableBalance(lastModifiedLedgerSeq, claimableBalance, discriminant, extensionV1)
-                }
-                LedgerEntryType.LIQUIDITY_POOL -> {
-                    val liquidityPool = LiquidityPoolEntry.decode(stream)
-                    val discriminant = stream.readInt()
-                    val extensionV1 = if (discriminant == 1){
-                        LedgerEntryExtensionV1.decode(stream)
-                    }else{
-                        null
-                    }
-                    LedgerEntryLiquidityPool(lastModifiedLedgerSeq, liquidityPool, discriminant, extensionV1)
-                }
-                else -> throw  IllegalArgumentException("Could not decode LedgerEntry for type: $type")
-            }
+
+            return LedgerEntry(lastModifiedLedgerSeq, LedgerEntryData.decode(stream), LedgerEntryExtensionV1.decodeNullable(stream))
         }
     }
 
+}
+
+sealed class LedgerEntryData(
+    val ledgerEntryType: LedgerEntryType
+): XdrElement{
+
+    override fun encode(stream: XdrStream) {
+        ledgerEntryType.encode(stream)
+    }
+
+    data class Account(
+        val account: AccountEntry,
+    ) : LedgerEntryData(LedgerEntryType.ACCOUNT)
+
+    data class Trustline(
+        val trustLine: TrustLineEntry,
+    ) : LedgerEntryData(LedgerEntryType.TRUSTLINE){
+        override fun encode(stream: XdrStream) {
+            super.encode(stream)
+            trustLine.encode(stream)
+        }
+    }
+
+    data class Offer(
+        val offer: OfferEntry,
+    ) : LedgerEntryData(LedgerEntryType.OFFER){
+        override fun encode(stream: XdrStream) {
+            super.encode(stream)
+            offer.encode(stream)
+        }
+    }
+
+    data class Data(
+        val data: DataEntry,
+    ) : LedgerEntryData(LedgerEntryType.DATA){
+        override fun encode(stream: XdrStream) {
+            super.encode(stream)
+            data.encode(stream)
+        }
+    }
+
+    data class ClaimableBalance(
+        val claimableBalance: ClaimableBalanceEntry,
+    ) : LedgerEntryData(LedgerEntryType.CLAIMABLE_BALANCE){
+        override fun encode(stream: XdrStream) {
+            super.encode(stream)
+            claimableBalance.encode(stream)
+        }
+    }
+
+    data class LiquidityPool(
+        val liquidityPool: LiquidityPoolEntry,
+    ) : LedgerEntryData(LedgerEntryType.LIQUIDITY_POOL){
+        override fun encode(stream: XdrStream) {
+            super.encode(stream)
+            liquidityPool.encode(stream)
+        }
+    }
+
+    data class ContractData(
+        val contractData: ContractDataEntry,
+    ): LedgerEntryData(LedgerEntryType.CONTRACT_DATA){
+        override fun encode(stream: XdrStream) {
+            super.encode(stream)
+            contractData.encode(stream)
+        }
+    }
+
+    data class ContractCode(val contractCodeEntry: ContractCodeEntry): LedgerEntryData(LedgerEntryType.CONTRACT_CODE){
+        override fun encode(stream: XdrStream) {
+            super.encode(stream)
+            contractCodeEntry.encode(stream)
+        }
+    }
+
+    data class TTL(
+        val ttl: TTLEntry,
+    ): LedgerEntryData(LedgerEntryType.TTL){
+        override fun encode(stream: XdrStream) {
+            super.encode(stream)
+            ttl.encode(stream)
+        }
+    }
+
+    companion object: XdrElementDecoder<LedgerEntryData> {
+        override fun decode(stream: XdrStream): LedgerEntryData {
+            return when(LedgerEntryType.decode(stream)){
+                LedgerEntryType.ACCOUNT -> Account(AccountEntry.decode(stream))
+                LedgerEntryType.TRUSTLINE -> Trustline(TrustLineEntry.decode(stream))
+                LedgerEntryType.OFFER -> Offer(OfferEntry.decode(stream))
+                LedgerEntryType.DATA -> Data(DataEntry.decode(stream))
+                LedgerEntryType.CLAIMABLE_BALANCE -> ClaimableBalance(ClaimableBalanceEntry.decode(stream))
+                LedgerEntryType.LIQUIDITY_POOL -> LiquidityPool(LiquidityPoolEntry.decode(stream))
+                LedgerEntryType.CONTRACT_DATA -> ContractData(ContractDataEntry.decode(stream))
+                LedgerEntryType.CONTRACT_CODE -> ContractCode(ContractCodeEntry.decode(stream))
+                LedgerEntryType.CONFIG_SETTING -> TODO()
+                LedgerEntryType.TTL -> TTL(TTLEntry.decode(stream))
+            }
+        }
+    }
 }
 
 

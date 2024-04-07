@@ -1,5 +1,6 @@
 package me.rahimklaber.stellar.base
 
+import me.rahimklaber.stellar.base.operations.InvokeHostFunction
 import me.rahimklaber.stellar.base.operations.Operation
 import me.rahimklaber.stellar.base.xdr.*
 import me.rahimklaber.stellar.base.xdr.MuxedAccount
@@ -79,14 +80,15 @@ fun preconditions(
     minSequenceNumber,
 )
 
-class Transaction(
+data class Transaction(
     val sourceAccount: String,
     val fee: UInt,
     val sequenceNumber: Long,
     val preconditions: TransactionPreconditions,
     val memo: Memo,
     val operations: List<Operation>,
-    val network: Network
+    val network: Network,
+    val sorobanData: SorobanTransactionData? = null
 ) {
     private val _signatures: MutableList<DecoratedSignature> = mutableListOf()
     val signatures: List<DecoratedSignature>
@@ -99,7 +101,8 @@ class Transaction(
             seqNum = sequenceNumber,
             cond = preconditions.toXdr(),
             memo = memo.toXdr(),
-            operations = operations.map(Operation::toXdr)
+            operations = operations.map(Operation::toXdr),
+            sorobanData = sorobanData
         )
 
     fun toEnvelopeXdr(): TransactionEnvelope {
@@ -109,6 +112,19 @@ class Transaction(
                 signatures = _signatures.toList() // copy list
             )
         )
+    }
+
+    fun withSorobanData(sorobanData: SorobanTransactionData): me.rahimklaber.stellar.base.Transaction =
+        copy(sorobanData = sorobanData)
+
+    fun withAuthEntry(authorizationEntry: SorobanAuthorizationEntry): me.rahimklaber.stellar.base.Transaction {
+        val op = operations.first() as InvokeHostFunction
+
+        val newOp = op.copy(
+            op.xdr.copy(auth = op.xdr.auth + authorizationEntry)
+        )
+
+        return copy(operations = listOf(newOp))
     }
 
     // data to sign to create a valid signature

@@ -8,7 +8,11 @@ package me.rahimklaber.stellar.base.xdr
 //    OFFER = 2,
 //    DATA = 3,
 //    CLAIMABLE_BALANCE = 4,
-//    LIQUIDITY_POOL = 5
+//    LIQUIDITY_POOL = 5,
+//    CONTRACT_DATA = 6,
+//    CONTRACT_CODE = 7,
+//    CONFIG_SETTING = 8,
+//    TTL = 9
 //};
 ///////////////////////////////////////////////////////////////////////////
 enum class LedgerEntryType(val value: Int) : XdrElement {
@@ -17,7 +21,11 @@ enum class LedgerEntryType(val value: Int) : XdrElement {
     OFFER(2),
     DATA(3),
     CLAIMABLE_BALANCE(4),
-    LIQUIDITY_POOL(5);
+    LIQUIDITY_POOL(5),
+    CONTRACT_DATA(6),
+    CONTRACT_CODE(7),
+    CONFIG_SETTING(8),
+    TTL(9);
 
     override fun encode(stream: XdrStream) {
         stream.writeInt(value)
@@ -25,16 +33,9 @@ enum class LedgerEntryType(val value: Int) : XdrElement {
 
     companion object: XdrElementDecoder<LedgerEntryType>{
         override fun decode(stream: XdrStream): LedgerEntryType {
-            return when(val value = stream.readInt()){
-                0 -> ACCOUNT
-                1 -> TRUSTLINE
-                2 -> OFFER
-                3 -> DATA
-                4 -> CLAIMABLE_BALANCE
-                5 -> LIQUIDITY_POOL
-                else -> throw IllegalArgumentException("could not decode $value to LedgerEntryType")
-
-            }
+            val value = stream.readInt()
+            return entries.find { it.value == value }
+                ?: throw IllegalArgumentException("could not decode $value to LedgerEntryType")
         }
 
     }

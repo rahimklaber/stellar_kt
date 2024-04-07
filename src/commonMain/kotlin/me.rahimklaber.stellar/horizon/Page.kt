@@ -1,6 +1,5 @@
 package me.rahimklaber.stellar.horizon
 
-import com.github.michaelbull.result.runCatching
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import kotlinx.serialization.KSerializer
@@ -27,20 +26,15 @@ data class Page<T>(@SerialName("_records") val records: List<T>, val links: Link
 /**
  * Get the next page.
  */
-suspend inline fun <reified T> Page<T>.next(server: Server): RequestResult<Page<T>> {
-    return runCatching {
-        server.client.get(links.next ?: throw Exception("Cannot get next page.")).body()
-    }
-
+suspend inline fun <reified T> Page<T>.next(server: Server): Page<T> {
+    return server.client.get(links.next ?: throw Exception("Cannot get next page.")).body()
 }
 
 /**
  * Get the previous page.
  */
-suspend inline fun <reified T> Page<T>.prev(server: Server): RequestResult<Page<T>> {
-    return runCatching {
-        server.client.get(links.prev ?: throw Exception("Cannot get previous page.")).body()
-    }
+suspend inline fun <reified T> Page<T>.prev(server: Server): Page<T> {
+    return server.client.get(links.prev ?: throw Exception("Cannot get previous page.")).body()
 }
 
 

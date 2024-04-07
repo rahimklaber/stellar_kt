@@ -1,6 +1,5 @@
 package me.rahimklaber.stellar.horizon
 
-import com.github.michaelbull.result.runCatching
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -12,10 +11,8 @@ class TransactionRequestBuilder(
     horizonUrl: String,
 ) : RequestBuilder<TransactionResponse>(client, horizonUrl, "transactions") {
 
-    override suspend fun call(): RequestResult<Page<TransactionResponse>> {
-        return runCatching {
-            client.get(buildUrl()).body()
-        }
+    override suspend fun call(): Page<TransactionResponse> {
+        return client.get(buildUrl()).body()
     }
 
     fun forAccount(accountId: String) = apply{
@@ -37,11 +34,9 @@ class TransactionRequestBuilder(
 
     suspend fun stream() = inlineStream<TransactionResponse>()
 
-    suspend fun transaction(transactionHash: String): RequestResult<TransactionResponse> {
+    suspend fun transaction(transactionHash: String): TransactionResponse {
         addPath(transactionHash)
-        return runCatching {
-            client.get(buildUrl()).body()
-        }
+        return client.get(buildUrl()).body()
     }
 
     override fun limit(limit: Int): TransactionRequestBuilder {

@@ -1,7 +1,6 @@
 package me.rahimklaber.stellar.horizon
 
 
-import com.github.michaelbull.result.runCatching
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -44,11 +43,9 @@ class OperationsRequestBuilder(client: HttpClient, horizonUrl: String) :
     }
 
 
-    suspend fun operation(operationId: ULong): RequestResult<OperationResponse> {
+    suspend fun operation(operationId: ULong): OperationResponse {
         addPath(operationId.toString())
-        return runCatching {
-            client.get(buildUrl()).body()
-        }
+        return client.get(buildUrl()).body()
     }
 
     override fun limit(limit: Int): OperationsRequestBuilder {
@@ -67,8 +64,8 @@ class OperationsRequestBuilder(client: HttpClient, horizonUrl: String) :
     }
 
     suspend fun stream() = inlineStream<OperationResponse>()
-    override suspend fun call(): RequestResult<Page<OperationResponse>> {
-        return runCatching {
+    override suspend fun call(): Page<OperationResponse> {
+        return run {
             val extension = if (forAccount) {
                 "accounts"
             } else if (forLedger) {

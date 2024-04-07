@@ -3,8 +3,10 @@ package me.rahimklaber.stellar.base
 import io.matthewnelson.encoding.builders.Base32Default
 import io.matthewnelson.encoding.core.Decoder.Companion.decodeToByteArray
 import io.matthewnelson.encoding.core.Encoder.Companion.encodeToCharArray
+import me.rahimklaber.stellar.base.VersionByte.*
 import me.rahimklaber.stellar.base.xdr.*
 import me.rahimklaber.stellar.base.xdr.MuxedAccount
+import me.rahimklaber.stellar.base.xdr.soroban.ScAddress
 import okio.Buffer
 
 //This file was ported from the java sdk
@@ -24,14 +26,7 @@ enum class VersionByte(// C
     }
 
     companion object {
-        fun findByValue(value: Byte): VersionByte? {
-            for (versionByte in values()) {
-                if (value == versionByte.value) {
-                    return versionByte
-                }
-            }
-            return null
-        }
+        fun findByValue(value: Byte) = entries.find { it.value == value }
     }
 }
 
@@ -55,6 +50,14 @@ private val base32Encoding = Base32Default {
 //doing it like this to add some context
 object StrKey
 
+fun StrKey.encodeToScAddress(address: String): ScAddress{
+    return when(decodeVersionByte(address)){
+        ACCOUNT_ID -> ScAddress.Account(encodeToAccountIDXDR(address))
+        CONTRACT -> ScAddress.Contract(Hash(decodeContractAddress(address)))
+       else -> throw IllegalArgumentException("could not decode $address as ScAddress")
+    }
+}
+
 fun StrKey.encodeToAccountIDXDR(account: String) : AccountID {
     return AccountID(PublicKey.PublicKeyEd25519(decodeAccountId(account).toUint256()))
 }
@@ -65,8 +68,8 @@ fun StrKey.encodeToAccountIDXDR(account: String) : AccountID {
 fun StrKey.encodeToMuxedAccountXDR(account: String): MuxedAccount {
 
     return when(decodeVersionByte(account)){
-        VersionByte.ACCOUNT_ID -> MuxedAccount.Ed25519(decodeAccountId(account).toUint256())
-        VersionByte.MUXED -> {
+        ACCOUNT_ID -> MuxedAccount.Ed25519(decodeAccountId(account).toUint256())
+        MUXED -> {
             val stream = XdrStream()
 
             stream.writeBytes(decodeMuxedAccountId(account))
@@ -80,19 +83,27 @@ fun StrKey.encodeToMuxedAccountXDR(account: String): MuxedAccount {
     }
 }
 fun StrKey.decodeAccountId(account: String) : ByteArray{
-    return decodeCheck(VersionByte.ACCOUNT_ID, account.toCharArray())
+    return decodeCheck(ACCOUNT_ID, account.toCharArray())
 }
 
 fun StrKey.decodeMuxedAccountId(account: String) : ByteArray{
-    return decodeCheck(VersionByte.MUXED, account.toCharArray())
+    return decodeCheck(MUXED, account.toCharArray())
 }
 
 fun StrKey.decodeSecretSeed(secretSeed: String): ByteArray{
-    return decodeCheck(VersionByte.SEED, secretSeed.toCharArray())
+    return decodeCheck(SEED, secretSeed.toCharArray())
+}
+
+fun StrKey.decodeContractAddress(address: String): ByteArray{
+    return decodeCheck(CONTRACT, address.toCharArray())
 }
 
 fun StrKey.encodeAccountId(pubkey: ByteArray): String {
-    return encodeCheck(VersionByte.ACCOUNT_ID, pubkey)
+    return encodeCheck(ACCOUNT_ID, pubkey)
+}
+
+fun StrKey.encodeContract(hash: ByteArray): String{
+    return encodeCheck(CONTRACT, hash)
 }
 
 fun StrKey.decodeVersionByte(data: String): VersionByte? {
@@ -138,7 +149,7 @@ fun StrKey.decodeCheck(versionByte: VersionByte, encoded: CharArray): ByteArray 
     if (!expectedChecksum.contentEquals(checksum)) {
         throw Exception("Checksum invalid")
     }
-    if (VersionByte.SEED.getValue() == decodedVersionByte.toInt()) {
+    if (SEED.getValue() == decodedVersionByte.toInt()) {
 //        java.util.Arrays.fill(bytes, 0.toByte())
 //        java.util.Arrays.fill(decoded, 0.toByte())
 //        java.util.Arrays.fill(payload, 0.toByte())

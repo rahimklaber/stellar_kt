@@ -1,4 +1,3 @@
-import com.github.michaelbull.result.orElseThrow
 import me.rahimklaber.stellar.base.*
 import me.rahimklaber.stellar.base.operations.Payment
 import me.rahimklaber.stellar.horizon.Server
@@ -12,7 +11,7 @@ suspend fun main() {
     val keypair = KeyPair.fromSecretSeed("SDCIQUQKNIIDWSX4E46GQCO7ZR6PC4X7EA7D2LRQYMIFSZ6BGZV4I3YN")
     println(keypair.accountId)
 
-    val source = server.accounts().account(account).orElseThrow().value.toAccount()
+    val source = server.accounts().account(account).toAccount()
     val transaction = transactionBuilder(source, Network.TESTNET) {
         addOperation(
             Payment(

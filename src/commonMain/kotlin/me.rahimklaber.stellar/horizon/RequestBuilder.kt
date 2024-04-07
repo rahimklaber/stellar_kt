@@ -1,7 +1,6 @@
 package me.rahimklaber.stellar.horizon
 
 
-import com.github.michaelbull.result.Result
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
@@ -14,7 +13,6 @@ import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.collections.set
 
-typealias RequestResult<T> = Result<T, Throwable>
 
 /**
  * Exception which indicates that a request is invalid.
@@ -104,7 +102,7 @@ abstract class RequestBuilder<T : Response>(
 
     }
 
-    abstract suspend fun call(): RequestResult<Page<T>>
+    abstract suspend fun call(): Page<T>
 
     /**
      * Specifies the amount of records to return.

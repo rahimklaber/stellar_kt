@@ -1,7 +1,7 @@
 package me.rahimklaber.stellar.base.xdr
 
 ///////////////////////////////////////////////////////////////////////////
-// /* a transaction is a container for a set of operations
+///* a transaction is a container for a set of operations
 //    - is executed by an account
 //    - fees are collected from the account
 //    - operations are executed in order as one ACID transaction
@@ -20,7 +20,7 @@ package me.rahimklaber.stellar.base.xdr
 //    SequenceNumber seqNum;
 //
 //    // validity conditions
-//    TransactionPreconditions cond;
+//    Preconditions cond;
 //
 //    Memo memo;
 //
@@ -31,6 +31,8 @@ package me.rahimklaber.stellar.base.xdr
 //    {
 //    case 0:
 //        void;
+//    case 1:
+//        SorobanTransactionData sorobanData;
 //    }
 //    ext;
 //};
@@ -42,7 +44,7 @@ data class Transaction(
     val cond: Preconditions,
     val memo: Memo,
     val operations: List<Operation>,
-    private val discriminant: Int = 0
+    val sorobanData: SorobanTransactionData? //TODO we treat this as a nullable, but it is actually a union with 2 cases
 ) : XdrElement {
     override fun encode(stream: XdrStream) {
         sourceAccount.encode(stream)
@@ -54,7 +56,7 @@ data class Transaction(
         operations.forEach {
             it.encode(stream)
         }
-        stream.writeInt(discriminant)
+        sorobanData.encodeNullable(stream)
     }
 
     companion object: XdrElementDecoder<Transaction> {
@@ -69,8 +71,8 @@ data class Transaction(
             for (i in 0 until size){
                 operations.add(Operation.decode(stream))
             }
-            val discriminant = stream.readInt()
-            return Transaction(sourceAccount, fee, seqNum, cond, memo, operations, discriminant)
+            val sorobanData = SorobanTransactionData.decodeNullable(stream)
+            return Transaction(sourceAccount, fee, seqNum, cond, memo, operations, sorobanData)
         }
     }
 }

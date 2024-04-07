@@ -53,7 +53,10 @@ enum class OperationType(val value: Int): XdrElement {
     CLAWBACK_CLAIMABLE_BALANCE(20),
     SET_TRUST_LINE_FLAGS(21),
     LIQUIDITY_POOL_DEPOSIT(22),
-    LIQUIDITY_POOL_WITHDRAW(23);
+    LIQUIDITY_POOL_WITHDRAW(23),
+    INVOKE_HOST_FUNCTION(24),
+    EXTEND_FOOTPRINT_TTL(25),
+    RESTORE_FOOTPRINT(26);
 
     override fun encode(stream: XdrStream) {
         stream.writeInt(value)
@@ -86,6 +89,9 @@ enum class OperationType(val value: Int): XdrElement {
                 SET_TRUST_LINE_FLAGS.value -> SET_TRUST_LINE_FLAGS
                 LIQUIDITY_POOL_DEPOSIT.value -> LIQUIDITY_POOL_DEPOSIT
                 LIQUIDITY_POOL_WITHDRAW.value -> LIQUIDITY_POOL_WITHDRAW
+                INVOKE_HOST_FUNCTION.value -> INVOKE_HOST_FUNCTION
+                EXTEND_FOOTPRINT_TTL.value -> EXTEND_FOOTPRINT_TTL
+                RESTORE_FOOTPRINT.value -> RESTORE_FOOTPRINT
                 else -> throw IllegalArgumentException("Could not decode OperationType for value: $value")
             }
         }

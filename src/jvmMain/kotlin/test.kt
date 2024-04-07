@@ -1,16 +1,16 @@
-import com.github.michaelbull.result.*
-import com.ionspin.kotlin.crypto.signature.Signature
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectIndexed
-import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
+import kotlinx.datetime.Clock
+import kotlinx.serialization.json.*
+import me.rahimklaber.stellar.JsonRpcClient
+import me.rahimklaber.stellar.JsonRpcRequest
 import me.rahimklaber.stellar.base.*
-import me.rahimklaber.stellar.base.operations.PathPaymentStrictReceive
-import me.rahimklaber.stellar.base.operations.Payment
+import me.rahimklaber.stellar.base.operations.InvokeHostFunction
+import me.rahimklaber.stellar.base.xdr.*
+import me.rahimklaber.stellar.base.xdr.soroban.*
 import me.rahimklaber.stellar.horizon.Server
 import me.rahimklaber.stellar.horizon.toAccount
-import kotlin.random.Random
+import me.rahimklaber.stellar.sorobanClient
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 
 val testAccountMerge = """
@@ -51,86 +51,199 @@ private val json = Json {
     ignoreUnknownKeys = true
 }
 
-@OptIn(ExperimentalStdlibApi::class)
-suspend fun main() {
-//    println(json.decodeFromString<TestI>(testAccountMerge))
-//    println(json.decodeFromString<Links2>(links))
+public data class SplitRecipientContract(
+    public val address: me.rahimklaber.stellar.base.xdr.soroban.SCVal.Address,
+    public val args: kotlin.collections.List<kotlin.Any>,
+    public val function: kotlin.String,
+) {
+    public fun toScVal(): me.rahimklaber.stellar.base.xdr.soroban.SCVal {
+        return SCVal.Map(
+            SCMap(
+                listOf(
+                    SCMapEntry(SCVal.Symbol(SCSymbol("address")), address.toScVal()),
+                    SCMapEntry(SCVal.Symbol(SCSymbol("args")), args.toScVal()),
+                    SCMapEntry(SCVal.Symbol(SCSymbol("function")), function.toScVal(me.rahimklaber.stellar.base.xdr.sorobanspec.SCSpecTypeDef.Symbol)),
 
-    val server = Server("https://horizon-testnet.stellar.org")
-
-    KeyPair.random()
-    val kp = Signature.keypair()
-//     Signature.init()
-    val msg = Random.nextBytes(32).toUByteArray()
-    val signature = Signature.sign(msg, kp.secretKey)
-
-    val account = "GAPXFBCUZVX4YJ6D5JDUSAVHPZVAX4PPDM3V7HE5YH4Z7PSACDNYEXOS"
-    val keypair = KeyPair.fromSecretSeed("SDCIQUQKNIIDWSX4E46GQCO7ZR6PC4X7EA7D2LRQYMIFSZ6BGZV4I3YN")
-    println(keypair.accountId)
-
-//    val transaction = Transaction(
-//        sourceAccount = account,
-//        fee = 1000u,
-//        sequenceNumber = server.accounts().account(account).orElseThrow().value.sequence + 1,
-//        preconditions = TransactionPreconditions.None,
-//        memo = Memo.None,
-//        operations = listOf(
-//            Payment(
-//                destination = "GAPXFBCUZVX4YJ6D5JDUSAVHPZVAX4PPDM3V7HE5YH4Z7PSACDNYEXOS",
-//                amount = tokenAmount(1_000_000_0),
-//                asset = Asset.Native
-//            )
-//        ),
-//        network = Network.TESTNET
-//
-//    )
-
-    val source = server.accounts().account(account).orElseThrow().value.toAccount()
-    val transaction = transactionBuilder(source, Network.TESTNET) {
-//        Payment(
-//            destination = source.accountId,
-//            amount = tokenAmount(1_000_000_0),
-//            asset = Asset.Native
-//        ).add()
-//
-//        Memo.Text("Hello world!").add()
+                    )
+            )
+        )
     }
+}
 
-    transaction.sign(keypair)
-    val transaction1 = transactionOfOne(
-        source, Network.TESTNET,
-        PathPaymentStrictReceive(
-            sendAsset = Asset.Native,
-            sendMax = TokenAmount(1_000_000_0),
-            destination = source.accountId,
-            destAsset = Asset.Native,
-            destAmount = TokenAmount(1_000_000)
+data class Stream(
+    val id: String,
+    val from: String,
+    val to: String,
+    val amount: String,
+    val startTime: ULong,
+    val endTime: ULong,
+    val amountPerSecond: ULong,
+    val tokenId: String,
+    val ableToStop: Boolean,
+
+
+    val amountWithdrawn: String = "",
+    val additionalAmount: String = "",
+    val cancelled: Boolean = false,
+)
+
+fun createSymbol(value: String) = SCVal.Symbol(SCSymbol(value))
+
+fun createAddressXdr(value: String) = catch({
+    SCVal.Address(ScAddress.Account(StrKey.encodeToAccountIDXDR(value)))
+}) {
+    SCVal.Address(ScAddress.Contract(Hash(StrKey.decodeContractAddress(value))))
+}
+
+inline fun <A> catch(function: () -> A, function1: () ->A): A {
+    return try {
+        function()
+    }catch (e: Throwable){
+        function1()
+    }
+}
+
+fun createI128(value: String): SCVal.I128 {
+
+
+    //TODO return the full 128 bits
+
+    return SCVal.I128(
+        Int128Parts(
+            low = value.toULong(),
+            hi = 0
         )
     )
+}
 
-    println(
-        server.transactions()
-            .forAccount(source.accountId)
-            .call()
-            .unwrap()
+fun createU64(value: ULong) = SCVal.U64(value)
 
 
+fun Stream.toStreamScVal(): SCVal {
+
+    val fromXdr = createAddressXdr(from)
+    val toXdr = createAddressXdr(to)
+
+
+    return SCVal.Map(
+        SCMap(
+            listOf(
+                SCMapEntry(createSymbol("able_stop"), SCVal.Bool(ableToStop)),
+                SCMapEntry(createSymbol("amount"), createI128(amount)),
+                SCMapEntry(createSymbol("amount_per_second"), createU64(amountPerSecond)),
+                SCMapEntry(createSymbol("end_time"), createU64(endTime)),
+                SCMapEntry(createSymbol("from"), fromXdr),
+                SCMapEntry(createSymbol("start_time"), createU64(startTime)),
+                SCMapEntry(createSymbol("to"), toXdr),
+                SCMapEntry(createSymbol("token_id"), createAddressXdr(tokenId)),
+            )
+        )
     )
+}
+@OptIn(ExperimentalStdlibApi::class, ExperimentalEncodingApi::class)
+suspend fun main() {
 
-//    serverff
-//        .transactions()
-//        .stream()
-//        .collect{
-//            println("""
-//                ledger: ${it.ledger}
-//                ledger: ${it.hash}
-//                pagingToken: ${it.pagingToken}
-//            """.trimIndent())
-//        }
+    val jsonRpcClient = JsonRpcClient("https://soroban-testnet.stellar.org")
 
+    val sorobanRpc = sorobanClient("https://soroban-testnet.stellar.org")
+
+    val horizon = Server("https://horizon-testnet.stellar.org")
+
+    val keypair = KeyPair.fromSecretSeed("SBVLLHTZ5ZV3KZWBBBUNMESYIMK7AEPQJY6FYNCG2PL5LZ5IFCWWSUH2")
+
+    val account = horizon.accounts().account(keypair.accountId).toAccount()
+
+
+    var tx = transactionBuilder(account, Network.TESTNET) {
+        addOperation(
+            InvokeHostFunction(
+                InvokeHostFunctionOp(
+                    HostFunction.InvokeContract(
+                        InvokeContractArgs(
+                            StrKey.encodeToScAddress("CB63WIOJRSWVI5JD3VSFFOI3JPJTUFK6NJP2NUHDNZBG6KW3YHVZISQB"),
+                            SCSymbol("create_stream"),
+                            listOf(
+                                Stream(
+                                    "",
+                                    account.accountId,
+                                    account.accountId,
+                                    "1111111111",
+                                    Clock.System.now().epochSeconds.toULong(),
+                                    Clock.System.now().epochSeconds.toULong() + 100_000u,
+                                    10u,
+                                    "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC",
+                                    true,
+                                ).toStreamScVal()
+                            )
+                        ),
+                    ),
+                    listOf()
+                ),
+            )
+        )
+        setFee(300_000u)
+    }
+
+    tx.sign(keypair)
+
+    val meta: TransactionMeta.V3 = TransactionMeta.decodeFromString("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") as TransactionMeta.V3
+
+    println(meta.v3.sorobanMeta?.returnValue)
+//    val simulateRes = sorobanRpc.simulateTransaction(tx.toEnvelopeXdr().toXdrString())
 //
-//    println("transaction hash: ${transaction.hash().toHexString()}")
+//    println(simulateRes)
+//
+//
+//    tx = tx
+//        .withSorobanData(SorobanTransactionData.decodeFromString(simulateRes.transactionData!!))
+//
+//    tx = catch({
+//        tx.withAuthEntry(SorobanAuthorizationEntry.decodeFromString(simulateRes.results!!.first().auth.first()))
+//    }){
+//        tx
+//    }
+//
+//    tx.sign(keypair)
+//
+//    val sendTransactionResponse = sorobanRpc.sendTransaction(tx.toEnvelopeXdr().toXdrString())
+//    println(sendTransactionResponse)
+//
+//    while (true){
+//        delay(1000)
+//
+//        println(sorobanRpc.getTransaction(sendTransactionResponse.hash))
+//    }
+
+//    val specbase64 = "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"
+//
+//    val stream = XdrStream()
+//    stream.writeBytes(Base64.decode(specbase64))
+//    val specs = mutableListOf<SCSpecEntry>()
+//
+//    do{
+//        try {
+//            specs.add(SCSpecEntry.decode(stream))
+//        }catch (e: Exception){
+//            println(e)
+//            break
+//        }
+//    }while (true)
+//
+//    while (!KeyPair.isInit){
+//        delay(200)
+//    }
+
 //    println(
-//        server.submitTransaction(transaction)
+//        SplitRecipientContract(
+//            SCVal.Address(ScAddress.Account(StrKey.encodeToAccountIDXDR(KeyPair.random().accountId))),
+//            listOf(SCVal.Symbol(SCSymbol("hi"))),
+//            "test"
+//        ).toScVal()
+//            .toXdrString()
 //    )
+
+//    println(wrapperForSpecEntry(specs.first()))
+
+
+
 }

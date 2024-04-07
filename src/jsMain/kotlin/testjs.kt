@@ -1,4 +1,3 @@
-import com.github.michaelbull.result.unwrap
 import me.rahimklaber.stellar.horizon.Server
 
 suspend fun main() {
@@ -7,8 +6,5 @@ suspend fun main() {
      val operations = server.operations()
          .forAccount("GAAUMMCT5PVLB5SP7FJYDXKZYDFJLXLJ34EXFREMDWOZLKYVE2PNVZWO")
          .limit(200)
-         .call().unwrap()
-    operations.records.forEach {
-        println(it)
-    }
+         .call()
 }

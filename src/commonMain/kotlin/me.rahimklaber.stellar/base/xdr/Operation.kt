@@ -59,6 +59,12 @@ package me.rahimklaber.stellar.base.xdr
 //        LiquidityPoolDepositOp liquidityPoolDepositOp;
 //    case LIQUIDITY_POOL_WITHDRAW:
 //        LiquidityPoolWithdrawOp liquidityPoolWithdrawOp;
+//    case INVOKE_HOST_FUNCTION:
+//        InvokeHostFunctionOp invokeHostFunctionOp;
+//    case EXTEND_FOOTPRINT_TTL:
+//        ExtendFootprintTTLOp extendFootprintTTLOp;
+//    case RESTORE_FOOTPRINT:
+//        RestoreFootprintOp restoreFootprintOp;
 //    }
 //    body;
 //};
@@ -190,6 +196,19 @@ sealed class Operation(val type: OperationType) : XdrElement {
                 OperationType.LIQUIDITY_POOL_WITHDRAW -> {
                     val liquidityPoolWithdrawOp = LiquidityPoolWithdrawOp.decode(stream)
                     LiquidityPoolWithdraw(account, liquidityPoolWithdrawOp)
+                }
+
+                OperationType.INVOKE_HOST_FUNCTION -> {
+                    val invokeHostFunctionOp = InvokeHostFunctionOp.decode(stream)
+                    InvokeHostFunction(account, invokeHostFunctionOp)
+                }
+                OperationType.EXTEND_FOOTPRINT_TTL -> {
+                    val extendFootprintTTLOp = ExtendFootprintTTLOp.decode(stream)
+                    ExtendFootPrintTTL(account, extendFootprintTTLOp)
+                }
+                OperationType.RESTORE_FOOTPRINT -> {
+                    val restoreFootPrintOp = RestoreFootprintOp.decode(stream)
+                    RestoreFootprint(account, restoreFootPrintOp)
                 }
             }
         }
@@ -382,6 +401,37 @@ sealed class Operation(val type: OperationType) : XdrElement {
         override fun encode(stream: XdrStream) {
             super.encode(stream)
             liquidityPoolWithdrawOp.encode(stream)
+        }
+    }
+
+    data class InvokeHostFunction(
+        override val sourceAccount: MuxedAccount?,
+        val invokeHostFunctionOp: InvokeHostFunctionOp
+    ) : Operation(OperationType.INVOKE_HOST_FUNCTION) {
+        override fun encode(stream: XdrStream) {
+            super.encode(stream)
+            invokeHostFunctionOp.encode(stream)
+        }
+    }
+
+
+    data class ExtendFootPrintTTL(
+        override val sourceAccount: MuxedAccount?,
+        val extendFootprintTTLOp: ExtendFootprintTTLOp,
+    ) : Operation(OperationType.EXTEND_FOOTPRINT_TTL) {
+        override fun encode(stream: XdrStream) {
+            super.encode(stream)
+            extendFootprintTTLOp.encode(stream)
+        }
+    }
+
+    data class RestoreFootprint(
+        override val sourceAccount: MuxedAccount?,
+        val restoreFootPrintOp: RestoreFootprintOp
+    ) : Operation(OperationType.RESTORE_FOOTPRINT) {
+        override fun encode(stream: XdrStream) {
+            super.encode(stream)
+            restoreFootPrintOp.encode(stream)
         }
     }
 

@@ -93,9 +93,7 @@ class XdrStream : IXdrStream{
 
     override fun readInt(): Int = buffer.readInt()
 
-    override fun readByte(): Byte {
-        TODO("Not yet implemented")
-    }
+    override fun readByte(): Byte = buffer.readByte()
 
     override fun readBytes(length: Int): ByteArray {
         val byteBuffer = ByteArray(length)

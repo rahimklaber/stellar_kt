@@ -1,5 +1,8 @@
 package me.rahimklaber.stellar.base.xdr
 
+import me.rahimklaber.stellar.base.*
+import me.rahimklaber.stellar.base.Transaction
+
 ///////////////////////////////////////////////////////////////////////////
 // union Asset switch (AssetType type)
 //{
@@ -56,4 +59,17 @@ sealed class Asset(
         }
 
     }
+}
+
+fun Asset.contractId(network: Network) = run{
+    val preimage = ContractIDPreimage.PreimageFromAsset(this)
+
+    val hashIDPreimage = HashIDPreimage.ContractId(
+        Hash(network.networkId),
+        preimage
+    )
+
+    val hashed = com.ionspin.kotlin.crypto.hash.Hash.sha256(hashIDPreimage.encodeToByteArray().toUByteArray())
+
+    StrKey.encodeContract(hashed.toByteArray())
 }

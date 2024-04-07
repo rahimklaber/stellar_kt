@@ -217,7 +217,7 @@ data class AccountEntryExtensionV2(
             val signerSponsoringIdsSize = stream.readInt()
             val signerSponsoringIds = mutableListOf<SponsorshipDescriptor>()
 
-            for (i in 0..signerSponsoringIdsSize){
+            for (i in 0..< signerSponsoringIdsSize){
                 signerSponsoringIds.add(SponsorshipDescriptor.decode(stream))
             }
 

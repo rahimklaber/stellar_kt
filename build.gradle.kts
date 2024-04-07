@@ -10,11 +10,12 @@ plugins {
 }
 
 group = "me.rahimklaber"
-version = "0.0.3"
+version = "0.0.4"
 
 repositories {
     mavenCentral()
     maven("https://jitpack.io")
+    maven("https://repo.kotlin.link")
 }
 val ktor_version = "2.3.5"
 val okioVersion = "3.6.0"
@@ -23,7 +24,9 @@ var encoding = "1.2.1"
 
 val localProperties = Properties()
 
-localProperties.load(File("local.properties").inputStream())
+try {
+    localProperties.load(File("local.properties").inputStream())
+}catch (e: Throwable){}
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).all {
     kotlinOptions.freeCompilerArgs = listOf("-Xcontext-receivers")
@@ -49,7 +52,7 @@ afterEvaluate {
             val publication = this
             val javadocJar = tasks.register("${publication.name}JavadocJar", Jar::class) {
                 archiveClassifier.set("javadoc")
-                archiveBaseName.set("${archiveBaseName.get()}-${publication.name}")
+                archiveAppendix.set(name)
             }
             artifact(javadocJar)
             pom {
@@ -128,7 +131,6 @@ kotlin {
                 api("io.ktor:ktor-client-core:$ktor_version")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
-                api("com.michael-bull.kotlin-result:kotlin-result:1.1.13")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
                 api("com.squareup.okio:okio:$okioVersion")
@@ -147,6 +149,9 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-cio-jvm:$ktor_version")
+
+                implementation("com.squareup:kotlinpoet:1.14.2")
+                api("space.kscience:kmath-core:0.3.1")
             }
         }
         val jvmTest by getting

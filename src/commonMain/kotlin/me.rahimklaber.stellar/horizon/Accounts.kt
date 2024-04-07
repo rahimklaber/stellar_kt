@@ -1,7 +1,5 @@
 package me.rahimklaber.stellar.horizon
 
-import com.github.michaelbull.result.Result
-import com.github.michaelbull.result.runCatching
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -20,11 +18,9 @@ import me.rahimklaber.stellar.base.Asset
 
 class AccountRequestBuilder(client: HttpClient, horizonUrl: String) :
     RequestBuilder<AccountResponse>(client, horizonUrl, "accounts") {
-    suspend fun account(accountId: String): RequestResult<AccountResponse> {
+    suspend fun account(accountId: String): AccountResponse {
         addPath(accountId)
-       return  runCatching {
-            client.get(buildUrl()).body()
-        }
+       return client.get(buildUrl()).body()
     }
 
     /**
@@ -83,10 +79,8 @@ class AccountRequestBuilder(client: HttpClient, horizonUrl: String) :
     }
 
 
-    override suspend fun call(): RequestResult<Page<AccountResponse>> {
-        return runCatching {
-            client.get(buildUrl()).body()
-        }
+    override suspend fun call(): Page<AccountResponse> {
+        return client.get(buildUrl()).body()
     }
 
     companion object {
