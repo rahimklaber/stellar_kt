@@ -1,4 +1,3 @@
-import com.github.michaelbull.result.unwrap
 import kotlinx.coroutines.test.runTest
 import me.rahimklaber.stellar.horizon.Order
 import me.rahimklaber.stellar.horizon.Server
@@ -15,9 +14,8 @@ class ServerTest{
                 .forAccount("GAAUMMCT5PVLB5SP7FJYDXKZYDFJLXLJ34EXFREMDWOZLKYVE2PNVZWO")
                 .limit(200)
                 .order(Order.DESC)
-                .call().unwrap()
+                .call()
 
-            println("hi")
             operations.records.filterIsInstance<PaymentResponse>()
                 .forEach(::println)
         }

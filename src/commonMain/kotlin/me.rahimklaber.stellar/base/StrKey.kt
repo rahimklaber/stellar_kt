@@ -7,6 +7,8 @@ import me.rahimklaber.stellar.base.VersionByte.*
 import me.rahimklaber.stellar.base.xdr.*
 import me.rahimklaber.stellar.base.xdr.MuxedAccount
 import me.rahimklaber.stellar.base.xdr.soroban.ScAddress
+import me.rahimklaber.stellar.base.xdr.soroban.ScAddressType
+import me.rahimklaber.stellar.base.xdr.soroban.ScAddressType.*
 import okio.Buffer
 
 //This file was ported from the java sdk
@@ -104,6 +106,13 @@ fun StrKey.encodeAccountId(pubkey: ByteArray): String {
 
 fun StrKey.encodeContract(hash: ByteArray): String{
     return encodeCheck(CONTRACT, hash)
+}
+
+fun StrKey.encodeScAddress(address: ScAddress): String{
+    return when(address){
+        is ScAddress.Account -> encodeAccountId((address.accountId.publicKey as PublicKey.PublicKeyEd25519).ed25519.byteArray)
+        is ScAddress.Contract -> encodeContract(address.contractId.byteArray)
+    }
 }
 
 fun StrKey.decodeVersionByte(data: String): VersionByte? {

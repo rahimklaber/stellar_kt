@@ -15,12 +15,38 @@ data class LatestLedgerResponse(
     val sequence: Long
 )
 
-data class getEventsResponse(
-    val events: Map<Int, EventResponse>
+
+
+@Serializable
+data class GetEventRequest(
+    val startLedger: Int,
+    val filters: List<EventFilter>,
+    val pagination: Pagination? = null
+){
+    @Serializable
+    data class Pagination(
+        val cursor: String? = null,
+        val limit: Int? = null
+    )
+
+    @Serializable
+    data class EventFilter(
+        val type: String,
+        val contractIds: List<String>,
+        val topics: List<List<String>>
+    )
+
+}
+
+@Serializable
+data class GetEventsResponse(
+    val latestLedger: Int,
+    val events: List<EventResponse>
 )
 
+@Serializable
 data class EventResponse(
-    val type: String,
+    val type: String, //contract/diagnostic/system
     val ledger: Int,
     val ledgerClosedAt: String,
     val contractId: String,
@@ -29,6 +55,7 @@ data class EventResponse(
     val inSuccessfulContractCall: Boolean,
     val topic: List<String>,
     val value: String,
+    val txHash: String,
 )
 
 fun createLatestLedgerResponse(response: JsonObject): LatestLedgerResponse {
@@ -90,6 +117,7 @@ interface SorobanClient {
     suspend fun sendTransaction(txXdr: String): SendTransactionResponse
     suspend fun getTransaction(hash: String): GetTransactionResponse
     suspend fun getLedgerEntries(keys: List<String>): GetLedgerEntriesResponse
+    suspend fun getEvents(request: GetEventRequest): GetEventsResponse
 }
 
 @Serializable
@@ -173,7 +201,11 @@ internal class SorobanClientImpl(
             put("transaction", JsonPrimitive(txXdr))
         }
 
+        println(txXdr)
+
         val response = client.executeRequest(JsonRpcRequest("sendTransaction", params))
+
+        println(response.toString())
 
         return json.decodeFromJsonElement<SendTransactionResponse>(response["result"]!!)
     }
@@ -194,6 +226,14 @@ internal class SorobanClientImpl(
         }
 
         val response = client.executeRequest(JsonRpcRequest("getLedgerEntries", params))
+
+        return json.decodeFromJsonElement(response["result"]!!)
+    }
+
+    override suspend fun getEvents(request: GetEventRequest): GetEventsResponse {
+        val params =  Json.encodeToJsonElement(request)
+
+        val response = client.executeRequest(JsonRpcRequest("getEvents", params))
 
         return json.decodeFromJsonElement(response["result"]!!)
     }
