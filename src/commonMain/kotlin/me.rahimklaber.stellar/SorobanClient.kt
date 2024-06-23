@@ -19,8 +19,8 @@ data class LatestLedgerResponse(
 
 @Serializable
 data class GetEventRequest(
-    val startLedger: Int,
     val filters: List<EventFilter>,
+    val startLedger: Int? = null,
     val pagination: Pagination? = null
 ){
     @Serializable
