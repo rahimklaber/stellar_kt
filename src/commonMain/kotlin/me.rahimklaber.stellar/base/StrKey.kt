@@ -45,7 +45,7 @@ private val b32Table by lazy {
 }
 
 private val base32Encoding = Base32Default {
-    lineBreakInterval = 64
+    lineBreakInterval = 0
     encodeToLowercase = false
     padEncoded = false
 }
@@ -64,6 +64,21 @@ fun StrKey.encodeToAccountIDXDR(account: String) : AccountID {
     return AccountID(PublicKey.PublicKeyEd25519(decodeAccountId(account).toUint256()))
 }
 
+fun StrKey.encodeMuxedAccount(account: MuxedAccount): String {
+    return when (account) {
+        is MuxedAccount.Ed25519 -> encodeAccountId(account.ed25519.byteArray)
+        is MuxedAccount.MuxedEd25519 -> {
+            val accountBytes = account.ed25519.byteArray
+            val idBytes = XdrStream().apply { writeULong(account.id) }.readAllBytes()
+            val bytes = ByteArray(40)
+            accountBytes.copyInto(bytes)
+            idBytes.copyInto(bytes, destinationOffset = 32)
+
+            encodeCheck(MUXED, bytes)
+        }
+    }
+}
+
 /**
  * Encode either a AccountId or MuxedAccountId to an XDR object
  */
@@ -73,11 +88,15 @@ fun StrKey.encodeToMuxedAccountXDR(account: String): MuxedAccount {
         ACCOUNT_ID -> MuxedAccount.Ed25519(decodeAccountId(account).toUint256())
         MUXED -> {
             val stream = XdrStream()
+            val bytes = decodeMuxedAccountId(account)
+            stream.writeBytes(bytes)
 
-            stream.writeBytes(decodeMuxedAccountId(account))
+            val pubkey = stream.readBytes(32).toUint256()
 
-            val muxedAccount = MuxedAccount.decode(stream)
-            require(muxedAccount is MuxedAccount.MuxedEd25519){"should be muxed"}
+            val muxedAccount = MuxedAccount.MuxedEd25519(
+                stream.readULong(),
+                pubkey
+            )
             muxedAccount
         }
         else -> throw IllegalArgumentException("could not decode $account as MuxedAccountXDR")

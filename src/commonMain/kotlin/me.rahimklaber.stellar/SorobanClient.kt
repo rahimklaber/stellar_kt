@@ -8,6 +8,11 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.*
+import me.rahimklaber.stellar.base.Account
+import me.rahimklaber.stellar.base.StrKey
+import me.rahimklaber.stellar.base.encodeToAccountIDXDR
+import me.rahimklaber.stellar.base.xdr.*
+import me.rahimklaber.stellar.horizon.AccountResponse
 
 data class LatestLedgerResponse(
     val id: String,
@@ -112,6 +117,7 @@ data class JsonRpcRequest(
 )
 
 interface SorobanClient {
+    suspend fun getAccount(account: String): Account
     suspend fun getLatestLedger(): LatestLedgerResponse
     suspend fun simulateTransaction(txXdr: String): SimulateTransactionResponse
     suspend fun sendTransaction(txXdr: String): SendTransactionResponse
@@ -181,6 +187,21 @@ val json = Json {
 internal class SorobanClientImpl(
     val client: JsonRpcClient
 ) : SorobanClient {
+    override suspend fun getAccount(accountId: String): Account {
+        val entries = getLedgerEntries(
+            listOf(
+                LedgerKey.LedgerKeyAccount(StrKey.encodeToAccountIDXDR(accountId)).toXdrString()
+            )
+        )
+
+        require(entries.entries.size == 1){"Account not found"}
+
+        val account = LedgerEntryData.decodeFromString(entries.entries.first().xdr) as LedgerEntryData.Account
+
+        return Account(accountId, account.account.sequenceNumber)
+
+    }
+
     override suspend fun getLatestLedger(): LatestLedgerResponse {
         val response = client.executeRequest(JsonRpcRequest("getLatestLedger"))
         return createLatestLedgerResponse(response)

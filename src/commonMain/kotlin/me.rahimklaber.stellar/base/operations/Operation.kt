@@ -1,15 +1,18 @@
 package me.rahimklaber.stellar.base.operations
 
-import me.rahimklaber.stellar.base.Asset
-import me.rahimklaber.stellar.base.StrKey
-import me.rahimklaber.stellar.base.decodeAccountId
-import me.rahimklaber.stellar.base.xdr.MuxedAccount
-import me.rahimklaber.stellar.base.xdr.PaymentOp
-import me.rahimklaber.stellar.base.xdr.toUint256
+import me.rahimklaber.stellar.base.xdr.Operation
 
 sealed interface Operation {
     val sourceAccount: String?
-    fun toXdr(): me.rahimklaber.stellar.base.xdr.Operation
+    fun toXdr(): Operation
 
+    companion object{
+        fun fromXdr(xdr: Operation): me.rahimklaber.stellar.base.operations.Operation {
+            return when(xdr){
+                is Operation.InvokeHostFunction -> InvokeHostFunction.fromXdr(xdr)
+                else -> TODO()
+            }
+        }
+    }
 
 }

@@ -143,4 +143,51 @@ data class Transaction(
     fun sign(keyPair: KeyPair) {
         _signatures.add(keyPair.signDecorated(hash()))
     }
+
+    companion object{
+        fun fromEnvelopeXdr(envelope: String, network: Network): me.rahimklaber.stellar.base.Transaction {
+            val envelope = TransactionEnvelope.decodeFromString(envelope)
+
+            return when(envelope){
+                is TransactionEnvelope.TxV1 -> {
+                    val tx = envelope.v1.tx
+                    Transaction(
+                        StrKey.encodeMuxedAccount(tx.sourceAccount),
+                        tx.fee,
+                        tx.seqNum,
+                        when(tx.cond){
+                            Preconditions.None -> TransactionPreconditions.None
+                            is Preconditions.V2 -> {
+                                val cond = tx.cond.v2
+                                TransactionPreconditions.V2(
+                                    cond.minSeqAge,
+                                    cond.minSeqLedgerGap,
+                                    cond.extraSigners,
+                                    cond.timeBounds,
+                                    cond.ledgerBounds,
+                                    cond.minSeqNum,
+                                )
+                            }
+                            is Preconditions.Time -> TODO()
+                        },
+                        when(tx.memo){
+                            is me.rahimklaber.stellar.base.xdr.Memo.Id -> Memo.Id(tx.memo.id)
+                            is me.rahimklaber.stellar.base.xdr.Memo.Text -> Memo.Text(tx.memo.text.toString())
+                            me.rahimklaber.stellar.base.xdr.Memo.None -> Memo.None
+                            is me.rahimklaber.stellar.base.xdr.Memo.Hash -> TODO()
+                            is me.rahimklaber.stellar.base.xdr.Memo.Return -> TODO()
+                        },
+                        tx.operations.map(Operation::fromXdr),
+                        network,
+                        tx.sorobanData
+
+                    ).apply {
+                        _signatures.addAll(envelope.v1.signatures)
+                    }
+                }
+                is TransactionEnvelope.FeeBump -> TODO()
+                else -> TODO()
+            }
+        }
+    }
 }
