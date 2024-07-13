@@ -73,7 +73,10 @@ sealed class SCVal(val type: ScValType): XdrElement {
     data class Bool(val b: Boolean): SCVal(ScValType.SCV_BOOL){
         override fun encode(stream: XdrStream) {
             super.encode(stream)
-            stream.writeInt(1)
+            when(b){
+                true -> stream.writeInt(1)
+                false -> stream.writeInt(0)
+            }
         }
     }
 
