@@ -80,14 +80,14 @@ afterEvaluate {
                 }
             }
         }
-        extensions.findByType<SigningExtension>()!!.apply sc@{
-            val publishing = extensions.findByType<PublishingExtension>() ?: return@sc
-            val key = localProperties["signingKey"]?.toString()?.replace("\\n", "\n")
-            val password = localProperties["signingPassword"]?.toString()
-
-            useInMemoryPgpKeys(key, password)
-            sign(publishing.publications)
-        }
+//        extensions.findByType<SigningExtension>()!!.apply sc@{
+//            val publishing = extensions.findByType<PublishingExtension>() ?: return@sc
+//            val key = localProperties["signingKey"]?.toString()?.replace("\\n", "\n")
+//            val password = localProperties["signingPassword"]?.toString()
+//
+//            useInMemoryPgpKeys(key, password)
+//            sign(publishing.publications)
+//        }
     }
 }
 
