@@ -88,7 +88,7 @@ data class Transaction(
     val memo: Memo,
     val operations: List<Operation>,
     val network: Network,
-    val sorobanData: SorobanTransactionData? = null
+    var sorobanData: SorobanTransactionData? = null
 ) {
     private val _signatures: MutableList<DecoratedSignature> = mutableListOf()
     val signatures: List<DecoratedSignature>

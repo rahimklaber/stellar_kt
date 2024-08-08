@@ -3,8 +3,8 @@ import java.net.URI
 import java.util.*
 
 plugins {
-    kotlin("multiplatform") version "1.9.10"
-    kotlin("plugin.serialization") version "1.9.10"
+    kotlin("multiplatform") version "2.0.0"
+    kotlin("plugin.serialization") version "2.0.0"
     `maven-publish`
     signing
 }
@@ -17,10 +17,13 @@ repositories {
     maven("https://jitpack.io")
     maven("https://repo.kotlin.link")
 }
-val ktor_version = "2.3.5"
+val ktor_version = "2.3.12"
 val okioVersion = "3.6.0"
 var encoding = "1.2.1"
-
+val coroutinesVersion = "1.9.0-RC"
+val serializationVersion = "1.7.1"
+val datetimeVersion = "0.6.0"
+val cryptoVersion = "0.9.2"
 
 val localProperties = Properties()
 
@@ -124,17 +127,17 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
+                api("org.jetbrains.kotlinx:kotlinx-datetime:$datetimeVersion")
 
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+                api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
 
                 api("io.ktor:ktor-client-core:$ktor_version")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
 
                 api("com.squareup.okio:okio:$okioVersion")
-                implementation("com.ionspin.kotlin:multiplatform-crypto-libsodium-bindings:0.8.9")
+                implementation("com.ionspin.kotlin:multiplatform-crypto-libsodium-bindings:$cryptoVersion")
                 implementation("io.matthewnelson.kotlin-components:encoding-base16:$encoding")
                 implementation("io.matthewnelson.kotlin-components:encoding-base32:$encoding")
 
@@ -150,8 +153,8 @@ kotlin {
             dependencies {
                 implementation("io.ktor:ktor-client-cio-jvm:$ktor_version")
 
-                implementation("com.squareup:kotlinpoet:1.14.2")
-                api("space.kscience:kmath-core:0.3.1")
+//                implementation("com.squareup:kotlinpoet:1.14.2")
+//                api("space.kscience:kmath-core:0.3.1")
             }
         }
         val jvmTest by getting
@@ -163,8 +166,8 @@ kotlin {
         val jsTest by getting
         val nativeMain by getting{
             dependencies {
-//                implementation("io.ktor:ktor-client-winhttp:$ktor_version")
-            }
+                implementation("io.ktor:ktor-client-winhttp:$ktor_version")
+        }
         }
         val nativeTest by getting
     }

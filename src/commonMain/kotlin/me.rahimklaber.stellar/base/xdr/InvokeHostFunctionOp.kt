@@ -16,7 +16,7 @@ package me.rahimklaber.stellar.base.xdr
 ///////////////////////////////////////////////////////////////////////////
 data class InvokeHostFunctionOp(
     val hostFunction: HostFunction,
-    val auth: List<SorobanAuthorizationEntry>
+    var auth: List<SorobanAuthorizationEntry>
 ): XdrElement {
     override fun encode(stream: XdrStream) {
         hostFunction.encode(stream)

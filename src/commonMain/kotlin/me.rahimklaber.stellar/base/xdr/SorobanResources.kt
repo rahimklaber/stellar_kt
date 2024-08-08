@@ -19,7 +19,7 @@ package me.rahimklaber.stellar.base.xdr
 data class SorobanResources(
     val footprint: LedgerFootprint,
     val instructions: UInt,
-    val readBytes: UInt,
+    var readBytes: UInt,
     val writeBytes: UInt,
 ): XdrElement {
     override fun encode(stream: XdrStream) {
