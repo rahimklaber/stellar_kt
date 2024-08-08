@@ -222,11 +222,9 @@ internal class SorobanClientImpl(
             put("transaction", JsonPrimitive(txXdr))
         }
 
-        println(txXdr)
 
         val response = client.executeRequest(JsonRpcRequest("sendTransaction", params))
 
-        println(response.toString())
 
         return json.decodeFromJsonElement<SendTransactionResponse>(response["result"]!!)
     }
