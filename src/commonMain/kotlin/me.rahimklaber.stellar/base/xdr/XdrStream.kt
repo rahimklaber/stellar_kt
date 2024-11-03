@@ -2,6 +2,9 @@ package me.rahimklaber.stellar.base.xdr
 
 import okio.Buffer
 
+class XdrDecodeException(message: String): Exception(message)
+
+fun xdrDecodeError(message: String): Nothing = throw XdrDecodeException(message)
 
 interface IXdrStream{
     //only write the lower 8 bits

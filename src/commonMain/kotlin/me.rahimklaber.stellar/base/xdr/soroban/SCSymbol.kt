@@ -24,3 +24,4 @@ data class SCSymbol(val string: String): XdrElement {
         }
     }
 }
+

@@ -8,7 +8,7 @@ package me.rahimklaber.stellar.base.xdr
 //};
 ///////////////////////////////////////////////////////////////////////////
 
-sealed class PublicKey(val type: PublicKeyType) : XdrElement, XdrElementDecoder<PublicKey>{
+sealed class PublicKey(val type: PublicKeyType) : XdrElement{
 
     data class PublicKeyEd25519(
         val ed25519: Uint256
@@ -16,10 +16,6 @@ sealed class PublicKey(val type: PublicKeyType) : XdrElement, XdrElementDecoder<
         override fun encode(stream: XdrStream) {
             type.encode(stream)
             ed25519.encode(stream)
-        }
-
-        override fun decode(stream: XdrStream): PublicKey {
-            TODO("Not yet implemented")
         }
 
     }
