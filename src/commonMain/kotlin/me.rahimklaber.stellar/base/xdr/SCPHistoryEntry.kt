@@ -1,5 +1,13 @@
 package me.rahimklaber.stellar.base.xdr
 
+/**
+ * // SCP history file is an array of these
+ * union SCPHistoryEntry switch (int v)
+ * {
+ * case 0:
+ *     SCPHistoryEntryV0 v0;
+ * };
+ */
 sealed class SCPHistoryEntry(
     val v: Int,
 ) : XdrElement {

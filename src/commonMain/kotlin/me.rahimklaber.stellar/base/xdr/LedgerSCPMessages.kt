@@ -1,19 +1,28 @@
 package me.rahimklaber.stellar.base.xdr
 
-public data class LedgerSCPMessages(
-    public val ledgerSeq: UInt,
-    public val messages: SCPEnvelope,
+/**
+ * // historical SCP messages
+ *
+ * struct LedgerSCPMessages
+ * {
+ *     uint32 ledgerSeq;
+ *     SCPEnvelope messages<>;
+ * };
+ */
+data class LedgerSCPMessages(
+    val ledgerSeq: UInt,
+    val messages: List<SCPEnvelope>,
 ) : XdrElement {
     override fun encode(stream: XdrStream) {
         stream.writeInt(ledgerSeq.toInt())
         messages.encode(stream)
     }
 
-    public companion object : XdrElementDecoder<LedgerSCPMessages> {
+    companion object : XdrElementDecoder<LedgerSCPMessages> {
         override fun decode(stream: XdrStream): LedgerSCPMessages {
             val ledgerSeq = stream.readInt().toUInt()
-            val messages = SCPEnvelope.decode(stream)
-            return LedgerSCPMessages(ledgerSeq,messages)
+            val messages = decodeXdrElementList(stream, SCPEnvelope::decode)
+            return LedgerSCPMessages(ledgerSeq, messages)
         }
     }
 }
