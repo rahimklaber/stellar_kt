@@ -42,7 +42,7 @@ class AccountEntryTest{
 
         entry.encode(xdrStream)
 
-        println(xdrStream.buffer.readByteArray().encodeBase64())
+//        println(xdrStream.buffer.readByteArray().encodeBase64())
 
         val streamv2 = XdrStream()
 
@@ -59,6 +59,6 @@ class AccountEntryTest{
         )
         v2.encode(streamv2)
 
-        println("v2: ${streamv2.buffer.readByteArray().encodeBase64()}")
+//        println("v2: ${streamv2.buffer.readByteArray().encodeBase64()}")
     }
 }

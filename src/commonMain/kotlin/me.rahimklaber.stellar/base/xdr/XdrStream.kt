@@ -1,6 +1,7 @@
 package me.rahimklaber.stellar.base.xdr
 
-import okio.Buffer
+import kotlinx.io.Buffer
+import kotlinx.io.readByteArray
 
 class XdrDecodeException(message: String): Exception(message)
 
@@ -99,8 +100,8 @@ class XdrStream : IXdrStream{
     override fun readByte(): Byte = buffer.readByte()
 
     override fun readBytes(length: Int): ByteArray {
-        val byteBuffer = ByteArray(length)
-        buffer.read(byteBuffer,0,length)
+        val byteBuffer = buffer.readByteArray(length)
+
         val padAmount = (4 -( length % 4)) % 4
         readPad(padAmount)
         return byteBuffer

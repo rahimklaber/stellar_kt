@@ -3,13 +3,14 @@ package me.rahimklaber.stellar.base
 import io.matthewnelson.encoding.builders.Base32Default
 import io.matthewnelson.encoding.core.Decoder.Companion.decodeToByteArray
 import io.matthewnelson.encoding.core.Encoder.Companion.encodeToCharArray
+import kotlinx.io.Buffer
+import kotlinx.io.readByteArray
 import me.rahimklaber.stellar.base.VersionByte.*
 import me.rahimklaber.stellar.base.xdr.*
 import me.rahimklaber.stellar.base.xdr.MuxedAccount
 import me.rahimklaber.stellar.base.xdr.soroban.ScAddress
 import me.rahimklaber.stellar.base.xdr.soroban.ScAddressType
 import me.rahimklaber.stellar.base.xdr.soroban.ScAddressType.*
-import okio.Buffer
 
 //This file was ported from the java sdk
 enum class VersionByte(// C
@@ -188,7 +189,7 @@ fun StrKey.decodeCheck(versionByte: VersionByte, encoded: CharArray): ByteArray 
 
 fun StrKey.encodeCheck(versionByte: VersionByte, data: ByteArray): String {
         val outputStream = Buffer()
-        outputStream.writeByte(versionByte.getValue())
+        outputStream.writeByte(versionByte.getValue().toByte())
         outputStream.write(data)
         val payload: ByteArray = outputStream.readByteArray()
         val checksum: ByteArray = calculateChecksum(payload)

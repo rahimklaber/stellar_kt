@@ -1,6 +1,7 @@
 package me.rahimklaber.stellar.base.xdr
 
 import io.ktor.util.*
+import kotlinx.io.readByteArray
 import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals

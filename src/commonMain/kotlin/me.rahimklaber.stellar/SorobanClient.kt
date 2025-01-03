@@ -20,7 +20,11 @@ data class LatestLedgerResponse(
     val sequence: Long
 )
 
-
+@Serializable
+data class Pagination(
+    val cursor: String? = null,
+    val limit: Int? = null
+)
 
 @Serializable
 data class GetEventRequest(
@@ -28,11 +32,7 @@ data class GetEventRequest(
     val startLedger: Int? = null,
     val pagination: Pagination? = null
 ){
-    @Serializable
-    data class Pagination(
-        val cursor: String? = null,
-        val limit: Int? = null
-    )
+
 
     @Serializable
     data class EventFilter(
@@ -79,6 +79,7 @@ class JsonRpcClient(
         install(ContentNegotiation) {
             json(Json {
                 this.ignoreUnknownKeys = true
+                isLenient = true
             })
         }
     }
@@ -116,6 +117,31 @@ data class JsonRpcRequest(
     val id: Long = 1,
 )
 
+@Serializable
+data class GetLedgesRequest(
+    val startLedger: Int?,
+    val pagination: Pagination? = null
+)
+
+@Serializable
+data class GetLedgersResponse(
+    val ledgers: List<GetLedgerResult>,
+    val latestLedger: Int,
+    val latestLedgerCloseTime: String,
+    val oldestLedger: Int,
+    val oldestLedgerCloseTime: String,
+    val cursor: String
+) {
+    @Serializable
+    data class GetLedgerResult(
+        val hash: String,
+        val sequence: Long,
+        val ledgerCloseTime: String,
+        val headerXdr: String,
+        val metadataXdr: String,
+    )
+}
+
 interface SorobanClient {
     suspend fun getAccount(account: String): Account
     suspend fun getLatestLedger(): LatestLedgerResponse
@@ -124,6 +150,7 @@ interface SorobanClient {
     suspend fun getTransaction(hash: String): GetTransactionResponse
     suspend fun getLedgerEntries(keys: List<String>): GetLedgerEntriesResponse
     suspend fun getEvents(request: GetEventRequest): GetEventsResponse
+    suspend fun getLedgers(request: GetLedgesRequest): GetLedgersResponse
 }
 
 @Serializable
@@ -183,6 +210,7 @@ data class SimulateTransactionResponse(
 
 val json = Json {
     ignoreUnknownKeys = true
+    isLenient = true
 }
 internal class SorobanClientImpl(
     val client: JsonRpcClient
@@ -254,6 +282,13 @@ internal class SorobanClientImpl(
 
         val response = client.executeRequest(JsonRpcRequest("getEvents", params))
 
+        return json.decodeFromJsonElement(response["result"]!!)
+    }
+
+    override suspend fun getLedgers(request: GetLedgesRequest): GetLedgersResponse {
+        val params =  Json.encodeToJsonElement(request)
+
+        val response = client.executeRequest(JsonRpcRequest("getLedgers", params))
         return json.decodeFromJsonElement(response["result"]!!)
     }
 

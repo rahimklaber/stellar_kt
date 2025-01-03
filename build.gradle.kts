@@ -98,7 +98,7 @@ afterEvaluate {
 kotlin {
     jvm {
         compilations.all {
-            kotlinOptions.jvmTarget = "1.8"
+//            kotlinOptions.jvmTarget = "1.8"
         }
         testRuns["test"].executionTask.configure {
             useJUnit()
@@ -136,7 +136,8 @@ kotlin {
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
 
-                api("com.squareup.okio:okio:$okioVersion")
+                api("org.jetbrains.kotlinx:kotlinx-io-core:0.6.0")
+
                 implementation("com.ionspin.kotlin:multiplatform-crypto-libsodium-bindings:$cryptoVersion")
                 implementation("io.matthewnelson.kotlin-components:encoding-base16:$encoding")
                 implementation("io.matthewnelson.kotlin-components:encoding-base32:$encoding")
@@ -152,12 +153,16 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-cio-jvm:$ktor_version")
+                implementation("network.lightsail:stellar-sdk:0.44.0")
 
 //                implementation("com.squareup:kotlinpoet:1.14.2")
 //                api("space.kscience:kmath-core:0.3.1")
             }
         }
-        val jvmTest by getting
+        val jvmTest by getting{
+            dependencies{
+            }
+        }
         val jsMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-js:$ktor_version")

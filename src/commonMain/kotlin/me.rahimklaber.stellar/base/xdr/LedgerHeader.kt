@@ -52,66 +52,114 @@ data class LedgerHeader(
     val bucketListHash: Hash,
     val ledgerSeq: UInt,
     val totalCoins: Long,
-    val feePool: UInt,
+    val feePool: Long,
+    val inflationSeq: UInt,
     val idPool: ULong,
     val baseFee: UInt,
     val baseReserve: UInt,
     val maxTxSetSize: UInt,
     val skipList: List<Hash>,
 
-    val discriminant: Int,
-    val v1Extension: LedgerHeaderExtensionV1,
+    val ext: Ext
 ): XdrElement{
     override fun encode(stream: XdrStream) {
-        stream.writeInt(ledgerVersion.toInt())
-        previousLedgerHash.encode(stream)
-        scpValue.encode(stream)
-        txSetResultHash.encode(stream)
-        bucketListHash.encode(stream)
-        stream.writeInt(ledgerSeq.toInt())
-        stream.writeLong(totalCoins)
-        stream.writeInt(feePool.toInt())
-        stream.writeULong(idPool)
-        stream.writeInt(baseFee.toInt())
-        stream.writeInt(baseReserve.toInt())
-        stream.writeInt(maxTxSetSize.toInt())
-
-        //skipList
-        stream.writeInt(4)
-        skipList.forEach{it.encode(stream)}
-
-        stream.writeInt(discriminant)
-        v1Extension.encode(stream)
+        error("not implemented")
+//        stream.writeInt(ledgerVersion.toInt())
+//        previousLedgerHash.encode(stream)
+//        scpValue.encode(stream)
+//        txSetResultHash.encode(stream)
+//        bucketListHash.encode(stream)
+//        stream.writeInt(ledgerSeq.toInt())
+//        stream.writeLong(totalCoins)
+//        stream.writelo(feePool)
+//        stream.writeInt(inflationSeq.toInt())
+//        stream.writeULong(idPool)
+//        stream.writeInt(baseFee.toInt())
+//        stream.writeInt(baseReserve.toInt())
+//        stream.writeInt(maxTxSetSize.toInt())
+//
+//        //skipList
+//        stream.writeInt(4)
+//        skipList.forEach{it.encode(stream)}
+//
+//        stream.writeInt(discriminant)
+//        v1Extension.encode(stream)
     }
 
     companion object: XdrElementDecoder<LedgerHeader> {
         override fun decode(stream: XdrStream): LedgerHeader {
+
+            val ledgerVersion = stream.readInt().toUInt()
+            val previousLedgerHash = Hash.decode(stream)
+            val scpValue = StellarValue.decode(stream)
+            val txSetResultHash = Hash.decode(stream)
+            val bucketListHash =  Hash.decode(stream)
+            val ledgerSeq = stream.readInt().toUInt()
+            val totalCoins = stream.readLong()
+            val feePool = stream.readLong()
+            val inflationSeq = stream.readInt().toUInt()
+            val idPool = stream.readULong()
+            val baseFee = stream.readInt().toUInt()
+            val baseReserve = stream.readInt().toUInt()
+            val maxTxSetSize = stream.readInt().toUInt()
+
+
+            val skipList = run{
+                val list =  mutableListOf<Hash>()
+
+                repeat(4){
+                    list.add(Hash.decode(stream))
+                }
+
+                list
+            }
+            val ext = Ext.decode(stream)
+
+
             return LedgerHeader(
-                stream.readInt().toUInt(),
-                Hash.decode(stream),
-                StellarValue.decode(stream),
-                Hash.decode(stream),
-                Hash.decode(stream),
-                stream.readInt().toUInt(),
-                stream.readLong(),
-                stream.readInt().toUInt(),
-                stream.readULong(),
-                stream.readInt().toUInt(),
-                stream.readInt().toUInt(),
-                stream.readInt().toUInt(),
-                run{
-                    val list = mutableListOf<Hash>()
-
-                    repeat(4){
-                        list.add(Hash.decode(stream))
-                    }
-
-                    list
-                },
-                stream.readInt(),
-                LedgerHeaderExtensionV1.decode(stream)
+                ledgerVersion,
+                previousLedgerHash,
+                scpValue,
+                txSetResultHash,
+                bucketListHash,
+                ledgerSeq,
+                totalCoins,
+                feePool,
+                inflationSeq,
+                idPool,
+                baseFee,
+                baseReserve,
+                maxTxSetSize,
+                skipList,
+                ext
             )
         }
+    }
+
+    data class Ext(val v: Int, val v1: LedgerHeaderExtensionV1? = null): XdrElement{
+        override fun encode(stream: XdrStream) {
+            stream.writeInt(v)
+            v1?.encode(stream)
+        }
+
+        companion object: XdrElementDecoder<Ext>{
+            override fun decode(stream: XdrStream): Ext {
+                val v = stream.readInt()
+
+                val v1 = when(v){
+                    0 -> null
+                    1 -> LedgerHeaderExtensionV1.decode(stream)
+                    else -> xdrDecodeError("could not decode LedgerHeader todo...")
+                }
+
+                return Ext(
+                    v,
+                    v1
+                )
+            }
+
+        }
+
     }
 
 }

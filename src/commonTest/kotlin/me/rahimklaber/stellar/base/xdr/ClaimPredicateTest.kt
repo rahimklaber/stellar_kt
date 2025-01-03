@@ -16,6 +16,6 @@ class ClaimPredicateTest {
         val stream = XdrStream()
         predicate.encode(stream)
 
-        println(stream.buffer.readByteArray().encodeBase64())
+//        println(stream.buffer.readByteArray().encodeBase64())
     }
 }
