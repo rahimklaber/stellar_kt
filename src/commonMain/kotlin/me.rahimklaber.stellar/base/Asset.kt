@@ -24,15 +24,23 @@ sealed interface Asset {
     data class AlphaNum(override val code: String, override val issuer: String): Asset{
         override fun toXdr(): me.rahimklaber.stellar.base.xdr.Asset.AlphaNum {
             return if(code.length > 4){
+                var bytes = code.encodeToByteArray()
+                if (bytes.size < 12) {
+                    bytes += ByteArray(12 - bytes.size)
+                }
                 me.rahimklaber.stellar.base.xdr.Asset.AlphaNum12(
                     AlphaNum12(
-                        AssetCode12(code.encodeToByteArray()),
+                        AssetCode12(bytes),
                         StrKey.encodeToAccountIDXDR(issuer)
                     )
                 )
             }else{
+                var bytes = code.encodeToByteArray()
+                if (bytes.size < 4) {
+                    bytes += ByteArray(4 - bytes.size)
+                }
                 me.rahimklaber.stellar.base.xdr.Asset.AlphaNum4(AlphaNum4(
-                    AssetCode4(code.encodeToByteArray()),
+                    AssetCode4(bytes),
                     StrKey.encodeToAccountIDXDR(issuer)
                 ))
             }

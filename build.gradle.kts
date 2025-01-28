@@ -3,8 +3,8 @@ import java.net.URI
 import java.util.*
 
 plugins {
-    kotlin("multiplatform") version "2.0.0"
-    kotlin("plugin.serialization") version "2.0.0"
+    kotlin("multiplatform") version "2.1.0"
+    kotlin("plugin.serialization") version "2.1.0"
     `maven-publish`
     signing
 }
@@ -17,12 +17,12 @@ repositories {
     maven("https://jitpack.io")
     maven("https://repo.kotlin.link")
 }
-val ktor_version = "2.3.12"
+val ktor_version = "3.0.3"
 val okioVersion = "3.6.0"
 var encoding = "1.2.1"
-val coroutinesVersion = "1.9.0-RC"
-val serializationVersion = "1.7.1"
-val datetimeVersion = "0.6.0"
+val coroutinesVersion = "1.10.1"
+val serializationVersion = "1.8.0"
+val datetimeVersion = "0.6.1"
 val cryptoVersion = "0.9.2"
 
 val localProperties = Properties()
@@ -127,16 +127,16 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-datetime:$datetimeVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:$datetimeVersion")
 
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
 
-                api("io.ktor:ktor-client-core:$ktor_version")
+                implementation("io.ktor:ktor-client-core:$ktor_version")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
 
-                api("org.jetbrains.kotlinx:kotlinx-io-core:0.6.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.6.0")
 
                 implementation("com.ionspin.kotlin:multiplatform-crypto-libsodium-bindings:$cryptoVersion")
                 implementation("io.matthewnelson.kotlin-components:encoding-base16:$encoding")
