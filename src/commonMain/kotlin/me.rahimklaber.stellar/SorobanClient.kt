@@ -200,19 +200,23 @@ data class SimulateTransactionResponse(
     val minResourceFee: String? = null,
     val cost: SorobanCost? = null,
     val error: String? = null,
+    val restorePreamble : RestorePreamble? = null,
 ){
     @Serializable
     data class Result(val xdr: String, val auth: List<String>)
 
     @Serializable
     data class SorobanCost(val cpuInstructions: String? = null, val memBytes: String)
+
+    @Serializable
+    data class RestorePreamble(val minResourceFee: String, val transactionDate: String)
 }
 
 val json = Json {
     ignoreUnknownKeys = true
     isLenient = true
 }
-internal class SorobanClientImpl(
+class SorobanClientImpl(
     val client: JsonRpcClient
 ) : SorobanClient {
     override suspend fun getAccount(accountId: String): Account {
