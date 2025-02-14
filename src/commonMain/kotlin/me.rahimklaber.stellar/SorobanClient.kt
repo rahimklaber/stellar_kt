@@ -209,7 +209,7 @@ data class SimulateTransactionResponse(
     data class SorobanCost(val cpuInstructions: String? = null, val memBytes: String)
 
     @Serializable
-    data class RestorePreamble(val minResourceFee: String, val transactionDate: String)
+    data class RestorePreamble(val minResourceFee: String, val transactionData: String)
 }
 
 val json = Json {
