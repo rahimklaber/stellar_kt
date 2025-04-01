@@ -16,19 +16,18 @@ sealed interface Asset {
         override val code: String = "XLM"
         override val issuer: String = ""
 
-        //todo maybe use extension functions for this?
         override fun toXdr(): me.rahimklaber.stellar.base.xdr.Asset {
             return me.rahimklaber.stellar.base.xdr.Asset.Native
         }
     }
     data class AlphaNum(override val code: String, override val issuer: String): Asset{
-        override fun toXdr(): me.rahimklaber.stellar.base.xdr.Asset.AlphaNum {
+        override fun toXdr(): me.rahimklaber.stellar.base.xdr.Asset {
             return if(code.length > 4){
                 var bytes = code.encodeToByteArray()
                 if (bytes.size < 12) {
                     bytes += ByteArray(12 - bytes.size)
                 }
-                me.rahimklaber.stellar.base.xdr.Asset.AlphaNum12(
+                me.rahimklaber.stellar.base.xdr.Asset.CreditAlphanum12(
                     AlphaNum12(
                         AssetCode12(bytes),
                         StrKey.encodeToAccountIDXDR(issuer)
@@ -39,7 +38,7 @@ sealed interface Asset {
                 if (bytes.size < 4) {
                     bytes += ByteArray(4 - bytes.size)
                 }
-                me.rahimklaber.stellar.base.xdr.Asset.AlphaNum4(AlphaNum4(
+                me.rahimklaber.stellar.base.xdr.Asset.CreditAlphanum4(AlphaNum4(
                     AssetCode4(bytes),
                     StrKey.encodeToAccountIDXDR(issuer)
                 ))

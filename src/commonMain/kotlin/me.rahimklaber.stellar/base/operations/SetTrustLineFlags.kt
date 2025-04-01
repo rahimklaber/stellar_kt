@@ -17,13 +17,15 @@ data class SetTrustLineFlags(
         val source = sourceAccount?.let {
             StrKey.encodeToMuxedAccountXDR(it)
         }
-        return me.rahimklaber.stellar.base.xdr.Operation.SetTrustlineFlags(
+        return me.rahimklaber.stellar.base.xdr.Operation(
             sourceAccount = source,
-            SetTrustLineFlagsOp(
-                trustor = StrKey.encodeToAccountIDXDR(trustor),
-                asset = asset.toXdr(),
-                clearFlags = clearFlags,
-                setFlags = setFlags
+            body = me.rahimklaber.stellar.base.xdr.Operation.OperationBody.SetTrustLineFlags(
+                SetTrustLineFlagsOp(
+                    trustor = StrKey.encodeToAccountIDXDR(trustor),
+                    asset = asset.toXdr(),
+                    clearFlags = clearFlags,
+                    setFlags = setFlags
+                )
             )
         )
     }

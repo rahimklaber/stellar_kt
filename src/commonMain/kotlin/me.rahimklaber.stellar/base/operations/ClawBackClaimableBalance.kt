@@ -14,10 +14,12 @@ data class ClawBackClaimableBalance(
         val source = sourceAccount?.let {
             StrKey.encodeToMuxedAccountXDR(it)
         }
-        return me.rahimklaber.stellar.base.xdr.Operation.ClawbackClaimableBalance(
+        return me.rahimklaber.stellar.base.xdr.Operation(
             sourceAccount = source,
-            ClawbackClaimableBalanceOp(
-                balanceID = ClaimableBalanceID.fromHex(balanceId)
+            body = me.rahimklaber.stellar.base.xdr.Operation.OperationBody.ClawbackClaimableBalance(
+                ClawbackClaimableBalanceOp(
+                    balanceID = ClaimableBalanceID.fromHex(balanceId)
+                )
             )
         )
     }

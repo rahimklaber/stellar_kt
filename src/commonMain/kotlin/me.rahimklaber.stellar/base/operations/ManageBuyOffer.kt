@@ -16,14 +16,16 @@ data class ManageBuyOffer(
     val offerID: Long
 ) : Operation {
     override fun toXdr(): me.rahimklaber.stellar.base.xdr.Operation {
-        return me.rahimklaber.stellar.base.xdr.Operation.ManageBuyOffer(
+        return me.rahimklaber.stellar.base.xdr.Operation(
             sourceAccount = sourceAccount?.let { StrKey.encodeToMuxedAccountXDR(it) },
-            ManageBuyOfferOp(
-                selling = selling.toXdr(),
-                buying = buying.toXdr(),
-                buyAmount = buyAmount.value,
-                price = price,
-                offerID = offerID
+            body = me.rahimklaber.stellar.base.xdr.Operation.OperationBody.ManageBuyOffer(
+                ManageBuyOfferOp(
+                    selling = selling.toXdr(),
+                    buying = buying.toXdr(),
+                    buyAmount = buyAmount.value,
+                    price = price,
+                    offerID = offerID
+                )
             )
         )
     }

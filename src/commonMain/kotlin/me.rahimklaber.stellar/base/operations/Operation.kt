@@ -8,8 +8,8 @@ sealed interface Operation {
 
     companion object{
         fun fromXdr(xdr: Operation): me.rahimklaber.stellar.base.operations.Operation {
-            return when(xdr){
-                is Operation.InvokeHostFunction -> InvokeHostFunction.fromXdr(xdr)
+            return when(xdr.body){
+                is Operation.OperationBody.InvokeHostFunction -> InvokeHostFunction.fromXdr(xdr)
                 else -> TODO()
             }
         }

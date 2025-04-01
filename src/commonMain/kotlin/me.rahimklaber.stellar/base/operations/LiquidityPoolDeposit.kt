@@ -20,14 +20,16 @@ data class LiquidityPoolDeposit(
         val source = sourceAccount?.let {
             StrKey.encodeToMuxedAccountXDR(it)
         }
-        return me.rahimklaber.stellar.base.xdr.Operation.LiquidityPoolDeposit(
+        return me.rahimklaber.stellar.base.xdr.Operation(
             sourceAccount = source,
-            LiquidityPoolDepositOp(
-                liquidityPoolID = PoolID.fromHex(poolID),
-                maxAmountA = maxAmountA.value,
-                maxAmountB = maxAmountB.value,
-                minPrice = minPrice,
-                maxPrice = maxPrice
+            body = me.rahimklaber.stellar.base.xdr.Operation.OperationBody.LiquidityPoolDeposit(
+                LiquidityPoolDepositOp(
+                    liquidityPoolID = PoolID.fromHex(poolID),
+                    maxAmountA = maxAmountA.value,
+                    maxAmountB = maxAmountB.value,
+                    minPrice = minPrice,
+                    maxPrice = maxPrice
+                )
             )
         )
     }

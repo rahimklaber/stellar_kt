@@ -1,7 +1,7 @@
 package me.rahimklaber.stellar.base.operations
 
 import me.rahimklaber.stellar.base.*
-import me.rahimklaber.stellar.base.xdr.ClawBackOp
+import me.rahimklaber.stellar.base.xdr.ClawbackOp
 
 data class ClawBack(
     override val sourceAccount: String? = null,
@@ -13,12 +13,14 @@ data class ClawBack(
         val source = sourceAccount?.let {
             StrKey.encodeToMuxedAccountXDR(it)
         }
-        return me.rahimklaber.stellar.base.xdr.Operation.Clawback(
+        return me.rahimklaber.stellar.base.xdr.Operation(
             sourceAccount = source,
-            ClawBackOp(
-                asset = asset.toXdr(),
-                from = StrKey.encodeToMuxedAccountXDR(from),
-                amount = amount.value
+            body = me.rahimklaber.stellar.base.xdr.Operation.OperationBody.Clawback(
+                ClawbackOp(
+                    asset = asset.toXdr(),
+                    from = StrKey.encodeToMuxedAccountXDR(from),
+                    amount = amount.value
+                )
             )
         )
     }

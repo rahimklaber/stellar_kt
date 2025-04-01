@@ -42,19 +42,20 @@ data class SetOptions(
     val signer: Signer? = null
 ) : Operation {
     override fun toXdr(): me.rahimklaber.stellar.base.xdr.Operation {
-        return me.rahimklaber.stellar.base.xdr.Operation.SetOptions(
+        return me.rahimklaber.stellar.base.xdr.Operation(
             sourceAccount = sourceAccount?.let { StrKey.encodeToMuxedAccountXDR(it) },
-            SetOptionsOp(
-                inflationDest = inflationDest?.let { StrKey.encodeToAccountIDXDR(it) },
-                clearFlags = clearFlags?.packedValue,
-                setFlags = setFlags?.packedValue,
-                masterWeight = masterWeight,
-                lowThreshold = lowThreshold,
-                medThreshold = medThreshold,
-                highThreshold = highThreshold,
-                homeDomain = homeDomain?.let { String32(it.encodeToByteArray()) },
-                signer = signer
-
+            body = me.rahimklaber.stellar.base.xdr.Operation.OperationBody.SetOptions(
+                SetOptionsOp(
+                    inflationDest = inflationDest?.let { StrKey.encodeToAccountIDXDR(it) },
+                    clearFlags = clearFlags?.packedValue,
+                    setFlags = setFlags?.packedValue,
+                    masterWeight = masterWeight,
+                    lowThreshold = lowThreshold,
+                    medThreshold = medThreshold,
+                    highThreshold = highThreshold,
+                    homeDomain = homeDomain?.let { String32(it) },
+                    signer = signer
+                )
             )
         )
     }

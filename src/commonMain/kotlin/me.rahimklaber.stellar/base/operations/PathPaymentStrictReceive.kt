@@ -13,15 +13,17 @@ data class PathPaymentStrictReceive(
     override val sourceAccount: String? = null,
 ): Operation{
     override fun toXdr(): me.rahimklaber.stellar.base.xdr.Operation {
-        return me.rahimklaber.stellar.base.xdr.Operation.PathPaymentStrictReceive(
+        return me.rahimklaber.stellar.base.xdr.Operation(
             sourceAccount = sourceAccount?.let { StrKey.encodeToMuxedAccountXDR(it) },
-            pathPaymentStrictReceiveOp = PathPaymentStrictReceiveOp(
-                sendAsset = sendAsset.toXdr(),
-                sendMax = sendMax.value,
-                destination = StrKey.encodeToMuxedAccountXDR(destination),
-                destAsset = destAsset.toXdr(),
-                destAmount = destAmount.value,
-                path = path.map(Asset::toXdr)
+            body = me.rahimklaber.stellar.base.xdr.Operation.OperationBody.PathPaymentStrictReceive(
+                pathPaymentStrictReceiveOp = PathPaymentStrictReceiveOp(
+                    sendAsset = sendAsset.toXdr(),
+                    sendMax = sendMax.value,
+                    destination = StrKey.encodeToMuxedAccountXDR(destination),
+                    destAsset = destAsset.toXdr(),
+                    destAmount = destAmount.value,
+                    path = path.map(Asset::toXdr)
+                )
             )
         )
     }

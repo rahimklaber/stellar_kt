@@ -8,9 +8,6 @@ import kotlinx.io.readByteArray
 import me.rahimklaber.stellar.base.VersionByte.*
 import me.rahimklaber.stellar.base.xdr.*
 import me.rahimklaber.stellar.base.xdr.MuxedAccount
-import me.rahimklaber.stellar.base.xdr.soroban.ScAddress
-import me.rahimklaber.stellar.base.xdr.soroban.ScAddressType
-import me.rahimklaber.stellar.base.xdr.soroban.ScAddressType.*
 
 //This file was ported from the java sdk
 enum class VersionByte(// C
@@ -53,24 +50,24 @@ private val base32Encoding = Base32Default {
 //doing it like this to add some context
 object StrKey
 
-fun StrKey.encodeToScAddress(address: String): ScAddress{
+fun StrKey.encodeToScAddress(address: String): SCAddress{
     return when(decodeVersionByte(address)){
-        ACCOUNT_ID -> ScAddress.Account(encodeToAccountIDXDR(address))
-        CONTRACT -> ScAddress.Contract(Hash(decodeContractAddress(address)))
+        ACCOUNT_ID -> SCAddress.Account(encodeToAccountIDXDR(address))
+        CONTRACT -> SCAddress.Contract(Hash(decodeContractAddress(address)))
        else -> throw IllegalArgumentException("could not decode $address as ScAddress")
     }
 }
 
 fun StrKey.encodeToAccountIDXDR(account: String) : AccountID {
-    return AccountID(PublicKey.PublicKeyEd25519(decodeAccountId(account).toUint256()))
+    return AccountID(PublicKey.Ed25519(decodeAccountId(account).toUint256()))
 }
 
 fun StrKey.encodeMuxedAccount(account: MuxedAccount): String {
     return when (account) {
-        is MuxedAccount.Ed25519 -> encodeAccountId(account.ed25519.byteArray)
-        is MuxedAccount.MuxedEd25519 -> {
-            val accountBytes = account.ed25519.byteArray
-            val idBytes = XdrStream().apply { writeULong(account.id) }.readAllBytes()
+        is MuxedAccount.KeyTypeEd25519 -> encodeAccountId(account.ed25519.value)
+        is MuxedAccount.KeyTypeMuxedEd25519 -> {
+            val accountBytes = account.med25519.ed25519.value
+            val idBytes = xdrStream().apply { writeLong(account.med25519.id.toLong()) }.readAllBytes()
             val bytes = ByteArray(40)
             accountBytes.copyInto(bytes)
             idBytes.copyInto(bytes, destinationOffset = 32)
@@ -86,17 +83,19 @@ fun StrKey.encodeMuxedAccount(account: MuxedAccount): String {
 fun StrKey.encodeToMuxedAccountXDR(account: String): MuxedAccount {
 
     return when(decodeVersionByte(account)){
-        ACCOUNT_ID -> MuxedAccount.Ed25519(decodeAccountId(account).toUint256())
+        ACCOUNT_ID -> MuxedAccount.KeyTypeEd25519(decodeAccountId(account).toUint256())
         MUXED -> {
-            val stream = XdrStream()
+            val stream = xdrStream()
             val bytes = decodeMuxedAccountId(account)
             stream.writeBytes(bytes)
 
             val pubkey = stream.readBytes(32).toUint256()
 
-            val muxedAccount = MuxedAccount.MuxedEd25519(
-                stream.readULong(),
-                pubkey
+            val muxedAccount = MuxedAccount.KeyTypeMuxedEd25519(
+                MuxedAccount.MuxedAccountMed25519(
+                    stream.readLong().toULong(),
+                    pubkey
+                )
             )
             muxedAccount
         }
@@ -128,10 +127,11 @@ fun StrKey.encodeContract(hash: ByteArray): String{
     return encodeCheck(CONTRACT, hash)
 }
 
-fun StrKey.encodeScAddress(address: ScAddress): String{
+fun StrKey.encodeScAddress(address: SCAddress): String{
     return when(address){
-        is ScAddress.Account -> encodeAccountId((address.accountId.publicKey as PublicKey.PublicKeyEd25519).ed25519.byteArray)
-        is ScAddress.Contract -> encodeContract(address.contractId.byteArray)
+        is SCAddress.Account -> encodeAccountId((address.accountId.value as PublicKey.Ed25519).ed25519.value)
+        is SCAddress.Contract -> encodeContract(address.contractId.value)
+        else -> TODO("implement new address types")
     }
 }
 

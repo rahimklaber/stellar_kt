@@ -16,12 +16,14 @@ data class Payment(
         val source = sourceAccount?.let {
             StrKey.encodeToMuxedAccountXDR(it)
         }
-        return me.rahimklaber.stellar.base.xdr.Operation.Payment(
+        return me.rahimklaber.stellar.base.xdr.Operation(
             sourceAccount = source,
-            PaymentOp(
-                destination = StrKey.encodeToMuxedAccountXDR(destination),
-                asset = asset.toXdr(),
-                amount = amount.value
+            body = me.rahimklaber.stellar.base.xdr.Operation.OperationBody.Payment(
+                PaymentOp(
+                    destination = StrKey.encodeToMuxedAccountXDR(destination),
+                    asset = asset.toXdr(),
+                    amount = amount.value
+                )
             )
         )
 

@@ -9,11 +9,13 @@ data class CreateAccount(
     override val sourceAccount: String? = null,
 ) : Operation {
     override fun toXdr(): me.rahimklaber.stellar.base.xdr.Operation {
-        return me.rahimklaber.stellar.base.xdr.Operation.CreateAccount(
+        return me.rahimklaber.stellar.base.xdr.Operation(
             sourceAccount =  sourceAccount?.let { StrKey.encodeToMuxedAccountXDR(it) },
-            CreateAccountOp(
-                destination = StrKey.encodeToAccountIDXDR(destination),
-                startingBalance = startingBalance.value
+            body = me.rahimklaber.stellar.base.xdr.Operation.OperationBody.CreateAccount(
+                CreateAccountOp(
+                    destination = StrKey.encodeToAccountIDXDR(destination),
+                    startingBalance = startingBalance.value
+                )
             )
         )
     }

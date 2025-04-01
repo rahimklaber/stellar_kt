@@ -11,10 +11,12 @@ data class ClaimClaimableBalance(
     val balanceId: String, //hex string of claimablebalanceIdXdr
 ) : Operation {
     override fun toXdr(): me.rahimklaber.stellar.base.xdr.Operation {
-        return me.rahimklaber.stellar.base.xdr.Operation.ClaimClaimableBalance(
+        return me.rahimklaber.stellar.base.xdr.Operation(
             sourceAccount = sourceAccount?.let { StrKey.encodeToMuxedAccountXDR(it) },
-            ClaimClaimableBalanceOp(
-                balanceID = ClaimableBalanceID.fromHex(balanceId)
+            body = me.rahimklaber.stellar.base.xdr.Operation.OperationBody.ClaimClaimableBalance(
+                ClaimClaimableBalanceOp(
+                    balanceID = ClaimableBalanceID.fromHex(balanceId)
+                )
             )
         )
     }

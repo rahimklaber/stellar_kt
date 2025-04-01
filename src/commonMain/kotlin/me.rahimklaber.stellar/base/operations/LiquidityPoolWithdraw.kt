@@ -18,13 +18,15 @@ data class LiquidityPoolWithdraw(
         val source = sourceAccount?.let {
             StrKey.encodeToMuxedAccountXDR(it)
         }
-        return me.rahimklaber.stellar.base.xdr.Operation.LiquidityPoolWithdraw(
+        return me.rahimklaber.stellar.base.xdr.Operation(
             sourceAccount = source,
-            LiquidityPoolWithdrawOp(
-                liquidityPoolID = PoolID.fromHex(poolID),
-                amount = amount.value,
-                minAmountA = minAmountA.value,
-                minAmountB = minAmountB.value
+            body = me.rahimklaber.stellar.base.xdr.Operation.OperationBody.LiquidityPoolWithdraw(
+                LiquidityPoolWithdrawOp(
+                    liquidityPoolID = PoolID.fromHex(poolID),
+                    amount = amount.value,
+                    minAmountA = minAmountA.value,
+                    minAmountB = minAmountB.value
+                )
             )
         )
     }

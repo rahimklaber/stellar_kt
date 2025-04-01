@@ -3,74 +3,53 @@ package me.rahimklaber.stellar.base.xdr
 import kotlinx.io.Buffer
 import kotlinx.io.readByteArray
 
-class XdrDecodeException(message: String): Exception(message)
-
-fun xdrDecodeError(message: String): Nothing = throw XdrDecodeException(message)
-
-interface IXdrStream{
-    //only write the lower 8 bits
-//    fun writeByte(value: Int)
-//    fun writeByte(value: Byte)
-
-    fun writeInt(value: Int)
-    fun writeLong(value:Long)
-    fun writeULong(value: ULong)
-
+interface XdrOutputStream {
     fun writeBytes(bytes: ByteArray)
+    fun writeInt(value: Int)
+    fun writeLong(value: Long)
+}
 
+interface XdrInputStream {
+    fun readBytes(count: Int): ByteArray
+    fun readInt(): Int
     fun readLong(): Long
-    fun readULong(): ULong
-    fun readInt() : Int
-    fun readByte(): Byte
-
-    fun readBytes(length: Int) : ByteArray
-    fun readAllBytes() : ByteArray
+    fun readAllBytes(): ByteArray
 }
 
-fun IXdrStream.readIntNullable(): Int? {
-    return if (readInt() == 1){
-        readInt()
-    }else{
-        null
+inline fun <T> decodeXdrElementsList(count: Int, stream: XdrInputStream, decoder: (XdrInputStream) -> T): List<T> {
+    return MutableList(count) {
+        decoder(stream)
     }
 }
 
-fun IXdrStream.readLongNullable(): Long? {
-    return if (readInt() == 1){
-        readLong()
-    }else{
-        null
-    }
+fun <T : XdrElement> XdrElementDecoder<T>.decoder(): (XdrInputStream) -> T = this::decode
+fun decodeULong(stream: XdrInputStream): ULong = stream.readLong().toULong()
+fun ULong.Companion.decoder(): (XdrInputStream) -> ULong = ::decodeULong
+
+fun decodeString(count: Int, stream: XdrInputStream): String {
+    return stream.readBytes(count).decodeToString()
 }
 
-fun IXdrStream.writeIntNullable(value: Int?){
-    if(value == null){
-        writeInt(0)
-    }else{
-        writeInt(1)
-        writeInt(value)
-    }
+fun <T : XdrElement> List<T>.encodeXdrElements(stream: XdrOutputStream) {
+    forEach { it.encode(stream) }
 }
 
-fun IXdrStream.writeLongNullable(value: Long?){
-    if(value == null){
-        writeInt(0)
-    }else{
-        writeInt(1)
-        writeLong(value)
-    }
+fun List<ULong>.encodeXdrElementsULong(stream: XdrOutputStream) {
+    forEach { stream.writeLong(it.toLong()) }
 }
 
+fun XdrOutputStream.writeBoolean(value: Boolean) = if (value) writeInt(1) else writeInt(0)
+fun XdrInputStream.readBoolean() = readInt() == 1
 
-class XdrStream : IXdrStream{
-    val buffer = Buffer()
-//    override fun writeByte(value: Int) {
-//        buffer.writeByte(value)
-//    }
-//
-//    override fun writeByte(value: Byte) {
-//        buffer.writeByte(value.toInt())
-//    }
+fun xdrStream() = DefaultXdrStream(Buffer())
+
+class DefaultXdrStream(val buffer: Buffer) : XdrOutputStream, XdrInputStream {
+    override fun writeBytes(bytes: ByteArray) {
+        buffer.write(bytes)
+
+        val padAmount = (4 - (bytes.size % 4)) % 4
+        pad(padAmount)
+    }
 
     override fun writeInt(value: Int) {
         buffer.writeInt(value)
@@ -80,47 +59,33 @@ class XdrStream : IXdrStream{
         buffer.writeLong(value)
     }
 
-    override fun writeULong(value: ULong) {
-        writeLong(value.toLong())
-    }
+    override fun readBytes(count: Int): ByteArray {
+        val bytes = buffer.readByteArray(count)
 
-    override fun writeBytes(bytes: ByteArray) {
-        buffer.write(bytes)
-
-        val padAmount = (4 -( bytes.size % 4)) % 4
-        pad(padAmount)
-    }
-
-    override fun readLong(): Long = buffer.readLong()
-
-    override fun readULong(): ULong = buffer.readLong().toULong()
-
-    override fun readInt(): Int = buffer.readInt()
-
-    override fun readByte(): Byte = buffer.readByte()
-
-    override fun readBytes(length: Int): ByteArray {
-        val byteBuffer = buffer.readByteArray(length)
-
-        val padAmount = (4 -( length % 4)) % 4
+        val padAmount = (4 - (count % 4)) % 4
         readPad(padAmount)
-        return byteBuffer
+        return bytes
+    }
+
+    override fun readInt(): Int {
+        return buffer.readInt()
+    }
+
+    override fun readLong(): Long {
+        return buffer.readLong()
     }
 
     override fun readAllBytes(): ByteArray {
         return buffer.readByteArray()
     }
 
-    private fun pad(amount: Int){
-        for (i in 0 until amount){
+    private fun pad(amount: Int) {
+        for (i in 0 until amount) {
             buffer.writeByte(0)
         }
     }
 
-    private fun readPad(amount: Int){
-        for (i in 0 until amount){
-            buffer.readByte()
-        }
+    private fun readPad(amount: Int) {
+        buffer.skip(amount.toLong())
     }
 }
-

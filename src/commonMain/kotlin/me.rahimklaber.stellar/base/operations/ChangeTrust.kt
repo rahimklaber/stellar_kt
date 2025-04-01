@@ -12,17 +12,19 @@ sealed class ChangeTrustAsset {
     data class AlphaNum(val asset: Asset.AlphaNum) : ChangeTrustAsset() {
         override fun toXdr(): me.rahimklaber.stellar.base.xdr.ChangeTrustAsset {
             return when (val assetXdr = asset.toXdr()) {
-                is me.rahimklaber.stellar.base.xdr.Asset.AlphaNum4 -> {
-                    me.rahimklaber.stellar.base.xdr.ChangeTrustAsset.AlphaNum4(
-                        (assetXdr.alphaNum4)
+                is me.rahimklaber.stellar.base.xdr.Asset.CreditAlphanum4 -> {
+                    me.rahimklaber.stellar.base.xdr.ChangeTrustAsset.CreditAlphanum4(
+                        assetXdr.alphaNum4
                     )
                 }
 
-                is me.rahimklaber.stellar.base.xdr.Asset.AlphaNum12 -> {
-                    me.rahimklaber.stellar.base.xdr.ChangeTrustAsset.AlphaNum12(
+                is me.rahimklaber.stellar.base.xdr.Asset.CreditAlphanum12 -> {
+                    me.rahimklaber.stellar.base.xdr.ChangeTrustAsset.CreditAlphanum12(
                         assetXdr.alphaNum12
                     )
                 }
+
+                me.rahimklaber.stellar.base.xdr.Asset.Native -> me.rahimklaber.stellar.base.xdr.ChangeTrustAsset.Native
             }
         }
     }
@@ -51,11 +53,13 @@ data class ChangeTrust(
     val limit: TokenAmount
 ) : Operation {
     override fun toXdr(): me.rahimklaber.stellar.base.xdr.Operation {
-        return me.rahimklaber.stellar.base.xdr.Operation.ChangeTrust(
+        return me.rahimklaber.stellar.base.xdr.Operation(
             sourceAccount = sourceAccount?.let { StrKey.encodeToMuxedAccountXDR(it) },
-            ChangeTrustOp(
-                line = line.toXdr(),
-                limit = limit.value
+            body = me.rahimklaber.stellar.base.xdr.Operation.OperationBody.ChangeTrust(
+                ChangeTrustOp(
+                    line = line.toXdr(),
+                    limit = limit.value
+                )
             )
         )
     }

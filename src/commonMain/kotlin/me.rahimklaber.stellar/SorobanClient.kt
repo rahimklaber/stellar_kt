@@ -219,18 +219,18 @@ val json = Json {
 class SorobanClientImpl(
     val client: JsonRpcClient
 ) : SorobanClient {
-    override suspend fun getAccount(accountId: String): Account {
+    override suspend fun getAccount(account: String): Account {
         val entries = getLedgerEntries(
             listOf(
-                LedgerKey.LedgerKeyAccount(StrKey.encodeToAccountIDXDR(accountId)).toXdrString()
+                LedgerKey.Account(LedgerKey.LedgerKeyAccount(StrKey.encodeToAccountIDXDR(account))).toXdrBase64()
             )
         )
 
         require(entries.entries.size == 1){"Account not found"}
 
-        val account = LedgerEntryData.decodeFromString(entries.entries.first().xdr) as LedgerEntryData.Account
+        val accountEntry = LedgerEntry.LedgerEntryData.fromXdrBase64(entries.entries.first().xdr) as LedgerEntry.LedgerEntryData.Account
 
-        return Account(accountId, account.account.sequenceNumber)
+        return Account(account, accountEntry.account.seqNum.value)
 
     }
 

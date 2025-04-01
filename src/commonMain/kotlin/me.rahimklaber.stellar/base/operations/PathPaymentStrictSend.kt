@@ -16,15 +16,17 @@ data class PathPaymentStrictSend(
     val path: List<Asset>
 ): Operation {
     override fun toXdr(): me.rahimklaber.stellar.base.xdr.Operation {
-        return me.rahimklaber.stellar.base.xdr.Operation.PathPaymentStrictSend(
+        return me.rahimklaber.stellar.base.xdr.Operation(
             sourceAccount = sourceAccount?.let { StrKey.encodeToMuxedAccountXDR(it) },
-            PathPaymentStrictSendOp(
-                sendAsset = sendAsset.toXdr(),
-                sendAmount = sendAmount.value,
-                destination = StrKey.encodeToMuxedAccountXDR(destination),
-                destAsset = destAsset.toXdr(),
-                destMin = destMin.value,
-                path = path.map(Asset::toXdr)
+            body = me.rahimklaber.stellar.base.xdr.Operation.OperationBody.PathPaymentStrictSend(
+                PathPaymentStrictSendOp(
+                    sendAsset = sendAsset.toXdr(),
+                    sendAmount = sendAmount.value,
+                    destination = StrKey.encodeToMuxedAccountXDR(destination),
+                    destAsset = destAsset.toXdr(),
+                    destMin = destMin.value,
+                    path = path.map(Asset::toXdr)
+                )
             )
         )
     }

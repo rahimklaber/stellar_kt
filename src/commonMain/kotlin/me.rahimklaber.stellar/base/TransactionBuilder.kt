@@ -1,6 +1,7 @@
 package me.rahimklaber.stellar.base
 
 import me.rahimklaber.stellar.base.operations.Operation
+import me.rahimklaber.stellar.base.xdr.Preconditions
 
 
 class TransactionBuilder(
@@ -58,29 +59,10 @@ fun transactionBuilder(source: Account, network: Network, block: TransactionBuil
     return builder.build()
 }
 
-fun transactionOfOne(source: Account, network: Network, operation: Operation): Transaction {
+fun transactionOfOne(source: Account, network: Network, fee: UInt, operation: Operation): Transaction {
     val builder = TransactionBuilder(source, network)
     builder.addOperation(operation)
+    builder.setFee(fee)
     return builder.build()
 }
 
-//context(TransactionBuilder)
-//fun Operation.add(){
-//    addOperation(
-//        this
-//    )
-//}
-//
-//context(TransactionBuilder)
-//fun TransactionPreconditions.add(){
-//    setPreconditions(
-//        this
-//    )
-//}
-//
-//context(TransactionBuilder)
-//fun Memo.add(){
-//    setMemo(
-//        this
-//    )
-//}

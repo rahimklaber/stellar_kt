@@ -10,10 +10,7 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 import me.rahimklaber.stellar.base.Transaction
-import me.rahimklaber.stellar.base.xdr.toXdrString
-import me.rahimklaber.stellar.horizon.AccountRequestBuilder
-import me.rahimklaber.stellar.horizon.OperationsRequestBuilder
-import me.rahimklaber.stellar.horizon.TransactionRequestBuilder
+import me.rahimklaber.stellar.base.xdr.toXdrBase64
 
 
 class Server(val horizonUrl: String) {
@@ -30,7 +27,7 @@ class Server(val horizonUrl: String) {
     fun operations() = OperationsRequestBuilder(client, horizonUrl)
 
     suspend fun submitTransaction(transaction: Transaction): SubmitTransactionResponse {
-        val transactionXdr = transaction.toEnvelopeXdr().toXdrString()
+        val transactionXdr = transaction.toEnvelopeXdr().toXdrBase64()
         return submitTransactionXdr(transactionXdr)
     }
 

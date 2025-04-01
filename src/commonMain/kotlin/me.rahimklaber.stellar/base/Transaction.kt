@@ -17,7 +17,7 @@ sealed interface Memo {
 
     data class Text(val text: String) : Memo {
         override fun toXdr(): me.rahimklaber.stellar.base.xdr.Memo {
-            return me.rahimklaber.stellar.base.xdr.Memo.Text(String32(text.encodeToByteArray()))
+            return me.rahimklaber.stellar.base.xdr.Memo.Text(text)
         }
 
     }
@@ -35,7 +35,7 @@ sealed interface TransactionPreconditions {
 
     data object None : TransactionPreconditions {
         override fun toXdr(): Preconditions {
-            return Preconditions.None
+            return Preconditions.PrecondNone
         }
     }
 
@@ -50,12 +50,12 @@ sealed interface TransactionPreconditions {
         val minSequenceNumber: Long? = null,
     ) : TransactionPreconditions {
         override fun toXdr(): Preconditions {
-            return Preconditions.V2(
+            return Preconditions.PrecondV2(
                 PreconditionsV2(
                     timeBounds,
                     ledgerBounds,
-                    minSequenceNumber,
-                    minSequenceAge,
+                    minSequenceNumber?.let(::SequenceNumber),
+                    Duration(minSequenceAge),
                     minSequenceLedgerGap,
                     extraSigners
                 )
@@ -94,19 +94,26 @@ data class Transaction(
     val signatures: List<DecoratedSignature>
         get() = _signatures
 
-    fun toV1Xdr(): Transaction =
-        Transaction(
-            sourceAccount = MuxedAccount.Ed25519(StrKey.decodeAccountId(sourceAccount).toUint256()),
+    fun toV1Xdr(): Transaction {
+        val ext = if (sorobanData == null) {
+            Transaction.TransactionExt.TransactionExtV0
+        }else{
+            Transaction.TransactionExt.TransactionExtV1(sorobanData!!)
+        }
+
+        return Transaction(
+            sourceAccount = MuxedAccount.KeyTypeEd25519(StrKey.decodeAccountId(sourceAccount).toUint256()),
             fee = fee,
-            seqNum = sequenceNumber,
+            seqNum = SequenceNumber(sequenceNumber),
             cond = preconditions.toXdr(),
             memo = memo.toXdr(),
             operations = operations.map(Operation::toXdr),
-            sorobanData = sorobanData
+            ext = ext
         )
+    }
 
     fun toEnvelopeXdr(): TransactionEnvelope {
-        return TransactionEnvelope.TxV1(
+        return TransactionEnvelope.Tx(
             TransactionV1Envelope(
                 toV1Xdr(),
                 signatures = _signatures.toList() // copy list
@@ -121,7 +128,7 @@ data class Transaction(
         val op = operations.first() as InvokeHostFunction
 
         val newOp = op.copy(
-            op.xdr.copy(auth = op.xdr.auth + authorizationEntry)
+            xdr = op.xdr.copy(auth = op.xdr.auth + authorizationEntry)
         )
 
         return copy(operations = listOf(newOp))
@@ -129,15 +136,16 @@ data class Transaction(
 
     // data to sign to create a valid signature
     fun hash(): ByteArray {
-        val payload = TransactionSignaturePayload.Tx(
+        val payload = TransactionSignaturePayload(
             Hash(network.networkId),
-            toV1Xdr()
+            TransactionSignaturePayload.TransactionSignaturePayloadTaggedTransaction.Tx(toV1Xdr())
         )
-        val stream = XdrStream()
-        payload.encode(stream)
-        val payloadBytes = stream.readAllBytes()
-        //todo need to make sure that libsodium is initialized?
-        return com.ionspin.kotlin.crypto.hash.Hash.sha256(payloadBytes.toUByteArray()).toByteArray()
+        val payloadBytes = xdrStream().run {
+            payload.encode(this)
+            readAllBytes()
+        }
+
+        return Crypto.sha256(payloadBytes)
     }
 
     fun sign(keyPair: KeyPair) {
@@ -145,49 +153,53 @@ data class Transaction(
     }
 
     companion object{
-        fun fromEnvelopeXdr(envelope: String, network: Network): me.rahimklaber.stellar.base.Transaction {
-            val envelope = TransactionEnvelope.decodeFromString(envelope)
-
+        fun fromEnvelope(envelope: TransactionEnvelope, network: Network): me.rahimklaber.stellar.base.Transaction  {
             return when(envelope){
-                is TransactionEnvelope.TxV1 -> {
+                is TransactionEnvelope.Tx -> {
                     val tx = envelope.v1.tx
                     Transaction(
                         StrKey.encodeMuxedAccount(tx.sourceAccount),
                         tx.fee,
-                        tx.seqNum,
+                        tx.seqNum.value,
                         when(tx.cond){
-                            Preconditions.None -> TransactionPreconditions.None
-                            is Preconditions.V2 -> {
+                            Preconditions.PrecondNone -> TransactionPreconditions.None
+                            is Preconditions.PrecondV2 -> {
                                 val cond = tx.cond.v2
                                 TransactionPreconditions.V2(
-                                    cond.minSeqAge,
+                                    cond.minSeqAge.value,
                                     cond.minSeqLedgerGap,
                                     cond.extraSigners,
                                     cond.timeBounds,
                                     cond.ledgerBounds,
-                                    cond.minSeqNum,
+                                    cond.minSeqNum?.value,
                                 )
                             }
-                            is Preconditions.Time -> TODO()
+                            is Preconditions.PrecondTime -> TODO()
                         },
                         when(tx.memo){
                             is me.rahimklaber.stellar.base.xdr.Memo.Id -> Memo.Id(tx.memo.id)
-                            is me.rahimklaber.stellar.base.xdr.Memo.Text -> Memo.Text(tx.memo.text.toString())
+                            is me.rahimklaber.stellar.base.xdr.Memo.Text -> Memo.Text(tx.memo.text)
                             me.rahimklaber.stellar.base.xdr.Memo.None -> Memo.None
                             is me.rahimklaber.stellar.base.xdr.Memo.Hash -> TODO()
                             is me.rahimklaber.stellar.base.xdr.Memo.Return -> TODO()
                         },
                         tx.operations.map(Operation::fromXdr),
                         network,
-                        tx.sorobanData
+                        if(tx.ext is Transaction.TransactionExt.TransactionExtV1) tx.ext.sorobanData else null
 
                     ).apply {
                         _signatures.addAll(envelope.v1.signatures)
                     }
                 }
-                is TransactionEnvelope.FeeBump -> TODO()
+                is TransactionEnvelope.TxFeeBump -> TODO()
                 else -> TODO()
             }
+        }
+
+        fun fromEnvelopeXdr(envelopeBase64: String, network: Network): me.rahimklaber.stellar.base.Transaction {
+            val envelope = TransactionEnvelope.fromXdrBase64(envelopeBase64)
+
+            return fromEnvelope(envelope, network)
         }
     }
 }

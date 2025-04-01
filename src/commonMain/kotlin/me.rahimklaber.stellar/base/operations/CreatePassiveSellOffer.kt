@@ -16,13 +16,15 @@ data class CreatePassiveSellOffer(
 
 ) : Operation {
     override fun toXdr(): me.rahimklaber.stellar.base.xdr.Operation {
-        return me.rahimklaber.stellar.base.xdr.Operation.CreatePassiveSellOffer(
+        return me.rahimklaber.stellar.base.xdr.Operation(
             sourceAccount = sourceAccount?.let { StrKey.encodeToMuxedAccountXDR(it) },
-            CreatePassiveSellOfferOp(
-                selling = selling.toXdr(),
-                buying = buying.toXdr(),
-                amount = amount.value,
-                price = price
+            body = me.rahimklaber.stellar.base.xdr.Operation.OperationBody.CreatePassiveSellOffer(
+                CreatePassiveSellOfferOp(
+                    selling = selling.toXdr(),
+                    buying = buying.toXdr(),
+                    amount = amount.value,
+                    price = price
+                )
             )
         )
     }

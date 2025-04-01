@@ -6,36 +6,36 @@ import me.rahimklaber.stellar.base.xdr.CreateClaimableBalanceOp
 
 sealed interface Predicate{
     fun toXdr() : ClaimPredicate
-    object Unconditional : Predicate {
+    data object Unconditional : Predicate {
         override fun toXdr(): ClaimPredicate {
-            return ClaimPredicate.ClaimPredicateUnconditional
+            return ClaimPredicate.Unconditional
         }
     }
 
     data class Not(val predicate: Predicate) : Predicate{
         override fun toXdr(): ClaimPredicate {
-            return ClaimPredicate.ClaimPredicateNot(predicate.toXdr())
+            return ClaimPredicate.Not(predicate.toXdr())
         }
     }
     data class And(val predicates: List<Predicate>) : Predicate{
         override fun toXdr(): ClaimPredicate {
-            return ClaimPredicate.ClaimPredicateAnd(predicates.map(Predicate::toXdr))
+            return ClaimPredicate.And(predicates.map(Predicate::toXdr))
         }
     }
     data class Or(val predicates: List<Predicate>) : Predicate{
         override fun toXdr(): ClaimPredicate {
-            return ClaimPredicate.ClaimPredicateOr(predicates.map(Predicate::toXdr))
+            return ClaimPredicate.Or(predicates.map(Predicate::toXdr))
         }
     }
     data class AbsBefore(val epochSeconds: Long) : Predicate {
         override fun toXdr(): ClaimPredicate {
-            return ClaimPredicate.ClaimPredicateBeforeAbsoluteTime(epochSeconds)
+            return ClaimPredicate.BeforeAbsoluteTime(epochSeconds)
         }
     }
 
     data class RelBefore(val secondsSinceClose: Long) : Predicate {
         override fun toXdr(): ClaimPredicate {
-            return ClaimPredicate.ClaimPredicateBeforeRelativeTime(secondsSinceClose)
+            return ClaimPredicate.BeforeRelativeTime(secondsSinceClose)
         }
     }
 
@@ -103,9 +103,11 @@ fun PredicateDSl.predicateAbsBefore(epochSeconds: Long) = Predicate.AbsBefore(ep
 
 data class Claimant(val destination: String, val predicate: Predicate){
     fun toXdr(): me.rahimklaber.stellar.base.xdr.Claimant {
-        return me.rahimklaber.stellar.base.xdr.Claimant.ClaimantV0(
-            StrKey.encodeToAccountIDXDR(destination),
-            predicate.toXdr()
+        return me.rahimklaber.stellar.base.xdr.Claimant.V0(
+           me.rahimklaber.stellar.base.xdr.Claimant.ClaimantV0Anon(
+               StrKey.encodeToAccountIDXDR(destination),
+               predicate.toXdr()
+           )
         )
     }
 }
@@ -117,12 +119,14 @@ data class CreateClaimableBalance(
 
 ) : Operation {
     override fun toXdr(): me.rahimklaber.stellar.base.xdr.Operation {
-        return me.rahimklaber.stellar.base.xdr.Operation.CreateClaimableBalance(
+        return me.rahimklaber.stellar.base.xdr.Operation(
             sourceAccount = sourceAccount?.let { StrKey.encodeToMuxedAccountXDR(it) },
-            CreateClaimableBalanceOp(
-                asset = asset.toXdr(),
-                amount = amount.value,
-                claimants = claimants.map(Claimant::toXdr)
+            body = me.rahimklaber.stellar.base.xdr.Operation.OperationBody.CreateClaimableBalance(
+                CreateClaimableBalanceOp(
+                    asset = asset.toXdr(),
+                    amount = amount.value,
+                    claimants = claimants.map(Claimant::toXdr)
+                )
             )
         )
     }

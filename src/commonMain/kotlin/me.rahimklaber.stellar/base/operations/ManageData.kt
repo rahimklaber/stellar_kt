@@ -15,11 +15,13 @@ data class ManageData(
     constructor(sourceAccount: String? = null, name: String, data: String) : this(sourceAccount, name, data.encodeToByteArray())
 
     override fun toXdr(): me.rahimklaber.stellar.base.xdr.Operation {
-        return me.rahimklaber.stellar.base.xdr.Operation.ManageData(
+        return me.rahimklaber.stellar.base.xdr.Operation(
             sourceAccount = sourceAccount?.let { StrKey.encodeToMuxedAccountXDR(it) },
-            ManageDataOp(
-                dataName = String64(name.encodeToByteArray()),
-                dataValue = value?.let { DataValue(it) }
+            body = me.rahimklaber.stellar.base.xdr.Operation.OperationBody.ManageData(
+                ManageDataOp(
+                    dataName = String64(name),
+                    dataValue = value?.let { DataValue(it) }
+                )
             )
         )
     }

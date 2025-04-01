@@ -6,14 +6,16 @@ import me.rahimklaber.stellar.base.encodeToMuxedAccountXDR
 import me.rahimklaber.stellar.base.xdr.BeginSponsoringFutureReservesOp
 
 data class BeginSponsoringFutureReserves(
-    override val sourceAccount: String?,
     val sponsoredID: String,
+    override val sourceAccount: String? = null,
 ) : Operation {
     override fun toXdr(): me.rahimklaber.stellar.base.xdr.Operation {
-        return me.rahimklaber.stellar.base.xdr.Operation.BeginSponsoringFutureReserves(
+        return me.rahimklaber.stellar.base.xdr.Operation(
             sourceAccount = sourceAccount?.let { StrKey.encodeToMuxedAccountXDR(it) },
-            BeginSponsoringFutureReservesOp(
-                sponsoredID = StrKey.encodeToAccountIDXDR(sponsoredID)
+            body = me.rahimklaber.stellar.base.xdr.Operation.OperationBody.BeginSponsoringFutureReserves(
+                BeginSponsoringFutureReservesOp(
+                    sponsoredID = StrKey.encodeToAccountIDXDR(sponsoredID)
+                )
             )
         )
     }
