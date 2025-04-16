@@ -11,6 +11,14 @@ class KeyPair internal constructor(
         StrKey.encodeAccountId(publicKey)
     }
 
+    val secretSeed: String?
+        get() {
+            if (privateKey == null) {
+                return null
+            }
+            return StrKey.encodeCheck(VersionByte.SEED, privateKey)
+        }
+
     fun sign(data: ByteArray): ByteArray {
         return Crypto.sign(data, privateKey?: error("Cannot sign without private key"))
             .copyOf(64)
@@ -35,6 +43,25 @@ class KeyPair internal constructor(
             Signature(signatureBytes)
         )
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || this::class != other::class) return false
+
+        other as KeyPair
+
+        if (!publicKey.contentEquals(other.publicKey)) return false
+        if (!privateKey.contentEquals(other.privateKey)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = publicKey.contentHashCode()
+        result = 31 * result + (privateKey?.contentHashCode() ?: 0)
+        return result
+    }
+
     companion object
 }
 
