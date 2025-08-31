@@ -25,7 +25,7 @@ data class MuxedEd25519Account(
 
     companion object : XdrElementDecoder<MuxedEd25519Account> {
         override fun decode(stream: XdrInputStream): MuxedEd25519Account {
-            val id = me.rahimklaber.stellar.base.xdr.Uint64.decode(stream)
+            val id = Uint64.decode(stream)
             val ed25519 = Uint256.decode(stream)
             return MuxedEd25519Account(
                 id,

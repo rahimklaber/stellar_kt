@@ -61,7 +61,7 @@ data class LedgerEntry(
 
     companion object : XdrElementDecoder<LedgerEntry> {
         override fun decode(stream: XdrInputStream): LedgerEntry {
-            val lastModifiedLedgerSeq = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val lastModifiedLedgerSeq = Uint32.decode(stream)
             val data = LedgerEntryData.decode(stream)
             val ext = LedgerEntryExt.decode(stream)
             return LedgerEntry(
@@ -203,7 +203,8 @@ data class LedgerEntry(
 
         companion object : XdrElementDecoder<LedgerEntryData> {
             override fun decode(stream: XdrInputStream): LedgerEntryData {
-                return when (val type = LedgerEntryType.decode(stream)) {
+                val type = LedgerEntryType.decode(stream)
+                return when (type) {
                     LedgerEntryType.ACCOUNT -> {
                         val account = AccountEntry.decode(stream)
                         Account(account)
@@ -291,7 +292,8 @@ data class LedgerEntry(
 
         companion object : XdrElementDecoder<LedgerEntryExt> {
             override fun decode(stream: XdrInputStream): LedgerEntryExt {
-                return when (val type = Int.decode(stream)) {
+                val type = Int.decode(stream)
+                return when (type) {
                     0 -> LedgerEntryExtV0
                     1 -> {
                         val v1 = LedgerEntryExtensionV1.decode(stream)

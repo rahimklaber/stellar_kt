@@ -18,7 +18,8 @@ enum class PublicKeyType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<PublicKeyType> {
         override fun decode(stream: XdrInputStream): PublicKeyType {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> PUBLIC_KEY_TYPE_ED25519
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)
             }

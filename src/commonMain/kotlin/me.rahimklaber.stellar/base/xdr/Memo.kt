@@ -73,7 +73,8 @@ sealed class Memo(val type: MemoType) : XdrElement {
 
     companion object : XdrElementDecoder<Memo> {
         override fun decode(stream: XdrInputStream): Memo {
-            return when (val type = MemoType.decode(stream)) {
+            val type = MemoType.decode(stream)
+            return when (type) {
                 MemoType.MEMO_NONE -> None
                 MemoType.MEMO_TEXT -> {
                     val textSize = stream.readInt()

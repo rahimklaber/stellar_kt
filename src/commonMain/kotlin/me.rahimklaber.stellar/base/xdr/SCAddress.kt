@@ -12,7 +12,7 @@ package me.rahimklaber.stellar.base.xdr
 case SC_ADDRESS_TYPE_ACCOUNT:
 AccountID accountId;
 case SC_ADDRESS_TYPE_CONTRACT:
-Hash contractId;
+ContractID contractId;
 case SC_ADDRESS_TYPE_MUXED_ACCOUNT:
 MuxedEd25519Account muxedAccount;
 case SC_ADDRESS_TYPE_CLAIMABLE_BALANCE:
@@ -35,7 +35,7 @@ sealed class SCAddress(val type: SCAddressType) : XdrElement {
 
     fun contractIdOrNull(): Contract? = if (this is Contract) this else null
     data class Contract(
-        val contractId: Hash,
+        val contractId: ContractID,
     ) : SCAddress(SCAddressType.SC_ADDRESS_TYPE_CONTRACT) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
@@ -75,14 +75,15 @@ sealed class SCAddress(val type: SCAddressType) : XdrElement {
 
     companion object : XdrElementDecoder<SCAddress> {
         override fun decode(stream: XdrInputStream): SCAddress {
-            return when (val type = SCAddressType.decode(stream)) {
+            val type = SCAddressType.decode(stream)
+            return when (type) {
                 SCAddressType.SC_ADDRESS_TYPE_ACCOUNT -> {
                     val accountId = AccountID.decode(stream)
                     Account(accountId)
                 }
 
                 SCAddressType.SC_ADDRESS_TYPE_CONTRACT -> {
-                    val contractId = Hash.decode(stream)
+                    val contractId = ContractID.decode(stream)
                     Contract(contractId)
                 }
 

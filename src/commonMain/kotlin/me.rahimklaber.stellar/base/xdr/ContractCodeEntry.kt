@@ -38,26 +38,6 @@ data class ContractCodeEntry(
         stream.writeBytes(code)
     }
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || this::class != other::class) return false
-
-        other as ContractCodeEntry
-
-        if (ext != other.ext) return false
-        if (hash != other.hash) return false
-        if (!code.contentEquals(other.code)) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = ext.hashCode()
-        result = 31 * result + hash.hashCode()
-        result = 31 * result + code.contentHashCode()
-        return result
-    }
-
     companion object : XdrElementDecoder<ContractCodeEntry> {
         override fun decode(stream: XdrInputStream): ContractCodeEntry {
             val ext = ContractCodeEntryExt.decode(stream)
@@ -107,7 +87,8 @@ data class ContractCodeEntry(
 
         companion object : XdrElementDecoder<ContractCodeEntryExt> {
             override fun decode(stream: XdrInputStream): ContractCodeEntryExt {
-                return when (val type = Int.decode(stream)) {
+                val type = Int.decode(stream)
+                return when (type) {
                     0 -> ContractCodeEntryExtV0
                     1 -> {
                         val v1 = ContractCodeEntryV1Anon.decode(stream)

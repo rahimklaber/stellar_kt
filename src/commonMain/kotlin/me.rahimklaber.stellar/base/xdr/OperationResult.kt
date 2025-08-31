@@ -127,7 +127,8 @@ sealed class OperationResult(val type: OperationResultCode) : XdrElement {
 
     companion object : XdrElementDecoder<OperationResult> {
         override fun decode(stream: XdrInputStream): OperationResult {
-            return when (val type = OperationResultCode.decode(stream)) {
+            val type = OperationResultCode.decode(stream)
+            return when (type) {
                 OperationResultCode.opINNER -> {
                     val tr = OperationResultTr.decode(stream)
                     Opinner(tr)
@@ -479,7 +480,8 @@ sealed class OperationResult(val type: OperationResultCode) : XdrElement {
 
         companion object : XdrElementDecoder<OperationResultTr> {
             override fun decode(stream: XdrInputStream): OperationResultTr {
-                return when (val type = OperationType.decode(stream)) {
+                val type = OperationType.decode(stream)
+                return when (type) {
                     OperationType.CREATE_ACCOUNT -> {
                         val createAccountResult = CreateAccountResult.decode(stream)
                         CreateAccount(createAccountResult)

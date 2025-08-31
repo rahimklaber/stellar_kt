@@ -26,7 +26,8 @@ enum class BucketEntryType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<BucketEntryType> {
         override fun decode(stream: XdrInputStream): BucketEntryType {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 -1 -> METAENTRY
                 0 -> LIVEENTRY
                 1 -> DEADENTRY

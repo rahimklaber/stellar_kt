@@ -26,7 +26,7 @@ data class Signer(
     companion object : XdrElementDecoder<Signer> {
         override fun decode(stream: XdrInputStream): Signer {
             val key = SignerKey.decode(stream)
-            val weight = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val weight = Uint32.decode(stream)
             return Signer(
                 key,
                 weight,

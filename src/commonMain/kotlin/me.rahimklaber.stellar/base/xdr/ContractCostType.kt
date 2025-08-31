@@ -235,7 +235,8 @@ enum class ContractCostType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<ContractCostType> {
         override fun decode(stream: XdrInputStream): ContractCostType {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> WasmInsnExec
                 1 -> MemAlloc
                 2 -> MemCpy

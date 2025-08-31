@@ -14,8 +14,8 @@ LedgerFootprint footprint;
 // The maximum number of instructions this transaction can use
 uint32 instructions;
 
-// The maximum number of bytes this transaction can read from ledger
-uint32 readBytes;
+// The maximum number of bytes this transaction can read from disk backed entries
+uint32 diskReadBytes;
 // The maximum number of bytes this transaction can write to ledger
 uint32 writeBytes;
 };
@@ -24,26 +24,26 @@ uint32 writeBytes;
 data class SorobanResources(
     val footprint: LedgerFootprint,
     val instructions: Uint32,
-    val readBytes: Uint32,
+    val diskReadBytes: Uint32,
     val writeBytes: Uint32,
 ) : XdrElement {
     override fun encode(stream: XdrOutputStream) {
         footprint.encode(stream)
         instructions.encode(stream)
-        readBytes.encode(stream)
+        diskReadBytes.encode(stream)
         writeBytes.encode(stream)
     }
 
     companion object : XdrElementDecoder<SorobanResources> {
         override fun decode(stream: XdrInputStream): SorobanResources {
             val footprint = LedgerFootprint.decode(stream)
-            val instructions = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val readBytes = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val writeBytes = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val instructions = Uint32.decode(stream)
+            val diskReadBytes = Uint32.decode(stream)
+            val writeBytes = Uint32.decode(stream)
             return SorobanResources(
                 footprint,
                 instructions,
-                readBytes,
+                diskReadBytes,
                 writeBytes,
             )
         }

@@ -25,7 +25,7 @@ data class ColdArchiveBoundaryLeaf(
 
     companion object : XdrElementDecoder<ColdArchiveBoundaryLeaf> {
         override fun decode(stream: XdrInputStream): ColdArchiveBoundaryLeaf {
-            val index = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val index = Uint32.decode(stream)
             val isLowerBound = stream.readBoolean()
             return ColdArchiveBoundaryLeaf(
                 index,

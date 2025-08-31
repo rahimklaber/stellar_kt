@@ -18,7 +18,8 @@ enum class SCEnvMetaKind(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<SCEnvMetaKind> {
         override fun decode(stream: XdrInputStream): SCEnvMetaKind {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> SC_ENV_META_KIND_INTERFACE_VERSION
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)
             }

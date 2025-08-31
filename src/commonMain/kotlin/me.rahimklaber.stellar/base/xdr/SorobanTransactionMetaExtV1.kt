@@ -58,9 +58,9 @@ data class SorobanTransactionMetaExtV1(
     companion object : XdrElementDecoder<SorobanTransactionMetaExtV1> {
         override fun decode(stream: XdrInputStream): SorobanTransactionMetaExtV1 {
             val ext = ExtensionPoint.decode(stream)
-            val totalNonRefundableResourceFeeCharged = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
-            val totalRefundableResourceFeeCharged = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
-            val rentFeeCharged = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val totalNonRefundableResourceFeeCharged = Int64.decode(stream)
+            val totalRefundableResourceFeeCharged = Int64.decode(stream)
+            val rentFeeCharged = Int64.decode(stream)
             return SorobanTransactionMetaExtV1(
                 ext,
                 totalNonRefundableResourceFeeCharged,

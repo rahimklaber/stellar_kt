@@ -50,7 +50,8 @@ sealed class ClawbackClaimableBalanceResult(val type: ClawbackClaimableBalanceRe
 
     companion object : XdrElementDecoder<ClawbackClaimableBalanceResult> {
         override fun decode(stream: XdrInputStream): ClawbackClaimableBalanceResult {
-            return when (val type = ClawbackClaimableBalanceResultCode.decode(stream)) {
+            val type = ClawbackClaimableBalanceResultCode.decode(stream)
+            return when (type) {
                 ClawbackClaimableBalanceResultCode.CLAWBACK_CLAIMABLE_BALANCE_SUCCESS -> ClawbackClaimableBalanceSuccess
                 ClawbackClaimableBalanceResultCode.CLAWBACK_CLAIMABLE_BALANCE_DOES_NOT_EXIST -> ClawbackClaimableBalanceDoesNotExist
                 ClawbackClaimableBalanceResultCode.CLAWBACK_CLAIMABLE_BALANCE_NOT_ISSUER -> ClawbackClaimableBalanceNotIssuer

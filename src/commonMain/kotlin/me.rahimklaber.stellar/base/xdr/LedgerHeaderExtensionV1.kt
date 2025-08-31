@@ -31,7 +31,7 @@ data class LedgerHeaderExtensionV1(
 
     companion object : XdrElementDecoder<LedgerHeaderExtensionV1> {
         override fun decode(stream: XdrInputStream): LedgerHeaderExtensionV1 {
-            val flags = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val flags = Uint32.decode(stream)
             val ext = LedgerHeaderExtensionV1Ext.decode(stream)
             return LedgerHeaderExtensionV1(
                 flags,
@@ -59,7 +59,8 @@ data class LedgerHeaderExtensionV1(
 
         companion object : XdrElementDecoder<LedgerHeaderExtensionV1Ext> {
             override fun decode(stream: XdrInputStream): LedgerHeaderExtensionV1Ext {
-                return when (val type = Int.decode(stream)) {
+                val type = Int.decode(stream)
+                return when (type) {
                     0 -> LedgerHeaderExtensionV1ExtV0
                     else -> throw IllegalArgumentException("unknown type: $type")
                 }

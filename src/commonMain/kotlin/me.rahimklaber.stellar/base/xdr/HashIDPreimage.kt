@@ -85,7 +85,8 @@ sealed class HashIDPreimage(val type: EnvelopeType) : XdrElement {
 
     companion object : XdrElementDecoder<HashIDPreimage> {
         override fun decode(stream: XdrInputStream): HashIDPreimage {
-            return when (val type = EnvelopeType.decode(stream)) {
+            val type = EnvelopeType.decode(stream)
+            return when (type) {
                 EnvelopeType.ENVELOPE_TYPE_OP_ID -> {
                     val operationID = HashIDPreimageOperationID.decode(stream)
                     OpId(operationID)
@@ -137,7 +138,7 @@ sealed class HashIDPreimage(val type: EnvelopeType) : XdrElement {
             override fun decode(stream: XdrInputStream): HashIDPreimageOperationID {
                 val sourceAccount = AccountID.decode(stream)
                 val seqNum = SequenceNumber.decode(stream)
-                val opNum = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+                val opNum = Uint32.decode(stream)
                 return HashIDPreimageOperationID(
                     sourceAccount,
                     seqNum,
@@ -180,7 +181,7 @@ sealed class HashIDPreimage(val type: EnvelopeType) : XdrElement {
             override fun decode(stream: XdrInputStream): HashIDPreimageRevokeID {
                 val sourceAccount = AccountID.decode(stream)
                 val seqNum = SequenceNumber.decode(stream)
-                val opNum = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+                val opNum = Uint32.decode(stream)
                 val liquidityPoolID = PoolID.decode(stream)
                 val asset = Asset.decode(stream)
                 return HashIDPreimageRevokeID(
@@ -255,8 +256,8 @@ sealed class HashIDPreimage(val type: EnvelopeType) : XdrElement {
         companion object : XdrElementDecoder<HashIDPreimageSorobanAuthorization> {
             override fun decode(stream: XdrInputStream): HashIDPreimageSorobanAuthorization {
                 val networkID = Hash.decode(stream)
-                val nonce = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
-                val signatureExpirationLedger = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+                val nonce = Int64.decode(stream)
+                val signatureExpirationLedger = Uint32.decode(stream)
                 val invocation = SorobanAuthorizedInvocation.decode(stream)
                 return HashIDPreimageSorobanAuthorization(
                     networkID,

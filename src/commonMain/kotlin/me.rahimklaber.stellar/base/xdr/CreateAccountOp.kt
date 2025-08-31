@@ -26,7 +26,7 @@ data class CreateAccountOp(
     companion object : XdrElementDecoder<CreateAccountOp> {
         override fun decode(stream: XdrInputStream): CreateAccountOp {
             val destination = AccountID.decode(stream)
-            val startingBalance = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val startingBalance = Int64.decode(stream)
             return CreateAccountOp(
                 destination,
                 startingBalance,

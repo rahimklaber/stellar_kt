@@ -20,7 +20,7 @@ value class TimePoint(val value: Uint64) : XdrElement {
 
     companion object : XdrElementDecoder<TimePoint> {
         override fun decode(stream: XdrInputStream): TimePoint {
-            val value = me.rahimklaber.stellar.base.xdr.Uint64.decode(stream)
+            val value = Uint64.decode(stream)
             return TimePoint(value)
         }
     }

@@ -20,7 +20,8 @@ enum class IPAddrType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<IPAddrType> {
         override fun decode(stream: XdrInputStream): IPAddrType {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> IPv4
                 1 -> IPv6
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)

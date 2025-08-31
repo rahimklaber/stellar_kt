@@ -37,7 +37,7 @@ data class TransactionHistoryEntry(
 
     companion object : XdrElementDecoder<TransactionHistoryEntry> {
         override fun decode(stream: XdrInputStream): TransactionHistoryEntry {
-            val ledgerSeq = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val ledgerSeq = Uint32.decode(stream)
             val txSet = TransactionSet.decode(stream)
             val ext = TransactionHistoryEntryExt.decode(stream)
             return TransactionHistoryEntry(
@@ -79,7 +79,8 @@ data class TransactionHistoryEntry(
 
         companion object : XdrElementDecoder<TransactionHistoryEntryExt> {
             override fun decode(stream: XdrInputStream): TransactionHistoryEntryExt {
-                return when (val type = Int.decode(stream)) {
+                val type = Int.decode(stream)
+                return when (type) {
                     0 -> TransactionHistoryEntryExtV0
                     1 -> {
                         val generalizedTxSet = GeneralizedTransactionSet.decode(stream)

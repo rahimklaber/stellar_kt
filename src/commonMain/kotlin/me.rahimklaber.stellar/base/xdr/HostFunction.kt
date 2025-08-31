@@ -51,19 +51,6 @@ sealed class HostFunction(val type: HostFunctionType) : XdrElement {
             stream.writeInt(wasmSize)
             stream.writeBytes(wasm)
         }
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (other == null || this::class != other::class) return false
-
-            other as UploadContractWasm
-
-            return wasm.contentEquals(other.wasm)
-        }
-
-        override fun hashCode(): Int {
-            return wasm.contentHashCode()
-        }
     }
 
     fun createContractV2OrNull(): CreateContractV2? = if (this is CreateContractV2) this else null
@@ -78,7 +65,8 @@ sealed class HostFunction(val type: HostFunctionType) : XdrElement {
 
     companion object : XdrElementDecoder<HostFunction> {
         override fun decode(stream: XdrInputStream): HostFunction {
-            return when (val type = HostFunctionType.decode(stream)) {
+            val type = HostFunctionType.decode(stream)
+            return when (type) {
                 HostFunctionType.HOST_FUNCTION_TYPE_INVOKE_CONTRACT -> {
                     val invokeContract = InvokeContractArgs.decode(stream)
                     InvokeContract(invokeContract)

@@ -39,7 +39,8 @@ sealed class SCSpecUDTUnionCaseV0(val type: SCSpecUDTUnionCaseV0Kind) : XdrEleme
 
     companion object : XdrElementDecoder<SCSpecUDTUnionCaseV0> {
         override fun decode(stream: XdrInputStream): SCSpecUDTUnionCaseV0 {
-            return when (val type = SCSpecUDTUnionCaseV0Kind.decode(stream)) {
+            val type = SCSpecUDTUnionCaseV0Kind.decode(stream)
+            return when (type) {
                 SCSpecUDTUnionCaseV0Kind.SC_SPEC_UDT_UNION_CASE_VOID_V0 -> {
                     val voidCase = SCSpecUDTUnionCaseVoidV0.decode(stream)
                     ScSpecUdtUnionCaseVoidV0(voidCase)

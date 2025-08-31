@@ -51,7 +51,8 @@ sealed class ClaimAtom(val type: ClaimAtomType) : XdrElement {
 
     companion object : XdrElementDecoder<ClaimAtom> {
         override fun decode(stream: XdrInputStream): ClaimAtom {
-            return when (val type = ClaimAtomType.decode(stream)) {
+            val type = ClaimAtomType.decode(stream)
+            return when (type) {
                 ClaimAtomType.CLAIM_ATOM_TYPE_V0 -> {
                     val v0 = ClaimOfferAtomV0.decode(stream)
                     V0(v0)

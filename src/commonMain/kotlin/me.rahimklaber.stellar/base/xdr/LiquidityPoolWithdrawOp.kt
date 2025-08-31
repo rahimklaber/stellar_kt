@@ -32,9 +32,9 @@ data class LiquidityPoolWithdrawOp(
     companion object : XdrElementDecoder<LiquidityPoolWithdrawOp> {
         override fun decode(stream: XdrInputStream): LiquidityPoolWithdrawOp {
             val liquidityPoolID = PoolID.decode(stream)
-            val amount = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
-            val minAmountA = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
-            val minAmountB = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val amount = Int64.decode(stream)
+            val minAmountA = Int64.decode(stream)
+            val minAmountB = Int64.decode(stream)
             return LiquidityPoolWithdrawOp(
                 liquidityPoolID,
                 amount,

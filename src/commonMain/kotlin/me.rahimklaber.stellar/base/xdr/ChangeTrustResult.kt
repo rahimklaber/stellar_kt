@@ -80,7 +80,8 @@ sealed class ChangeTrustResult(val type: ChangeTrustResultCode) : XdrElement {
 
     companion object : XdrElementDecoder<ChangeTrustResult> {
         override fun decode(stream: XdrInputStream): ChangeTrustResult {
-            return when (val type = ChangeTrustResultCode.decode(stream)) {
+            val type = ChangeTrustResultCode.decode(stream)
+            return when (type) {
                 ChangeTrustResultCode.CHANGE_TRUST_SUCCESS -> ChangeTrustSuccess
                 ChangeTrustResultCode.CHANGE_TRUST_MALFORMED -> ChangeTrustMalformed
                 ChangeTrustResultCode.CHANGE_TRUST_NO_ISSUER -> ChangeTrustNoIssuer

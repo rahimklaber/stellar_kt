@@ -46,7 +46,8 @@ sealed class RestoreFootprintResult(val type: RestoreFootprintResultCode) : XdrE
 
     companion object : XdrElementDecoder<RestoreFootprintResult> {
         override fun decode(stream: XdrInputStream): RestoreFootprintResult {
-            return when (val type = RestoreFootprintResultCode.decode(stream)) {
+            val type = RestoreFootprintResultCode.decode(stream)
+            return when (type) {
                 RestoreFootprintResultCode.RESTORE_FOOTPRINT_SUCCESS -> RestoreFootprintSuccess
                 RestoreFootprintResultCode.RESTORE_FOOTPRINT_MALFORMED -> RestoreFootprintMalformed
                 RestoreFootprintResultCode.RESTORE_FOOTPRINT_RESOURCE_LIMIT_EXCEEDED -> RestoreFootprintResourceLimitExceeded

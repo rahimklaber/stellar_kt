@@ -35,7 +35,7 @@ data class AccountEntryExtensionV3(
     companion object : XdrElementDecoder<AccountEntryExtensionV3> {
         override fun decode(stream: XdrInputStream): AccountEntryExtensionV3 {
             val ext = ExtensionPoint.decode(stream)
-            val seqLedger = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val seqLedger = Uint32.decode(stream)
             val seqTime = TimePoint.decode(stream)
             return AccountEntryExtensionV3(
                 ext,

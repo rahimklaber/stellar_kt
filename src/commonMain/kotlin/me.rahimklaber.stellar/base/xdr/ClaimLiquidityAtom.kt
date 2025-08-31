@@ -40,9 +40,9 @@ data class ClaimLiquidityAtom(
         override fun decode(stream: XdrInputStream): ClaimLiquidityAtom {
             val liquidityPoolID = PoolID.decode(stream)
             val assetSold = Asset.decode(stream)
-            val amountSold = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val amountSold = Int64.decode(stream)
             val assetBought = Asset.decode(stream)
-            val amountBought = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val amountBought = Int64.decode(stream)
             return ClaimLiquidityAtom(
                 liquidityPoolID,
                 assetSold,

@@ -17,6 +17,8 @@ case LEDGER_ENTRY_REMOVED:
 LedgerKey removed;
 case LEDGER_ENTRY_STATE:
 LedgerEntry state;
+case LEDGER_ENTRY_RESTORED:
+LedgerEntry restored;
 };
  * ```
  */
@@ -61,9 +63,20 @@ sealed class LedgerEntryChange(val type: LedgerEntryChangeType) : XdrElement {
         }
     }
 
+    fun restoredOrNull(): LedgerEntryRestored? = if (this is LedgerEntryRestored) this else null
+    data class LedgerEntryRestored(
+        val restored: LedgerEntry,
+    ) : LedgerEntryChange(LedgerEntryChangeType.LEDGER_ENTRY_RESTORED) {
+        override fun encode(stream: XdrOutputStream) {
+            type.encode(stream)
+            restored.encode(stream)
+        }
+    }
+
     companion object : XdrElementDecoder<LedgerEntryChange> {
         override fun decode(stream: XdrInputStream): LedgerEntryChange {
-            return when (val type = LedgerEntryChangeType.decode(stream)) {
+            val type = LedgerEntryChangeType.decode(stream)
+            return when (type) {
                 LedgerEntryChangeType.LEDGER_ENTRY_CREATED -> {
                     val created = LedgerEntry.decode(stream)
                     LedgerEntryCreated(created)
@@ -82,6 +95,11 @@ sealed class LedgerEntryChange(val type: LedgerEntryChangeType) : XdrElement {
                 LedgerEntryChangeType.LEDGER_ENTRY_STATE -> {
                     val state = LedgerEntry.decode(stream)
                     LedgerEntryState(state)
+                }
+
+                LedgerEntryChangeType.LEDGER_ENTRY_RESTORED -> {
+                    val restored = LedgerEntry.decode(stream)
+                    LedgerEntryRestored(restored)
                 }
 
                 else -> throw IllegalArgumentException("unknown type: $type")

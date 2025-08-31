@@ -31,7 +31,7 @@ data class TrustLineEntryExtensionV2(
 
     companion object : XdrElementDecoder<TrustLineEntryExtensionV2> {
         override fun decode(stream: XdrInputStream): TrustLineEntryExtensionV2 {
-            val liquidityPoolUseCount = me.rahimklaber.stellar.base.xdr.Int32.decode(stream)
+            val liquidityPoolUseCount = Int32.decode(stream)
             val ext = TrustLineEntryExtensionV2Ext.decode(stream)
             return TrustLineEntryExtensionV2(
                 liquidityPoolUseCount,
@@ -59,7 +59,8 @@ data class TrustLineEntryExtensionV2(
 
         companion object : XdrElementDecoder<TrustLineEntryExtensionV2Ext> {
             override fun decode(stream: XdrInputStream): TrustLineEntryExtensionV2Ext {
-                return when (val type = Int.decode(stream)) {
+                val type = Int.decode(stream)
+                return when (type) {
                     0 -> TrustLineEntryExtensionV2ExtV0
                     else -> throw IllegalArgumentException("unknown type: $type")
                 }

@@ -20,7 +20,7 @@ value class Duration(val value: Uint64) : XdrElement {
 
     companion object : XdrElementDecoder<Duration> {
         override fun decode(stream: XdrInputStream): Duration {
-            val value = me.rahimklaber.stellar.base.xdr.Uint64.decode(stream)
+            val value = Uint64.decode(stream)
             return Duration(value)
         }
     }

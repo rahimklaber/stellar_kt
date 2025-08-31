@@ -25,7 +25,7 @@ data class SCPBallot(
 
     companion object : XdrElementDecoder<SCPBallot> {
         override fun decode(stream: XdrInputStream): SCPBallot {
-            val counter = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val counter = Uint32.decode(stream)
             val value = Value.decode(stream)
             return SCPBallot(
                 counter,

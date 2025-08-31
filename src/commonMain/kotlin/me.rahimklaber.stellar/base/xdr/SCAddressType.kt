@@ -26,7 +26,8 @@ enum class SCAddressType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<SCAddressType> {
         override fun decode(stream: XdrInputStream): SCAddressType {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> SC_ADDRESS_TYPE_ACCOUNT
                 1 -> SC_ADDRESS_TYPE_CONTRACT
                 2 -> SC_ADDRESS_TYPE_MUXED_ACCOUNT

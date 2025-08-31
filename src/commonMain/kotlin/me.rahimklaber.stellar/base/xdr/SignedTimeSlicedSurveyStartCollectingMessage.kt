@@ -25,8 +25,8 @@ data class SignedTimeSlicedSurveyStartCollectingMessage(
 
     companion object : XdrElementDecoder<SignedTimeSlicedSurveyStartCollectingMessage> {
         override fun decode(stream: XdrInputStream): SignedTimeSlicedSurveyStartCollectingMessage {
-            val signature = me.rahimklaber.stellar.base.xdr.Signature.decode(stream)
-            val startCollecting = me.rahimklaber.stellar.base.xdr.TimeSlicedSurveyStartCollectingMessage.decode(stream)
+            val signature = Signature.decode(stream)
+            val startCollecting = TimeSlicedSurveyStartCollectingMessage.decode(stream)
             return SignedTimeSlicedSurveyStartCollectingMessage(
                 signature,
                 startCollecting,

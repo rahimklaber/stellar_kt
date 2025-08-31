@@ -25,8 +25,8 @@ data class Liabilities(
 
     companion object : XdrElementDecoder<Liabilities> {
         override fun decode(stream: XdrInputStream): Liabilities {
-            val buying = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
-            val selling = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val buying = Int64.decode(stream)
+            val selling = Int64.decode(stream)
             return Liabilities(
                 buying,
                 selling,

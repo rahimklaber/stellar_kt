@@ -94,7 +94,8 @@ sealed class SetOptionsResult(val type: SetOptionsResultCode) : XdrElement {
 
     companion object : XdrElementDecoder<SetOptionsResult> {
         override fun decode(stream: XdrInputStream): SetOptionsResult {
-            return when (val type = SetOptionsResultCode.decode(stream)) {
+            val type = SetOptionsResultCode.decode(stream)
+            return when (type) {
                 SetOptionsResultCode.SET_OPTIONS_SUCCESS -> SetOptionsSuccess
                 SetOptionsResultCode.SET_OPTIONS_LOW_RESERVE -> SetOptionsLowReserve
                 SetOptionsResultCode.SET_OPTIONS_TOO_MANY_SIGNERS -> SetOptionsTooManySigners

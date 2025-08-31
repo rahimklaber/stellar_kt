@@ -22,7 +22,8 @@ enum class SorobanAuthorizedFunctionType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<SorobanAuthorizedFunctionType> {
         override fun decode(stream: XdrInputStream): SorobanAuthorizedFunctionType {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN
                 1 -> SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN
                 2 -> SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_V2_HOST_FN

@@ -37,10 +37,10 @@ data class ConfigSettingContractComputeV0(
 
     companion object : XdrElementDecoder<ConfigSettingContractComputeV0> {
         override fun decode(stream: XdrInputStream): ConfigSettingContractComputeV0 {
-            val ledgerMaxInstructions = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
-            val txMaxInstructions = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
-            val feeRatePerInstructionsIncrement = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
-            val txMemoryLimit = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val ledgerMaxInstructions = Int64.decode(stream)
+            val txMaxInstructions = Int64.decode(stream)
+            val feeRatePerInstructionsIncrement = Int64.decode(stream)
+            val txMemoryLimit = Uint32.decode(stream)
             return ConfigSettingContractComputeV0(
                 ledgerMaxInstructions,
                 txMaxInstructions,

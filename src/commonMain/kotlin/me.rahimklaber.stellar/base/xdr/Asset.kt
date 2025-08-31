@@ -29,7 +29,7 @@ sealed class Asset(val type: AssetType) : XdrElement {
         }
     }
 
-    fun alphaNum4OrNull(): CreditAlphanum4? = if (this is CreditAlphanum4) this else null
+    fun alphaNum4OrNull(): CreditAlphanum4? = this as? CreditAlphanum4
     data class CreditAlphanum4(
         val alphaNum4: AlphaNum4,
     ) : Asset(AssetType.ASSET_TYPE_CREDIT_ALPHANUM4) {
@@ -39,7 +39,7 @@ sealed class Asset(val type: AssetType) : XdrElement {
         }
     }
 
-    fun alphaNum12OrNull(): CreditAlphanum12? = if (this is CreditAlphanum12) this else null
+    fun alphaNum12OrNull(): CreditAlphanum12? = this as? CreditAlphanum12
     data class CreditAlphanum12(
         val alphaNum12: AlphaNum12,
     ) : Asset(AssetType.ASSET_TYPE_CREDIT_ALPHANUM12) {
@@ -51,7 +51,8 @@ sealed class Asset(val type: AssetType) : XdrElement {
 
     companion object : XdrElementDecoder<Asset> {
         override fun decode(stream: XdrInputStream): Asset {
-            return when (val type = AssetType.decode(stream)) {
+            val type = AssetType.decode(stream)
+            return when (type) {
                 AssetType.ASSET_TYPE_NATIVE -> Native
                 AssetType.ASSET_TYPE_CREDIT_ALPHANUM4 -> {
                     val alphaNum4 = AlphaNum4.decode(stream)

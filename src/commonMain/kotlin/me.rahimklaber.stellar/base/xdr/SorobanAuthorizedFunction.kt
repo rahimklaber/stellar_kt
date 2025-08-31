@@ -59,7 +59,8 @@ sealed class SorobanAuthorizedFunction(val type: SorobanAuthorizedFunctionType) 
 
     companion object : XdrElementDecoder<SorobanAuthorizedFunction> {
         override fun decode(stream: XdrInputStream): SorobanAuthorizedFunction {
-            return when (val type = SorobanAuthorizedFunctionType.decode(stream)) {
+            val type = SorobanAuthorizedFunctionType.decode(stream)
+            return when (type) {
                 SorobanAuthorizedFunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CONTRACT_FN -> {
                     val contractFn = InvokeContractArgs.decode(stream)
                     ContractFn(contractFn)

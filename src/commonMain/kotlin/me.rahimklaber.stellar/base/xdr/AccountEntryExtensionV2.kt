@@ -41,8 +41,8 @@ data class AccountEntryExtensionV2(
 
     companion object : XdrElementDecoder<AccountEntryExtensionV2> {
         override fun decode(stream: XdrInputStream): AccountEntryExtensionV2 {
-            val numSponsored = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val numSponsoring = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val numSponsored = Uint32.decode(stream)
+            val numSponsoring = Uint32.decode(stream)
             val signerSponsoringIDsSize = stream.readInt()
             val signerSponsoringIDs: List<SponsorshipDescriptor> =
                 decodeXdrElementsList(signerSponsoringIDsSize, stream, SponsorshipDescriptor.decoder())
@@ -87,7 +87,8 @@ data class AccountEntryExtensionV2(
 
         companion object : XdrElementDecoder<AccountEntryExtensionV2Ext> {
             override fun decode(stream: XdrInputStream): AccountEntryExtensionV2Ext {
-                return when (val type = Int.decode(stream)) {
+                val type = Int.decode(stream)
+                return when (type) {
                     0 -> AccountEntryExtensionV2ExtV0
                     3 -> {
                         val v3 = AccountEntryExtensionV3.decode(stream)

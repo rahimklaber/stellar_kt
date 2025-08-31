@@ -25,7 +25,7 @@ data class ArchivalProofNode(
 
     companion object : XdrElementDecoder<ArchivalProofNode> {
         override fun decode(stream: XdrInputStream): ArchivalProofNode {
-            val index = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val index = Uint32.decode(stream)
             val hash = Hash.decode(stream)
             return ArchivalProofNode(
                 index,

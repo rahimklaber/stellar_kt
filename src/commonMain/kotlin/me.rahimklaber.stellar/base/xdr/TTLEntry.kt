@@ -26,7 +26,7 @@ data class TTLEntry(
     companion object : XdrElementDecoder<TTLEntry> {
         override fun decode(stream: XdrInputStream): TTLEntry {
             val keyHash = Hash.decode(stream)
-            val liveUntilLedgerSeq = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val liveUntilLedgerSeq = Uint32.decode(stream)
             return TTLEntry(
                 keyHash,
                 liveUntilLedgerSeq,

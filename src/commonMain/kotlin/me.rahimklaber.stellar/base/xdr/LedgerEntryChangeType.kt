@@ -12,7 +12,8 @@ package me.rahimklaber.stellar.base.xdr
 LEDGER_ENTRY_CREATED = 0, // entry was added to the ledger
 LEDGER_ENTRY_UPDATED = 1, // entry was modified in the ledger
 LEDGER_ENTRY_REMOVED = 2, // entry was removed from the ledger
-LEDGER_ENTRY_STATE = 3    // value of the entry
+LEDGER_ENTRY_STATE    = 3, // value of the entry
+LEDGER_ENTRY_RESTORED = 4  // archived entry was restored in the ledger
 };
  * ```
  */
@@ -20,15 +21,18 @@ enum class LedgerEntryChangeType(val value: Int) : XdrElement {
     LEDGER_ENTRY_CREATED(0),
     LEDGER_ENTRY_UPDATED(1),
     LEDGER_ENTRY_REMOVED(2),
-    LEDGER_ENTRY_STATE(3);
+    LEDGER_ENTRY_STATE(3),
+    LEDGER_ENTRY_RESTORED(4);
 
     companion object : XdrElementDecoder<LedgerEntryChangeType> {
         override fun decode(stream: XdrInputStream): LedgerEntryChangeType {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> LEDGER_ENTRY_CREATED
                 1 -> LEDGER_ENTRY_UPDATED
                 2 -> LEDGER_ENTRY_REMOVED
                 3 -> LEDGER_ENTRY_STATE
+                4 -> LEDGER_ENTRY_RESTORED
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)
             }
         }

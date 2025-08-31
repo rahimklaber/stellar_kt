@@ -43,7 +43,8 @@ sealed class ContractIDPreimage(val type: ContractIDPreimageType) : XdrElement {
 
     companion object : XdrElementDecoder<ContractIDPreimage> {
         override fun decode(stream: XdrInputStream): ContractIDPreimage {
-            return when (val type = ContractIDPreimageType.decode(stream)) {
+            val type = ContractIDPreimageType.decode(stream)
+            return when (type) {
                 ContractIDPreimageType.CONTRACT_ID_PREIMAGE_FROM_ADDRESS -> {
                     val fromAddress = ContractIDPreimageFromAddress.decode(stream)
                     FromAddress(fromAddress)

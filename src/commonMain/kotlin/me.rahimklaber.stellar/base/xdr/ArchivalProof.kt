@@ -32,7 +32,7 @@ data class ArchivalProof(
 
     companion object : XdrElementDecoder<ArchivalProof> {
         override fun decode(stream: XdrInputStream): ArchivalProof {
-            val epoch = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val epoch = Uint32.decode(stream)
             val body = ArchivalProofBody.decode(stream)
             return ArchivalProof(
                 epoch,
@@ -54,7 +54,7 @@ data class ArchivalProof(
      * ```
      */
     sealed class ArchivalProofBody(val type: ArchivalProofType) : XdrElement {
-        fun nonexistenceProofOrNull(): Existence? = if (this is Existence) this else null
+        fun nonexistenceProofOrNull(): Existence? = this as? Existence
         data class Existence(
             val nonexistenceProof: NonexistenceProofBody,
         ) : ArchivalProofBody(ArchivalProofType.EXISTENCE) {
@@ -64,7 +64,7 @@ data class ArchivalProof(
             }
         }
 
-        fun existenceProofOrNull(): Nonexistence? = if (this is Nonexistence) this else null
+        fun existenceProofOrNull(): Nonexistence? = this as? Nonexistence
         data class Nonexistence(
             val existenceProof: ExistenceProofBody,
         ) : ArchivalProofBody(ArchivalProofType.NONEXISTENCE) {

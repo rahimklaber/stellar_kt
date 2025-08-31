@@ -35,7 +35,7 @@ data class TransactionHistoryResultEntry(
 
     companion object : XdrElementDecoder<TransactionHistoryResultEntry> {
         override fun decode(stream: XdrInputStream): TransactionHistoryResultEntry {
-            val ledgerSeq = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val ledgerSeq = Uint32.decode(stream)
             val txResultSet = TransactionResultSet.decode(stream)
             val ext = TransactionHistoryResultEntryExt.decode(stream)
             return TransactionHistoryResultEntry(
@@ -65,7 +65,8 @@ data class TransactionHistoryResultEntry(
 
         companion object : XdrElementDecoder<TransactionHistoryResultEntryExt> {
             override fun decode(stream: XdrInputStream): TransactionHistoryResultEntryExt {
-                return when (val type = Int.decode(stream)) {
+                val type = Int.decode(stream)
+                return when (type) {
                     0 -> TransactionHistoryResultEntryExtV0
                     else -> throw IllegalArgumentException("unknown type: $type")
                 }

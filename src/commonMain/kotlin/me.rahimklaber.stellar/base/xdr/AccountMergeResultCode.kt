@@ -35,7 +35,8 @@ enum class AccountMergeResultCode(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<AccountMergeResultCode> {
         override fun decode(stream: XdrInputStream): AccountMergeResultCode {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> ACCOUNT_MERGE_SUCCESS
                 -1 -> ACCOUNT_MERGE_MALFORMED
                 -2 -> ACCOUNT_MERGE_NO_ACCOUNT

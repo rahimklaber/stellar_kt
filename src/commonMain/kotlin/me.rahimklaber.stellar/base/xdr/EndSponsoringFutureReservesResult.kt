@@ -34,7 +34,8 @@ sealed class EndSponsoringFutureReservesResult(val type: EndSponsoringFutureRese
 
     companion object : XdrElementDecoder<EndSponsoringFutureReservesResult> {
         override fun decode(stream: XdrInputStream): EndSponsoringFutureReservesResult {
-            return when (val type = EndSponsoringFutureReservesResultCode.decode(stream)) {
+            val type = EndSponsoringFutureReservesResultCode.decode(stream)
+            return when (type) {
                 EndSponsoringFutureReservesResultCode.END_SPONSORING_FUTURE_RESERVES_SUCCESS -> EndSponsoringFutureReservesSuccess
                 EndSponsoringFutureReservesResultCode.END_SPONSORING_FUTURE_RESERVES_NOT_SPONSORED -> EndSponsoringFutureReservesNotSponsored
                 else -> throw IllegalArgumentException("unknown type: $type")

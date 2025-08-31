@@ -106,37 +106,37 @@ data class SetOptionsOp(
             }
             val clearFlagsPresent = stream.readInt()
             val clearFlags = if (clearFlagsPresent != 0) {
-                me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+                Uint32.decode(stream)
             } else {
                 null
             }
             val setFlagsPresent = stream.readInt()
             val setFlags = if (setFlagsPresent != 0) {
-                me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+                Uint32.decode(stream)
             } else {
                 null
             }
             val masterWeightPresent = stream.readInt()
             val masterWeight = if (masterWeightPresent != 0) {
-                me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+                Uint32.decode(stream)
             } else {
                 null
             }
             val lowThresholdPresent = stream.readInt()
             val lowThreshold = if (lowThresholdPresent != 0) {
-                me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+                Uint32.decode(stream)
             } else {
                 null
             }
             val medThresholdPresent = stream.readInt()
             val medThreshold = if (medThresholdPresent != 0) {
-                me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+                Uint32.decode(stream)
             } else {
                 null
             }
             val highThresholdPresent = stream.readInt()
             val highThreshold = if (highThresholdPresent != 0) {
-                me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+                Uint32.decode(stream)
             } else {
                 null
             }

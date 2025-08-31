@@ -41,7 +41,8 @@ enum class SetOptionsResultCode(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<SetOptionsResultCode> {
         override fun decode(stream: XdrInputStream): SetOptionsResultCode {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> SET_OPTIONS_SUCCESS
                 -1 -> SET_OPTIONS_LOW_RESERVE
                 -2 -> SET_OPTIONS_TOO_MANY_SIGNERS

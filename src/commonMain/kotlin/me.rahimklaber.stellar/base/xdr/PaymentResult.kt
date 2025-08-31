@@ -87,7 +87,8 @@ sealed class PaymentResult(val type: PaymentResultCode) : XdrElement {
 
     companion object : XdrElementDecoder<PaymentResult> {
         override fun decode(stream: XdrInputStream): PaymentResult {
-            return when (val type = PaymentResultCode.decode(stream)) {
+            val type = PaymentResultCode.decode(stream)
+            return when (type) {
                 PaymentResultCode.PAYMENT_SUCCESS -> PaymentSuccess
                 PaymentResultCode.PAYMENT_MALFORMED -> PaymentMalformed
                 PaymentResultCode.PAYMENT_UNDERFUNDED -> PaymentUnderfunded

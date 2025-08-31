@@ -25,8 +25,8 @@ data class SendMoreExtended(
 
     companion object : XdrElementDecoder<SendMoreExtended> {
         override fun decode(stream: XdrInputStream): SendMoreExtended {
-            val numMessages = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val numBytes = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val numMessages = Uint32.decode(stream)
+            val numBytes = Uint32.decode(stream)
             return SendMoreExtended(
                 numMessages,
                 numBytes,

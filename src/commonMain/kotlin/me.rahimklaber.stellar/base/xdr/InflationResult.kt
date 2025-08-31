@@ -37,7 +37,8 @@ sealed class InflationResult(val type: InflationResultCode) : XdrElement {
 
     companion object : XdrElementDecoder<InflationResult> {
         override fun decode(stream: XdrInputStream): InflationResult {
-            return when (val type = InflationResultCode.decode(stream)) {
+            val type = InflationResultCode.decode(stream)
+            return when (type) {
                 InflationResultCode.INFLATION_SUCCESS -> {
                     val payoutsSize = stream.readInt()
                     val payouts: List<InflationPayout> = decodeXdrElementsList(payoutsSize, stream, InflationPayout.decoder())

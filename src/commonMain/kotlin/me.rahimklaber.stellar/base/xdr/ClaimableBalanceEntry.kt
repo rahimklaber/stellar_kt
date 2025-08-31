@@ -56,7 +56,7 @@ data class ClaimableBalanceEntry(
             val claimantsSize = stream.readInt()
             val claimants: List<Claimant> = decodeXdrElementsList(claimantsSize, stream, Claimant.decoder())
             val asset = Asset.decode(stream)
-            val amount = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val amount = Int64.decode(stream)
             val ext = ClaimableBalanceEntryExt.decode(stream)
             return ClaimableBalanceEntry(
                 balanceID,
@@ -99,7 +99,8 @@ data class ClaimableBalanceEntry(
 
         companion object : XdrElementDecoder<ClaimableBalanceEntryExt> {
             override fun decode(stream: XdrInputStream): ClaimableBalanceEntryExt {
-                return when (val type = Int.decode(stream)) {
+                val type = Int.decode(stream)
+                return when (type) {
                     0 -> ClaimableBalanceEntryExtV0
                     1 -> {
                         val v1 = ClaimableBalanceEntryExtensionV1.decode(stream)

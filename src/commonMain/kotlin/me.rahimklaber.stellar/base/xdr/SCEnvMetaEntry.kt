@@ -30,7 +30,8 @@ sealed class SCEnvMetaEntry(val type: SCEnvMetaKind) : XdrElement {
 
     companion object : XdrElementDecoder<SCEnvMetaEntry> {
         override fun decode(stream: XdrInputStream): SCEnvMetaEntry {
-            return when (val type = SCEnvMetaKind.decode(stream)) {
+            val type = SCEnvMetaKind.decode(stream)
+            return when (type) {
                 SCEnvMetaKind.SC_ENV_META_KIND_INTERFACE_VERSION -> {
                     val interfaceVersion = SCEnvMetaEntryInterfaceVersion.decode(stream)
                     InterfaceVersion(interfaceVersion)
@@ -61,8 +62,8 @@ sealed class SCEnvMetaEntry(val type: SCEnvMetaKind) : XdrElement {
 
         companion object : XdrElementDecoder<SCEnvMetaEntryInterfaceVersion> {
             override fun decode(stream: XdrInputStream): SCEnvMetaEntryInterfaceVersion {
-                val protocol = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-                val preRelease = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+                val protocol = Uint32.decode(stream)
+                val preRelease = Uint32.decode(stream)
                 return SCEnvMetaEntryInterfaceVersion(
                     protocol,
                     preRelease,

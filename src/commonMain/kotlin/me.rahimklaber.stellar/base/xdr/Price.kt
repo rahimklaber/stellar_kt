@@ -25,8 +25,8 @@ data class Price(
 
     companion object : XdrElementDecoder<Price> {
         override fun decode(stream: XdrInputStream): Price {
-            val n = me.rahimklaber.stellar.base.xdr.Int32.decode(stream)
-            val d = me.rahimklaber.stellar.base.xdr.Int32.decode(stream)
+            val n = Int32.decode(stream)
+            val d = Int32.decode(stream)
             return Price(
                 n,
                 d,

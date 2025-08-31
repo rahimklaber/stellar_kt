@@ -33,10 +33,16 @@ case CONFIG_SETTING_STATE_ARCHIVAL:
 StateArchivalSettings stateArchivalSettings;
 case CONFIG_SETTING_CONTRACT_EXECUTION_LANES:
 ConfigSettingContractExecutionLanesV0 contractExecutionLanes;
-case CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW:
-uint64 bucketListSizeWindow<>;
+case CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW:
+uint64 liveSorobanStateSizeWindow<>;
 case CONFIG_SETTING_EVICTION_ITERATOR:
 EvictionIterator evictionIterator;
+case CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0:
+ConfigSettingContractParallelComputeV0 contractParallelCompute;
+case CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0:
+ConfigSettingContractLedgerCostExtV0 contractLedgerCostExt;
+case CONFIG_SETTING_SCP_TIMING:
+ConfigSettingSCPTiming contractSCPTiming;
 };
  * ```
  */
@@ -167,15 +173,17 @@ sealed class ConfigSettingEntry(val type: ConfigSettingID) : XdrElement {
         }
     }
 
-    fun bucketListSizeWindowOrNull(): ConfigSettingBucketlistSizeWindow? = if (this is ConfigSettingBucketlistSizeWindow) this else null
-    data class ConfigSettingBucketlistSizeWindow(
-        val bucketListSizeWindow: List<Uint64>,
-    ) : ConfigSettingEntry(ConfigSettingID.CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW) {
+    fun liveSorobanStateSizeWindowOrNull(): ConfigSettingLiveSorobanStateSizeWindow? =
+        if (this is ConfigSettingLiveSorobanStateSizeWindow) this else null
+
+    data class ConfigSettingLiveSorobanStateSizeWindow(
+        val liveSorobanStateSizeWindow: List<Uint64>,
+    ) : ConfigSettingEntry(ConfigSettingID.CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
-            val bucketListSizeWindowSize = bucketListSizeWindow.size
-            stream.writeInt(bucketListSizeWindowSize)
-            bucketListSizeWindow.encodeXdrElementsULong(stream)
+            val liveSorobanStateSizeWindowSize = liveSorobanStateSizeWindow.size
+            stream.writeInt(liveSorobanStateSizeWindowSize)
+            liveSorobanStateSizeWindow.encodeXdrElementsULong(stream)
         }
     }
 
@@ -189,9 +197,40 @@ sealed class ConfigSettingEntry(val type: ConfigSettingID) : XdrElement {
         }
     }
 
+    fun contractParallelComputeOrNull(): ConfigSettingContractParallelComputeV0? = if (this is ConfigSettingContractParallelComputeV0) this else null
+    data class ConfigSettingContractParallelComputeV0(
+        val contractParallelCompute: me.rahimklaber.stellar.base.xdr.ConfigSettingContractParallelComputeV0,
+    ) : ConfigSettingEntry(ConfigSettingID.CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0) {
+        override fun encode(stream: XdrOutputStream) {
+            type.encode(stream)
+            contractParallelCompute.encode(stream)
+        }
+    }
+
+    fun contractLedgerCostExtOrNull(): ConfigSettingContractLedgerCostExtV0? = if (this is ConfigSettingContractLedgerCostExtV0) this else null
+    data class ConfigSettingContractLedgerCostExtV0(
+        val contractLedgerCostExt: me.rahimklaber.stellar.base.xdr.ConfigSettingContractLedgerCostExtV0,
+    ) : ConfigSettingEntry(ConfigSettingID.CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0) {
+        override fun encode(stream: XdrOutputStream) {
+            type.encode(stream)
+            contractLedgerCostExt.encode(stream)
+        }
+    }
+
+    fun contractSCPTimingOrNull(): ConfigSettingScpTiming? = if (this is ConfigSettingScpTiming) this else null
+    data class ConfigSettingScpTiming(
+        val contractSCPTiming: ConfigSettingSCPTiming,
+    ) : ConfigSettingEntry(ConfigSettingID.CONFIG_SETTING_SCP_TIMING) {
+        override fun encode(stream: XdrOutputStream) {
+            type.encode(stream)
+            contractSCPTiming.encode(stream)
+        }
+    }
+
     companion object : XdrElementDecoder<ConfigSettingEntry> {
         override fun decode(stream: XdrInputStream): ConfigSettingEntry {
-            return when (val type = ConfigSettingID.decode(stream)) {
+            val type = ConfigSettingID.decode(stream)
+            return when (type) {
                 ConfigSettingID.CONFIG_SETTING_CONTRACT_MAX_SIZE_BYTES -> {
                     val contractMaxSizeBytes = Uint32.decode(stream)
                     ConfigSettingContractMaxSizeBytes(contractMaxSizeBytes)
@@ -252,15 +291,30 @@ sealed class ConfigSettingEntry(val type: ConfigSettingID) : XdrElement {
                     ConfigSettingContractExecutionLanes(contractExecutionLanes)
                 }
 
-                ConfigSettingID.CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW -> {
-                    val bucketListSizeWindowSize = stream.readInt()
-                    val bucketListSizeWindow: List<Uint64> = decodeXdrElementsList(bucketListSizeWindowSize, stream, Uint64.decoder())
-                    ConfigSettingBucketlistSizeWindow(bucketListSizeWindow)
+                ConfigSettingID.CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW -> {
+                    val liveSorobanStateSizeWindowSize = stream.readInt()
+                    val liveSorobanStateSizeWindow: List<Uint64> = decodeXdrElementsList(liveSorobanStateSizeWindowSize, stream, Uint64.decoder())
+                    ConfigSettingLiveSorobanStateSizeWindow(liveSorobanStateSizeWindow)
                 }
 
                 ConfigSettingID.CONFIG_SETTING_EVICTION_ITERATOR -> {
                     val evictionIterator = EvictionIterator.decode(stream)
                     ConfigSettingEvictionIterator(evictionIterator)
+                }
+
+                ConfigSettingID.CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0 -> {
+                    val contractParallelCompute = me.rahimklaber.stellar.base.xdr.ConfigSettingContractParallelComputeV0.decode(stream)
+                    ConfigSettingContractParallelComputeV0(contractParallelCompute)
+                }
+
+                ConfigSettingID.CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0 -> {
+                    val contractLedgerCostExt = me.rahimklaber.stellar.base.xdr.ConfigSettingContractLedgerCostExtV0.decode(stream)
+                    ConfigSettingContractLedgerCostExtV0(contractLedgerCostExt)
+                }
+
+                ConfigSettingID.CONFIG_SETTING_SCP_TIMING -> {
+                    val contractSCPTiming = ConfigSettingSCPTiming.decode(stream)
+                    ConfigSettingScpTiming(contractSCPTiming)
                 }
 
                 else -> throw IllegalArgumentException("unknown type: $type")

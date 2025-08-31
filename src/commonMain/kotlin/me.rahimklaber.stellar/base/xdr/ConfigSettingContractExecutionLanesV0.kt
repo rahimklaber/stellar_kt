@@ -24,7 +24,7 @@ value class ConfigSettingContractExecutionLanesV0(val ledgerMaxTxCount: Uint32) 
 
     companion object : XdrElementDecoder<ConfigSettingContractExecutionLanesV0> {
         override fun decode(stream: XdrInputStream): ConfigSettingContractExecutionLanesV0 {
-            val ledgerMaxTxCount = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val ledgerMaxTxCount = Uint32.decode(stream)
             return ConfigSettingContractExecutionLanesV0(
                 ledgerMaxTxCount,
             )

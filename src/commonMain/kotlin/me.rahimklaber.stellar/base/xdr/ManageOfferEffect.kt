@@ -22,7 +22,8 @@ enum class ManageOfferEffect(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<ManageOfferEffect> {
         override fun decode(stream: XdrInputStream): ManageOfferEffect {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> MANAGE_OFFER_CREATED
                 1 -> MANAGE_OFFER_UPDATED
                 2 -> MANAGE_OFFER_DELETED

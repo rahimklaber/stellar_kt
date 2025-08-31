@@ -284,7 +284,8 @@ sealed class StellarMessage(val type: MessageType) : XdrElement {
 
     companion object : XdrElementDecoder<StellarMessage> {
         override fun decode(stream: XdrInputStream): StellarMessage {
-            return when (val type = MessageType.decode(stream)) {
+            val type = MessageType.decode(stream)
+            return when (type) {
                 MessageType.ERROR_MSG -> {
                     val error = Error.decode(stream)
                     ErrorMsg(error)

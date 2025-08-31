@@ -134,7 +134,8 @@ sealed class PathPaymentStrictReceiveResult(val type: PathPaymentStrictReceiveRe
 
     companion object : XdrElementDecoder<PathPaymentStrictReceiveResult> {
         override fun decode(stream: XdrInputStream): PathPaymentStrictReceiveResult {
-            return when (val type = PathPaymentStrictReceiveResultCode.decode(stream)) {
+            val type = PathPaymentStrictReceiveResultCode.decode(stream)
+            return when (type) {
                 PathPaymentStrictReceiveResultCode.PATH_PAYMENT_STRICT_RECEIVE_SUCCESS -> {
                     val success = PathPaymentStrictReceiveResultSuccess.decode(stream)
                     PathPaymentStrictReceiveSuccess(success)

@@ -26,7 +26,7 @@ data class TimeSlicedPeerData(
     companion object : XdrElementDecoder<TimeSlicedPeerData> {
         override fun decode(stream: XdrInputStream): TimeSlicedPeerData {
             val peerStats = PeerStats.decode(stream)
-            val averageLatencyMs = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val averageLatencyMs = Uint32.decode(stream)
             return TimeSlicedPeerData(
                 peerStats,
                 averageLatencyMs,

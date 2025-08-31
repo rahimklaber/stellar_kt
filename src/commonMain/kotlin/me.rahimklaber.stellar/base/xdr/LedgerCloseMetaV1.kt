@@ -26,16 +26,15 @@ UpgradeEntryMeta upgradesProcessing<>;
 // other misc information attached to the ledger close
 SCPHistoryEntry scpInfo<>;
 
-// Size in bytes of BucketList, to support downstream
+// Size in bytes of live Soroban state, to support downstream
 // systems calculating storage fees correctly.
-uint64 totalByteSizeOfBucketList;
+uint64 totalByteSizeOfLiveSorobanState;
 
-// Temp keys that are being evicted at this ledger.
-LedgerKey evictedTemporaryLedgerKeys<>;
+// TTL and data/code keys that have been evicted at this ledger.
+LedgerKey evictedKeys<>;
 
-// Archived restorable ledger entries that are being
-// evicted at this ledger.
-LedgerEntry evictedPersistentLedgerEntries<>;
+// Maintained for backwards compatibility, should never be populated.
+LedgerEntry unused<>;
 };
  * ```
  */
@@ -46,9 +45,9 @@ data class LedgerCloseMetaV1(
     val txProcessing: List<TransactionResultMeta>,
     val upgradesProcessing: List<UpgradeEntryMeta>,
     val scpInfo: List<SCPHistoryEntry>,
-    val totalByteSizeOfBucketList: Uint64,
-    val evictedTemporaryLedgerKeys: List<LedgerKey>,
-    val evictedPersistentLedgerEntries: List<LedgerEntry>,
+    val totalByteSizeOfLiveSorobanState: Uint64,
+    val evictedKeys: List<LedgerKey>,
+    val unused: List<LedgerEntry>,
 ) : XdrElement {
     override fun encode(stream: XdrOutputStream) {
         ext.encode(stream)
@@ -63,13 +62,13 @@ data class LedgerCloseMetaV1(
         val scpInfoSize = scpInfo.size
         stream.writeInt(scpInfoSize)
         scpInfo.encodeXdrElements(stream)
-        totalByteSizeOfBucketList.encode(stream)
-        val evictedTemporaryLedgerKeysSize = evictedTemporaryLedgerKeys.size
-        stream.writeInt(evictedTemporaryLedgerKeysSize)
-        evictedTemporaryLedgerKeys.encodeXdrElements(stream)
-        val evictedPersistentLedgerEntriesSize = evictedPersistentLedgerEntries.size
-        stream.writeInt(evictedPersistentLedgerEntriesSize)
-        evictedPersistentLedgerEntries.encodeXdrElements(stream)
+        totalByteSizeOfLiveSorobanState.encode(stream)
+        val evictedKeysSize = evictedKeys.size
+        stream.writeInt(evictedKeysSize)
+        evictedKeys.encodeXdrElements(stream)
+        val unusedSize = unused.size
+        stream.writeInt(unusedSize)
+        unused.encodeXdrElements(stream)
     }
 
     companion object : XdrElementDecoder<LedgerCloseMetaV1> {
@@ -83,12 +82,11 @@ data class LedgerCloseMetaV1(
             val upgradesProcessing: List<UpgradeEntryMeta> = decodeXdrElementsList(upgradesProcessingSize, stream, UpgradeEntryMeta.decoder())
             val scpInfoSize = stream.readInt()
             val scpInfo: List<SCPHistoryEntry> = decodeXdrElementsList(scpInfoSize, stream, SCPHistoryEntry.decoder())
-            val totalByteSizeOfBucketList = me.rahimklaber.stellar.base.xdr.Uint64.decode(stream)
-            val evictedTemporaryLedgerKeysSize = stream.readInt()
-            val evictedTemporaryLedgerKeys: List<LedgerKey> = decodeXdrElementsList(evictedTemporaryLedgerKeysSize, stream, LedgerKey.decoder())
-            val evictedPersistentLedgerEntriesSize = stream.readInt()
-            val evictedPersistentLedgerEntries: List<LedgerEntry> =
-                decodeXdrElementsList(evictedPersistentLedgerEntriesSize, stream, LedgerEntry.decoder())
+            val totalByteSizeOfLiveSorobanState = Uint64.decode(stream)
+            val evictedKeysSize = stream.readInt()
+            val evictedKeys: List<LedgerKey> = decodeXdrElementsList(evictedKeysSize, stream, LedgerKey.decoder())
+            val unusedSize = stream.readInt()
+            val unused: List<LedgerEntry> = decodeXdrElementsList(unusedSize, stream, LedgerEntry.decoder())
             return LedgerCloseMetaV1(
                 ext,
                 ledgerHeader,
@@ -96,9 +94,9 @@ data class LedgerCloseMetaV1(
                 txProcessing,
                 upgradesProcessing,
                 scpInfo,
-                totalByteSizeOfBucketList,
-                evictedTemporaryLedgerKeys,
-                evictedPersistentLedgerEntries,
+                totalByteSizeOfLiveSorobanState,
+                evictedKeys,
+                unused,
             )
         }
     }

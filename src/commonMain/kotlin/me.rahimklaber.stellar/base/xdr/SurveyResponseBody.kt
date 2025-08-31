@@ -27,7 +27,8 @@ sealed class SurveyResponseBody(val type: SurveyMessageResponseType) : XdrElemen
 
     companion object : XdrElementDecoder<SurveyResponseBody> {
         override fun decode(stream: XdrInputStream): SurveyResponseBody {
-            return when (val type = SurveyMessageResponseType.decode(stream)) {
+            val type = SurveyMessageResponseType.decode(stream)
+            return when (type) {
                 SurveyMessageResponseType.SURVEY_TOPOLOGY_RESPONSE_V2 -> {
                     val topologyResponseBodyV2 = TopologyResponseBodyV2.decode(stream)
                     SurveyTopologyResponseV2(topologyResponseBodyV2)

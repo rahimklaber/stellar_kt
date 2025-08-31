@@ -11,6 +11,8 @@ package me.rahimklaber.stellar.base.xdr
 {
 case 0:
 TxSetComponent v0Components<>;
+case 1:
+ParallelTxsComponent parallelTxsComponent;
 };
  * ```
  */
@@ -27,13 +29,29 @@ sealed class TransactionPhase(val type: Int) : XdrElement {
         }
     }
 
+    fun parallelTxsComponentOrNull(): TransactionPhaseV1? = if (this is TransactionPhaseV1) this else null
+    data class TransactionPhaseV1(
+        val parallelTxsComponent: ParallelTxsComponent,
+    ) : TransactionPhase(1) {
+        override fun encode(stream: XdrOutputStream) {
+            type.encode(stream)
+            parallelTxsComponent.encode(stream)
+        }
+    }
+
     companion object : XdrElementDecoder<TransactionPhase> {
         override fun decode(stream: XdrInputStream): TransactionPhase {
-            return when (val type = Int.decode(stream)) {
+            val type = Int.decode(stream)
+            return when (type) {
                 0 -> {
                     val v0ComponentsSize = stream.readInt()
                     val v0Components: List<TxSetComponent> = decodeXdrElementsList(v0ComponentsSize, stream, TxSetComponent.decoder())
                     TransactionPhaseV0(v0Components)
+                }
+
+                1 -> {
+                    val parallelTxsComponent = ParallelTxsComponent.decode(stream)
+                    TransactionPhaseV1(parallelTxsComponent)
                 }
 
                 else -> throw IllegalArgumentException("unknown type: $type")

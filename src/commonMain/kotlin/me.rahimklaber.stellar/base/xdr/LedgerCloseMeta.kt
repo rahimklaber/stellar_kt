@@ -13,6 +13,8 @@ case 0:
 LedgerCloseMetaV0 v0;
 case 1:
 LedgerCloseMetaV1 v1;
+case 2:
+LedgerCloseMetaV2 v2;
 };
  * ```
  */
@@ -37,9 +39,20 @@ sealed class LedgerCloseMeta(val type: Int) : XdrElement {
         }
     }
 
+    fun v2OrNull(): LedgerCloseMetaV2? = if (this is LedgerCloseMetaV2) this else null
+    data class LedgerCloseMetaV2(
+        val v2: me.rahimklaber.stellar.base.xdr.LedgerCloseMetaV2,
+    ) : LedgerCloseMeta(2) {
+        override fun encode(stream: XdrOutputStream) {
+            type.encode(stream)
+            v2.encode(stream)
+        }
+    }
+
     companion object : XdrElementDecoder<LedgerCloseMeta> {
         override fun decode(stream: XdrInputStream): LedgerCloseMeta {
-            return when (val type = Int.decode(stream)) {
+            val type = Int.decode(stream)
+            return when (type) {
                 0 -> {
                     val v0 = me.rahimklaber.stellar.base.xdr.LedgerCloseMetaV0.decode(stream)
                     LedgerCloseMetaV0(v0)
@@ -48,6 +61,11 @@ sealed class LedgerCloseMeta(val type: Int) : XdrElement {
                 1 -> {
                     val v1 = me.rahimklaber.stellar.base.xdr.LedgerCloseMetaV1.decode(stream)
                     LedgerCloseMetaV1(v1)
+                }
+
+                2 -> {
+                    val v2 = me.rahimklaber.stellar.base.xdr.LedgerCloseMetaV2.decode(stream)
+                    LedgerCloseMetaV2(v2)
                 }
 
                 else -> throw IllegalArgumentException("unknown type: $type")

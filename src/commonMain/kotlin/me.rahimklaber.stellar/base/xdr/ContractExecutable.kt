@@ -35,7 +35,8 @@ sealed class ContractExecutable(val type: ContractExecutableType) : XdrElement {
 
     companion object : XdrElementDecoder<ContractExecutable> {
         override fun decode(stream: XdrInputStream): ContractExecutable {
-            return when (val type = ContractExecutableType.decode(stream)) {
+            val type = ContractExecutableType.decode(stream)
+            return when (type) {
                 ContractExecutableType.CONTRACT_EXECUTABLE_WASM -> {
                     val wasm_hash = Hash.decode(stream)
                     Wasm(wasm_hash)

@@ -9,7 +9,13 @@ package me.rahimklaber.stellar.base.xdr
  * ```
  * struct SorobanTransactionData
 {
-ExtensionPoint ext;
+union switch (int v)
+{
+case 0:
+void;
+case 1:
+SorobanResourcesExtV0 resourceExt;
+} ext;
 SorobanResources resources;
 // Amount of the transaction `fee` allocated to the Soroban resource fees.
 // The fraction of `resourceFee` corresponding to `resources` specified
@@ -25,7 +31,7 @@ int64 resourceFee;
  * ```
  */
 data class SorobanTransactionData(
-    val ext: ExtensionPoint,
+    val ext: SorobanTransactionDataExt,
     val resources: SorobanResources,
     val resourceFee: Int64,
 ) : XdrElement {
@@ -37,14 +43,59 @@ data class SorobanTransactionData(
 
     companion object : XdrElementDecoder<SorobanTransactionData> {
         override fun decode(stream: XdrInputStream): SorobanTransactionData {
-            val ext = ExtensionPoint.decode(stream)
+            val ext = SorobanTransactionDataExt.decode(stream)
             val resources = SorobanResources.decode(stream)
-            val resourceFee = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val resourceFee = Int64.decode(stream)
             return SorobanTransactionData(
                 ext,
                 resources,
                 resourceFee,
             )
+        }
+    }
+
+    /**
+     * SorobanTransactionDataExt's original definition in the XDR file is:
+     * ```
+     * union switch (int v)
+    {
+    case 0:
+    void;
+    case 1:
+    SorobanResourcesExtV0 resourceExt;
+    }
+     * ```
+     */
+    sealed class SorobanTransactionDataExt(val type: Int) : XdrElement {
+        data object SorobanTransactionDataExtV0 : SorobanTransactionDataExt(0) {
+            override fun encode(stream: XdrOutputStream) {
+                type.encode(stream)
+            }
+        }
+
+        fun resourceExtOrNull(): SorobanTransactionDataExtV1? = if (this is SorobanTransactionDataExtV1) this else null
+        data class SorobanTransactionDataExtV1(
+            val resourceExt: SorobanResourcesExtV0,
+        ) : SorobanTransactionDataExt(1) {
+            override fun encode(stream: XdrOutputStream) {
+                type.encode(stream)
+                resourceExt.encode(stream)
+            }
+        }
+
+        companion object : XdrElementDecoder<SorobanTransactionDataExt> {
+            override fun decode(stream: XdrInputStream): SorobanTransactionDataExt {
+                val type = Int.decode(stream)
+                return when (type) {
+                    0 -> SorobanTransactionDataExtV0
+                    1 -> {
+                        val resourceExt = SorobanResourcesExtV0.decode(stream)
+                        SorobanTransactionDataExtV1(resourceExt)
+                    }
+
+                    else -> throw IllegalArgumentException("unknown type: $type")
+                }
+            }
         }
     }
 }

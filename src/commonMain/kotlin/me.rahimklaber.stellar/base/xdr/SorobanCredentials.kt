@@ -35,7 +35,8 @@ sealed class SorobanCredentials(val type: SorobanCredentialsType) : XdrElement {
 
     companion object : XdrElementDecoder<SorobanCredentials> {
         override fun decode(stream: XdrInputStream): SorobanCredentials {
-            return when (val type = SorobanCredentialsType.decode(stream)) {
+            val type = SorobanCredentialsType.decode(stream)
+            return when (type) {
                 SorobanCredentialsType.SOROBAN_CREDENTIALS_SOURCE_ACCOUNT -> SourceAccount
                 SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS -> {
                     val address = SorobanAddressCredentials.decode(stream)

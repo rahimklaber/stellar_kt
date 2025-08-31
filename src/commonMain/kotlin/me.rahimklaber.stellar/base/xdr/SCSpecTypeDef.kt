@@ -27,6 +27,7 @@ case SC_SPEC_TYPE_BYTES:
 case SC_SPEC_TYPE_STRING:
 case SC_SPEC_TYPE_SYMBOL:
 case SC_SPEC_TYPE_ADDRESS:
+case SC_SPEC_TYPE_MUXED_ADDRESS:
 void;
 case SC_SPEC_TYPE_OPTION:
 SCSpecTypeOption option;
@@ -154,6 +155,12 @@ sealed class SCSpecTypeDef(val type: SCSpecType) : XdrElement {
         }
     }
 
+    data object MuxedAddress : SCSpecTypeDef(SCSpecType.SC_SPEC_TYPE_MUXED_ADDRESS) {
+        override fun encode(stream: XdrOutputStream) {
+            type.encode(stream)
+        }
+    }
+
     fun optionOrNull(): Option? = if (this is Option) this else null
     data class Option(
         val option: SCSpecTypeOption,
@@ -226,7 +233,8 @@ sealed class SCSpecTypeDef(val type: SCSpecType) : XdrElement {
 
     companion object : XdrElementDecoder<SCSpecTypeDef> {
         override fun decode(stream: XdrInputStream): SCSpecTypeDef {
-            return when (val type = SCSpecType.decode(stream)) {
+            val type = SCSpecType.decode(stream)
+            return when (type) {
                 SCSpecType.SC_SPEC_TYPE_VAL -> Val
                 SCSpecType.SC_SPEC_TYPE_BOOL -> Bool
                 SCSpecType.SC_SPEC_TYPE_VOID -> Void
@@ -245,6 +253,7 @@ sealed class SCSpecTypeDef(val type: SCSpecType) : XdrElement {
                 SCSpecType.SC_SPEC_TYPE_STRING -> String
                 SCSpecType.SC_SPEC_TYPE_SYMBOL -> Symbol
                 SCSpecType.SC_SPEC_TYPE_ADDRESS -> Address
+                SCSpecType.SC_SPEC_TYPE_MUXED_ADDRESS -> MuxedAddress
                 SCSpecType.SC_SPEC_TYPE_OPTION -> {
                     val option = SCSpecTypeOption.decode(stream)
                     Option(option)

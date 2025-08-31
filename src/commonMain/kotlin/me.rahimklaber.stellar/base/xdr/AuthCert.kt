@@ -29,7 +29,7 @@ data class AuthCert(
     companion object : XdrElementDecoder<AuthCert> {
         override fun decode(stream: XdrInputStream): AuthCert {
             val pubkey = Curve25519Public.decode(stream)
-            val expiration = me.rahimklaber.stellar.base.xdr.Uint64.decode(stream)
+            val expiration = Uint64.decode(stream)
             val sig = Signature.decode(stream)
             return AuthCert(
                 pubkey,

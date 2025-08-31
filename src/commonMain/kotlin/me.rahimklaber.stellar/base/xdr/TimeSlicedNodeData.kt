@@ -55,16 +55,16 @@ data class TimeSlicedNodeData(
 
     companion object : XdrElementDecoder<TimeSlicedNodeData> {
         override fun decode(stream: XdrInputStream): TimeSlicedNodeData {
-            val addedAuthenticatedPeers = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val droppedAuthenticatedPeers = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val totalInboundPeerCount = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val totalOutboundPeerCount = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val p75SCPFirstToSelfLatencyMs = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val p75SCPSelfToOtherLatencyMs = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val lostSyncCount = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val addedAuthenticatedPeers = Uint32.decode(stream)
+            val droppedAuthenticatedPeers = Uint32.decode(stream)
+            val totalInboundPeerCount = Uint32.decode(stream)
+            val totalOutboundPeerCount = Uint32.decode(stream)
+            val p75SCPFirstToSelfLatencyMs = Uint32.decode(stream)
+            val p75SCPSelfToOtherLatencyMs = Uint32.decode(stream)
+            val lostSyncCount = Uint32.decode(stream)
             val isValidator = stream.readBoolean()
-            val maxInboundPeerCount = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val maxOutboundPeerCount = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val maxInboundPeerCount = Uint32.decode(stream)
+            val maxOutboundPeerCount = Uint32.decode(stream)
             return TimeSlicedNodeData(
                 addedAuthenticatedPeers,
                 droppedAuthenticatedPeers,

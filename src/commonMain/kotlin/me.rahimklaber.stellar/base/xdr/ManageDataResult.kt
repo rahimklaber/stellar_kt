@@ -52,7 +52,8 @@ sealed class ManageDataResult(val type: ManageDataResultCode) : XdrElement {
 
     companion object : XdrElementDecoder<ManageDataResult> {
         override fun decode(stream: XdrInputStream): ManageDataResult {
-            return when (val type = ManageDataResultCode.decode(stream)) {
+            val type = ManageDataResultCode.decode(stream)
+            return when (type) {
                 ManageDataResultCode.MANAGE_DATA_SUCCESS -> ManageDataSuccess
                 ManageDataResultCode.MANAGE_DATA_NOT_SUPPORTED_YET -> ManageDataNotSupportedYet
                 ManageDataResultCode.MANAGE_DATA_NAME_NOT_FOUND -> ManageDataNameNotFound

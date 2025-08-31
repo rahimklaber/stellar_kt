@@ -27,7 +27,7 @@ data class LedgerSCPMessages(
 
     companion object : XdrElementDecoder<LedgerSCPMessages> {
         override fun decode(stream: XdrInputStream): LedgerSCPMessages {
-            val ledgerSeq = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val ledgerSeq = Uint32.decode(stream)
             val messagesSize = stream.readInt()
             val messages: List<SCPEnvelope> = decodeXdrElementsList(messagesSize, stream, SCPEnvelope.decoder())
             return LedgerSCPMessages(

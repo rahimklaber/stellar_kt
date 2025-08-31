@@ -30,7 +30,7 @@ data class SimplePaymentResult(
         override fun decode(stream: XdrInputStream): SimplePaymentResult {
             val destination = AccountID.decode(stream)
             val asset = Asset.decode(stream)
-            val amount = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val amount = Int64.decode(stream)
             return SimplePaymentResult(
                 destination,
                 asset,

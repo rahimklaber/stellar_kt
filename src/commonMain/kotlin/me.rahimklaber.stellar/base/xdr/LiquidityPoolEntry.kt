@@ -81,7 +81,8 @@ data class LiquidityPoolEntry(
 
         companion object : XdrElementDecoder<LiquidityPoolEntryBody> {
             override fun decode(stream: XdrInputStream): LiquidityPoolEntryBody {
-                return when (val type = LiquidityPoolType.decode(stream)) {
+                val type = LiquidityPoolType.decode(stream)
+                return when (type) {
                     LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT -> {
                         val constantProduct = LiquidityPoolEntryConstantProduct.decode(stream)
                         ConstantProduct(constantProduct)
@@ -125,10 +126,10 @@ data class LiquidityPoolEntry(
             companion object : XdrElementDecoder<LiquidityPoolEntryConstantProduct> {
                 override fun decode(stream: XdrInputStream): LiquidityPoolEntryConstantProduct {
                     val params = LiquidityPoolConstantProductParameters.decode(stream)
-                    val reserveA = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
-                    val reserveB = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
-                    val totalPoolShares = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
-                    val poolSharesTrustLineCount = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+                    val reserveA = Int64.decode(stream)
+                    val reserveB = Int64.decode(stream)
+                    val totalPoolShares = Int64.decode(stream)
+                    val poolSharesTrustLineCount = Int64.decode(stream)
                     return LiquidityPoolEntryConstantProduct(
                         params,
                         reserveA,

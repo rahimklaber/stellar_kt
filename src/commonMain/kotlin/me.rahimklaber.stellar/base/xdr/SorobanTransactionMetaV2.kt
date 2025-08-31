@@ -11,23 +11,33 @@ package me.rahimklaber.stellar.base.xdr
 {
 SorobanTransactionMetaExt ext;
 
-SCVal returnValue;
+SCVal* returnValue;
 };
  * ```
  */
 data class SorobanTransactionMetaV2(
     val ext: SorobanTransactionMetaExt,
-    val returnValue: SCVal,
+    val returnValue: SCVal?,
 ) : XdrElement {
     override fun encode(stream: XdrOutputStream) {
         ext.encode(stream)
-        returnValue.encode(stream)
+        if (returnValue != null) {
+            stream.writeInt(1)
+            returnValue.encode(stream)
+        } else {
+            stream.writeInt(0)
+        }
     }
 
     companion object : XdrElementDecoder<SorobanTransactionMetaV2> {
         override fun decode(stream: XdrInputStream): SorobanTransactionMetaV2 {
             val ext = SorobanTransactionMetaExt.decode(stream)
-            val returnValue = SCVal.decode(stream)
+            val returnValuePresent = stream.readInt()
+            val returnValue = if (returnValuePresent != 0) {
+                SCVal.decode(stream)
+            } else {
+                null
+            }
             return SorobanTransactionMetaV2(
                 ext,
                 returnValue,

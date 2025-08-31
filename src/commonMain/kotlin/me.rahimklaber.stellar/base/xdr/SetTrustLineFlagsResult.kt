@@ -59,7 +59,8 @@ sealed class SetTrustLineFlagsResult(val type: SetTrustLineFlagsResultCode) : Xd
 
     companion object : XdrElementDecoder<SetTrustLineFlagsResult> {
         override fun decode(stream: XdrInputStream): SetTrustLineFlagsResult {
-            return when (val type = SetTrustLineFlagsResultCode.decode(stream)) {
+            val type = SetTrustLineFlagsResultCode.decode(stream)
+            return when (type) {
                 SetTrustLineFlagsResultCode.SET_TRUST_LINE_FLAGS_SUCCESS -> SetTrustLineFlagsSuccess
                 SetTrustLineFlagsResultCode.SET_TRUST_LINE_FLAGS_MALFORMED -> SetTrustLineFlagsMalformed
                 SetTrustLineFlagsResultCode.SET_TRUST_LINE_FLAGS_NO_TRUST_LINE -> SetTrustLineFlagsNoTrustLine

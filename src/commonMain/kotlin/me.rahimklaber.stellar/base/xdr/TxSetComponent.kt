@@ -31,7 +31,8 @@ sealed class TxSetComponent(val type: TxSetComponentType) : XdrElement {
 
     companion object : XdrElementDecoder<TxSetComponent> {
         override fun decode(stream: XdrInputStream): TxSetComponent {
-            return when (val type = TxSetComponentType.decode(stream)) {
+            val type = TxSetComponentType.decode(stream)
+            return when (type) {
                 TxSetComponentType.TXSET_COMP_TXS_MAYBE_DISCOUNTED_FEE -> {
                     val txsMaybeDiscountedFee = TxSetComponentTxsMaybeDiscountedFee.decode(stream)
                     TxsetCompTxsMaybeDiscountedFee(txsMaybeDiscountedFee)
@@ -72,7 +73,7 @@ sealed class TxSetComponent(val type: TxSetComponentType) : XdrElement {
             override fun decode(stream: XdrInputStream): TxSetComponentTxsMaybeDiscountedFee {
                 val baseFeePresent = stream.readInt()
                 val baseFee = if (baseFeePresent != 0) {
-                    me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+                    Int64.decode(stream)
                 } else {
                     null
                 }

@@ -32,7 +32,7 @@ data class SCPQuorumSet(
 
     companion object : XdrElementDecoder<SCPQuorumSet> {
         override fun decode(stream: XdrInputStream): SCPQuorumSet {
-            val threshold = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val threshold = Uint32.decode(stream)
             val validatorsSize = stream.readInt()
             val validators: List<NodeID> = decodeXdrElementsList(validatorsSize, stream, NodeID.decoder())
             val innerSetsSize = stream.readInt()

@@ -23,7 +23,7 @@ value class SCSpecTypeBytesN(val n: Uint32) : XdrElement {
 
     companion object : XdrElementDecoder<SCSpecTypeBytesN> {
         override fun decode(stream: XdrInputStream): SCSpecTypeBytesN {
-            val n = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val n = Uint32.decode(stream)
             return SCSpecTypeBytesN(
                 n,
             )

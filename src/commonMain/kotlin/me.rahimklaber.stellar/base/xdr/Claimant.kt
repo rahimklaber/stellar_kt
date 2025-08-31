@@ -31,7 +31,8 @@ sealed class Claimant(val type: ClaimantType) : XdrElement {
 
     companion object : XdrElementDecoder<Claimant> {
         override fun decode(stream: XdrInputStream): Claimant {
-            return when (val type = ClaimantType.decode(stream)) {
+            val type = ClaimantType.decode(stream)
+            return when (type) {
                 ClaimantType.CLAIMANT_TYPE_V0 -> {
                     val v0 = ClaimantV0Anon.decode(stream)
                     V0(v0)

@@ -22,7 +22,8 @@ enum class BinaryFuseFilterType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<BinaryFuseFilterType> {
         override fun decode(stream: XdrInputStream): BinaryFuseFilterType {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> BINARY_FUSE_FILTER_8_BIT
                 1 -> BINARY_FUSE_FILTER_16_BIT
                 2 -> BINARY_FUSE_FILTER_32_BIT

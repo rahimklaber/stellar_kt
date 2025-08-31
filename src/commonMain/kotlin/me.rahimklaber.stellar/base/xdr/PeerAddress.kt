@@ -36,8 +36,8 @@ data class PeerAddress(
     companion object : XdrElementDecoder<PeerAddress> {
         override fun decode(stream: XdrInputStream): PeerAddress {
             val ip = PeerAddressIp.decode(stream)
-            val port = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val numFailures = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val port = Uint32.decode(stream)
+            val numFailures = Uint32.decode(stream)
             return PeerAddress(
                 ip,
                 port,
@@ -67,19 +67,6 @@ data class PeerAddress(
                 type.encode(stream)
                 stream.writeBytes(ipv4)
             }
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) return true
-                if (other == null || this::class != other::class) return false
-
-                other as Ipv4
-
-                return ipv4.contentEquals(other.ipv4)
-            }
-
-            override fun hashCode(): Int {
-                return ipv4.contentHashCode()
-            }
         }
 
         fun ipv6OrNull(): Ipv6? = if (this is Ipv6) this else null
@@ -90,24 +77,12 @@ data class PeerAddress(
                 type.encode(stream)
                 stream.writeBytes(ipv6)
             }
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) return true
-                if (other == null || this::class != other::class) return false
-
-                other as Ipv6
-
-                return ipv6.contentEquals(other.ipv6)
-            }
-
-            override fun hashCode(): Int {
-                return ipv6.contentHashCode()
-            }
         }
 
         companion object : XdrElementDecoder<PeerAddressIp> {
             override fun decode(stream: XdrInputStream): PeerAddressIp {
-                return when (val type = IPAddrType.decode(stream)) {
+                val type = IPAddrType.decode(stream)
+                return when (type) {
                     IPAddrType.IPv4 -> {
                         val ipv4Size = 4
                         val ipv4 = stream.readBytes(ipv4Size)

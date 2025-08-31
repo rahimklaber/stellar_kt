@@ -25,7 +25,7 @@ data class ColdArchiveArchivedLeaf(
 
     companion object : XdrElementDecoder<ColdArchiveArchivedLeaf> {
         override fun decode(stream: XdrInputStream): ColdArchiveArchivedLeaf {
-            val index = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val index = Uint32.decode(stream)
             val archivedEntry = LedgerEntry.decode(stream)
             return ColdArchiveArchivedLeaf(
                 index,

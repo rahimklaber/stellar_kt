@@ -36,7 +36,7 @@ data class SurveyResponseMessage(
         override fun decode(stream: XdrInputStream): SurveyResponseMessage {
             val surveyorPeerID = NodeID.decode(stream)
             val surveyedPeerID = NodeID.decode(stream)
-            val ledgerNum = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val ledgerNum = Uint32.decode(stream)
             val commandType = SurveyMessageCommandType.decode(stream)
             val encryptedBody = EncryptedBody.decode(stream)
             return SurveyResponseMessage(

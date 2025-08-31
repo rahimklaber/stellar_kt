@@ -13,7 +13,6 @@ case HOT_ARCHIVE_ARCHIVED:
 LedgerEntry archivedEntry;
 
 case HOT_ARCHIVE_LIVE:
-case HOT_ARCHIVE_DELETED:
 LedgerKey key;
 case HOT_ARCHIVE_METAENTRY:
 BucketMetadata metaEntry;
@@ -31,18 +30,10 @@ sealed class HotArchiveBucketEntry(val type: HotArchiveBucketEntryType) : XdrEle
         }
     }
 
+    fun keyOrNull(): HotArchiveLive? = if (this is HotArchiveLive) this else null
     data class HotArchiveLive(
         val key: LedgerKey,
     ) : HotArchiveBucketEntry(HotArchiveBucketEntryType.HOT_ARCHIVE_LIVE) {
-        override fun encode(stream: XdrOutputStream) {
-            type.encode(stream)
-            key.encode(stream)
-        }
-    }
-
-    data class HotArchiveDeleted(
-        val key: LedgerKey,
-    ) : HotArchiveBucketEntry(HotArchiveBucketEntryType.HOT_ARCHIVE_DELETED) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
             key.encode(stream)
@@ -61,7 +52,8 @@ sealed class HotArchiveBucketEntry(val type: HotArchiveBucketEntryType) : XdrEle
 
     companion object : XdrElementDecoder<HotArchiveBucketEntry> {
         override fun decode(stream: XdrInputStream): HotArchiveBucketEntry {
-            return when (val type = HotArchiveBucketEntryType.decode(stream)) {
+            val type = HotArchiveBucketEntryType.decode(stream)
+            return when (type) {
                 HotArchiveBucketEntryType.HOT_ARCHIVE_ARCHIVED -> {
                     val archivedEntry = LedgerEntry.decode(stream)
                     HotArchiveArchived(archivedEntry)
@@ -70,11 +62,6 @@ sealed class HotArchiveBucketEntry(val type: HotArchiveBucketEntryType) : XdrEle
                 HotArchiveBucketEntryType.HOT_ARCHIVE_LIVE -> {
                     val key = LedgerKey.decode(stream)
                     HotArchiveLive(key)
-                }
-
-                HotArchiveBucketEntryType.HOT_ARCHIVE_DELETED -> {
-                    val key = LedgerKey.decode(stream)
-                    HotArchiveDeleted(key)
                 }
 
                 HotArchiveBucketEntryType.HOT_ARCHIVE_METAENTRY -> {

@@ -31,7 +31,7 @@ data class CreateClaimableBalanceOp(
     companion object : XdrElementDecoder<CreateClaimableBalanceOp> {
         override fun decode(stream: XdrInputStream): CreateClaimableBalanceOp {
             val asset = Asset.decode(stream)
-            val amount = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val amount = Int64.decode(stream)
             val claimantsSize = stream.readInt()
             val claimants: List<Claimant> = decodeXdrElementsList(claimantsSize, stream, Claimant.decoder())
             return CreateClaimableBalanceOp(

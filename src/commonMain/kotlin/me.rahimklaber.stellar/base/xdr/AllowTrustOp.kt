@@ -32,7 +32,7 @@ data class AllowTrustOp(
         override fun decode(stream: XdrInputStream): AllowTrustOp {
             val trustor = AccountID.decode(stream)
             val asset = AssetCode.decode(stream)
-            val authorize = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val authorize = Uint32.decode(stream)
             return AllowTrustOp(
                 trustor,
                 asset,

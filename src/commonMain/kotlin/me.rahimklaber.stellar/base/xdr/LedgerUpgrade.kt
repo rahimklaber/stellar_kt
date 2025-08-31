@@ -102,7 +102,8 @@ sealed class LedgerUpgrade(val type: LedgerUpgradeType) : XdrElement {
 
     companion object : XdrElementDecoder<LedgerUpgrade> {
         override fun decode(stream: XdrInputStream): LedgerUpgrade {
-            return when (val type = LedgerUpgradeType.decode(stream)) {
+            val type = LedgerUpgradeType.decode(stream)
+            return when (type) {
                 LedgerUpgradeType.LEDGER_UPGRADE_VERSION -> {
                     val newLedgerVersion = Uint32.decode(stream)
                     Version(newLedgerVersion)

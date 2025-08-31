@@ -93,7 +93,8 @@ data class StellarValue(
 
         companion object : XdrElementDecoder<StellarValueExt> {
             override fun decode(stream: XdrInputStream): StellarValueExt {
-                return when (val type = StellarValueType.decode(stream)) {
+                val type = StellarValueType.decode(stream)
+                return when (type) {
                     StellarValueType.STELLAR_VALUE_BASIC -> Basic
                     StellarValueType.STELLAR_VALUE_SIGNED -> {
                         val lcValueSignature = LedgerCloseValueSignature.decode(stream)

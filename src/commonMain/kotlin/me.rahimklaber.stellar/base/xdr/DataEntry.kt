@@ -70,7 +70,8 @@ data class DataEntry(
 
         companion object : XdrElementDecoder<DataEntryExt> {
             override fun decode(stream: XdrInputStream): DataEntryExt {
-                return when (val type = Int.decode(stream)) {
+                val type = Int.decode(stream)
+                return when (type) {
                     0 -> DataEntryExtV0
                     else -> throw IllegalArgumentException("unknown type: $type")
                 }

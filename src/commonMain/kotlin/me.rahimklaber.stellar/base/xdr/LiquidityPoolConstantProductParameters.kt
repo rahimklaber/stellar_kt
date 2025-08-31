@@ -30,7 +30,7 @@ data class LiquidityPoolConstantProductParameters(
         override fun decode(stream: XdrInputStream): LiquidityPoolConstantProductParameters {
             val assetA = Asset.decode(stream)
             val assetB = Asset.decode(stream)
-            val fee = me.rahimklaber.stellar.base.xdr.Int32.decode(stream)
+            val fee = Int32.decode(stream)
             return LiquidityPoolConstantProductParameters(
                 assetA,
                 assetB,

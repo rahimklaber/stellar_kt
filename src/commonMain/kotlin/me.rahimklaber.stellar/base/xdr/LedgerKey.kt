@@ -176,7 +176,8 @@ sealed class LedgerKey(val type: LedgerEntryType) : XdrElement {
 
     companion object : XdrElementDecoder<LedgerKey> {
         override fun decode(stream: XdrInputStream): LedgerKey {
-            return when (val type = LedgerEntryType.decode(stream)) {
+            val type = LedgerEntryType.decode(stream)
+            return when (type) {
                 LedgerEntryType.ACCOUNT -> {
                     val account = LedgerKeyAccount.decode(stream)
                     Account(account)
@@ -313,7 +314,7 @@ sealed class LedgerKey(val type: LedgerEntryType) : XdrElement {
         companion object : XdrElementDecoder<LedgerKeyOffer> {
             override fun decode(stream: XdrInputStream): LedgerKeyOffer {
                 val sellerID = AccountID.decode(stream)
-                val offerID = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+                val offerID = Int64.decode(stream)
                 return LedgerKeyOffer(
                     sellerID,
                     offerID,

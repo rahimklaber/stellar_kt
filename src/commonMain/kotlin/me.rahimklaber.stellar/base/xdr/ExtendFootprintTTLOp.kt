@@ -26,7 +26,7 @@ data class ExtendFootprintTTLOp(
     companion object : XdrElementDecoder<ExtendFootprintTTLOp> {
         override fun decode(stream: XdrInputStream): ExtendFootprintTTLOp {
             val ext = ExtensionPoint.decode(stream)
-            val extendTo = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val extendTo = Uint32.decode(stream)
             return ExtendFootprintTTLOp(
                 ext,
                 extendTo,

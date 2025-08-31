@@ -19,6 +19,8 @@ case SC_SPEC_ENTRY_UDT_ENUM_V0:
 SCSpecUDTEnumV0 udtEnumV0;
 case SC_SPEC_ENTRY_UDT_ERROR_ENUM_V0:
 SCSpecUDTErrorEnumV0 udtErrorEnumV0;
+case SC_SPEC_ENTRY_EVENT_V0:
+SCSpecEventV0 eventV0;
 };
  * ```
  */
@@ -73,9 +75,20 @@ sealed class SCSpecEntry(val type: SCSpecEntryKind) : XdrElement {
         }
     }
 
+    fun eventV0OrNull(): ScSpecEntryEventV0? = if (this is ScSpecEntryEventV0) this else null
+    data class ScSpecEntryEventV0(
+        val eventV0: SCSpecEventV0,
+    ) : SCSpecEntry(SCSpecEntryKind.SC_SPEC_ENTRY_EVENT_V0) {
+        override fun encode(stream: XdrOutputStream) {
+            type.encode(stream)
+            eventV0.encode(stream)
+        }
+    }
+
     companion object : XdrElementDecoder<SCSpecEntry> {
         override fun decode(stream: XdrInputStream): SCSpecEntry {
-            return when (val type = SCSpecEntryKind.decode(stream)) {
+            val type = SCSpecEntryKind.decode(stream)
+            return when (type) {
                 SCSpecEntryKind.SC_SPEC_ENTRY_FUNCTION_V0 -> {
                     val functionV0 = SCSpecFunctionV0.decode(stream)
                     ScSpecEntryFunctionV0(functionV0)
@@ -99,6 +112,11 @@ sealed class SCSpecEntry(val type: SCSpecEntryKind) : XdrElement {
                 SCSpecEntryKind.SC_SPEC_ENTRY_UDT_ERROR_ENUM_V0 -> {
                     val udtErrorEnumV0 = SCSpecUDTErrorEnumV0.decode(stream)
                     ScSpecEntryUdtErrorEnumV0(udtErrorEnumV0)
+                }
+
+                SCSpecEntryKind.SC_SPEC_ENTRY_EVENT_V0 -> {
+                    val eventV0 = SCSpecEventV0.decode(stream)
+                    ScSpecEntryEventV0(eventV0)
                 }
 
                 else -> throw IllegalArgumentException("unknown type: $type")

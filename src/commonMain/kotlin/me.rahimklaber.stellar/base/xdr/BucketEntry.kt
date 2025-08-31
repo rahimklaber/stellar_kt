@@ -61,7 +61,8 @@ sealed class BucketEntry(val type: BucketEntryType) : XdrElement {
 
     companion object : XdrElementDecoder<BucketEntry> {
         override fun decode(stream: XdrInputStream): BucketEntry {
-            return when (val type = BucketEntryType.decode(stream)) {
+            val type = BucketEntryType.decode(stream)
+            return when (type) {
                 BucketEntryType.LIVEENTRY -> {
                     val liveEntry = LedgerEntry.decode(stream)
                     Liveentry(liveEntry)

@@ -432,7 +432,8 @@ data class Operation(
 
         companion object : XdrElementDecoder<OperationBody> {
             override fun decode(stream: XdrInputStream): OperationBody {
-                return when (val type = OperationType.decode(stream)) {
+                val type = OperationType.decode(stream)
+                return when (type) {
                     OperationType.CREATE_ACCOUNT -> {
                         val createAccountOp = CreateAccountOp.decode(stream)
                         CreateAccount(createAccountOp)

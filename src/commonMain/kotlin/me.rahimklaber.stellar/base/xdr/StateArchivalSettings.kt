@@ -19,11 +19,11 @@ int64 tempRentRateDenominator;
 // max number of entries that emit archival meta in a single ledger
 uint32 maxEntriesToArchive;
 
-// Number of snapshots to use when calculating average BucketList size
-uint32 bucketListSizeWindowSampleSize;
+// Number of snapshots to use when calculating average live Soroban State size
+uint32 liveSorobanStateSizeWindowSampleSize;
 
-// How often to sample the BucketList size for the average, in ledgers
-uint32 bucketListWindowSamplePeriod;
+// How often to sample the live Soroban State size for the average, in ledgers
+uint32 liveSorobanStateSizeWindowSamplePeriod;
 
 // Maximum number of bytes that we scan for eviction per ledger
 uint32 evictionScanSize;
@@ -40,8 +40,8 @@ data class StateArchivalSettings(
     val persistentRentRateDenominator: Int64,
     val tempRentRateDenominator: Int64,
     val maxEntriesToArchive: Uint32,
-    val bucketListSizeWindowSampleSize: Uint32,
-    val bucketListWindowSamplePeriod: Uint32,
+    val liveSorobanStateSizeWindowSampleSize: Uint32,
+    val liveSorobanStateSizeWindowSamplePeriod: Uint32,
     val evictionScanSize: Uint32,
     val startingEvictionScanLevel: Uint32,
 ) : XdrElement {
@@ -52,24 +52,24 @@ data class StateArchivalSettings(
         persistentRentRateDenominator.encode(stream)
         tempRentRateDenominator.encode(stream)
         maxEntriesToArchive.encode(stream)
-        bucketListSizeWindowSampleSize.encode(stream)
-        bucketListWindowSamplePeriod.encode(stream)
+        liveSorobanStateSizeWindowSampleSize.encode(stream)
+        liveSorobanStateSizeWindowSamplePeriod.encode(stream)
         evictionScanSize.encode(stream)
         startingEvictionScanLevel.encode(stream)
     }
 
     companion object : XdrElementDecoder<StateArchivalSettings> {
         override fun decode(stream: XdrInputStream): StateArchivalSettings {
-            val maxEntryTTL = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val minTemporaryTTL = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val minPersistentTTL = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val persistentRentRateDenominator = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
-            val tempRentRateDenominator = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
-            val maxEntriesToArchive = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val bucketListSizeWindowSampleSize = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val bucketListWindowSamplePeriod = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val evictionScanSize = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val startingEvictionScanLevel = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val maxEntryTTL = Uint32.decode(stream)
+            val minTemporaryTTL = Uint32.decode(stream)
+            val minPersistentTTL = Uint32.decode(stream)
+            val persistentRentRateDenominator = Int64.decode(stream)
+            val tempRentRateDenominator = Int64.decode(stream)
+            val maxEntriesToArchive = Uint32.decode(stream)
+            val liveSorobanStateSizeWindowSampleSize = Uint32.decode(stream)
+            val liveSorobanStateSizeWindowSamplePeriod = Uint32.decode(stream)
+            val evictionScanSize = Uint32.decode(stream)
+            val startingEvictionScanLevel = Uint32.decode(stream)
             return StateArchivalSettings(
                 maxEntryTTL,
                 minTemporaryTTL,
@@ -77,8 +77,8 @@ data class StateArchivalSettings(
                 persistentRentRateDenominator,
                 tempRentRateDenominator,
                 maxEntriesToArchive,
-                bucketListSizeWindowSampleSize,
-                bucketListWindowSamplePeriod,
+                liveSorobanStateSizeWindowSampleSize,
+                liveSorobanStateSizeWindowSamplePeriod,
                 evictionScanSize,
                 startingEvictionScanLevel,
             )

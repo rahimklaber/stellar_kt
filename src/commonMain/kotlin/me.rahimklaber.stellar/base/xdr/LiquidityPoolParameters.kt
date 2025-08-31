@@ -27,7 +27,8 @@ sealed class LiquidityPoolParameters(val type: LiquidityPoolType) : XdrElement {
 
     companion object : XdrElementDecoder<LiquidityPoolParameters> {
         override fun decode(stream: XdrInputStream): LiquidityPoolParameters {
-            return when (val type = LiquidityPoolType.decode(stream)) {
+            val type = LiquidityPoolType.decode(stream)
+            return when (type) {
                 LiquidityPoolType.LIQUIDITY_POOL_CONSTANT_PRODUCT -> {
                     val constantProduct = LiquidityPoolConstantProductParameters.decode(stream)
                     ConstantProduct(constantProduct)

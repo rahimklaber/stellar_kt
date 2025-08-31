@@ -29,7 +29,7 @@ data class StoredDebugTransactionSet(
     companion object : XdrElementDecoder<StoredDebugTransactionSet> {
         override fun decode(stream: XdrInputStream): StoredDebugTransactionSet {
             val txSet = StoredTransactionSet.decode(stream)
-            val ledgerSeq = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val ledgerSeq = Uint32.decode(stream)
             val scpValue = StellarValue.decode(stream)
             return StoredDebugTransactionSet(
                 txSet,

@@ -43,11 +43,11 @@ data class ClaimOfferAtomV0(
     companion object : XdrElementDecoder<ClaimOfferAtomV0> {
         override fun decode(stream: XdrInputStream): ClaimOfferAtomV0 {
             val sellerEd25519 = Uint256.decode(stream)
-            val offerID = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val offerID = Int64.decode(stream)
             val assetSold = Asset.decode(stream)
-            val amountSold = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val amountSold = Int64.decode(stream)
             val assetBought = Asset.decode(stream)
-            val amountBought = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val amountBought = Int64.decode(stream)
             return ClaimOfferAtomV0(
                 sellerEd25519,
                 offerID,

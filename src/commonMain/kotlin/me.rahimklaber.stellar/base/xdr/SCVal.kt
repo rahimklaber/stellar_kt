@@ -60,13 +60,12 @@ SCAddress address;
 
 // Special SCVals reserved for system-constructed contract-data
 // ledger keys, not generally usable elsewhere.
+case SCV_CONTRACT_INSTANCE:
+SCContractInstance instance;
 case SCV_LEDGER_KEY_CONTRACT_INSTANCE:
 void;
 case SCV_LEDGER_KEY_NONCE:
 SCNonceKey nonce_key;
-
-case SCV_CONTRACT_INSTANCE:
-SCContractInstance instance;
 };
  * ```
  */
@@ -267,6 +266,16 @@ sealed class SCVal(val type: SCValType) : XdrElement {
         }
     }
 
+    fun instanceOrNull(): ContractInstance? = if (this is ContractInstance) this else null
+    data class ContractInstance(
+        val instance: SCContractInstance,
+    ) : SCVal(SCValType.SCV_CONTRACT_INSTANCE) {
+        override fun encode(stream: XdrOutputStream) {
+            type.encode(stream)
+            instance.encode(stream)
+        }
+    }
+
     data object LedgerKeyContractInstance : SCVal(SCValType.SCV_LEDGER_KEY_CONTRACT_INSTANCE) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
@@ -283,19 +292,10 @@ sealed class SCVal(val type: SCValType) : XdrElement {
         }
     }
 
-    fun instanceOrNull(): ContractInstance? = if (this is ContractInstance) this else null
-    data class ContractInstance(
-        val instance: SCContractInstance,
-    ) : SCVal(SCValType.SCV_CONTRACT_INSTANCE) {
-        override fun encode(stream: XdrOutputStream) {
-            type.encode(stream)
-            instance.encode(stream)
-        }
-    }
-
     companion object : XdrElementDecoder<SCVal> {
         override fun decode(stream: XdrInputStream): SCVal {
-            return when (val type = SCValType.decode(stream)) {
+            val type = SCValType.decode(stream)
+            return when (type) {
                 SCValType.SCV_BOOL -> {
                     val b = stream.readBoolean()
                     Bool(b)
@@ -397,15 +397,15 @@ sealed class SCVal(val type: SCValType) : XdrElement {
                     Address(address)
                 }
 
+                SCValType.SCV_CONTRACT_INSTANCE -> {
+                    val instance = SCContractInstance.decode(stream)
+                    ContractInstance(instance)
+                }
+
                 SCValType.SCV_LEDGER_KEY_CONTRACT_INSTANCE -> LedgerKeyContractInstance
                 SCValType.SCV_LEDGER_KEY_NONCE -> {
                     val nonce_key = SCNonceKey.decode(stream)
                     LedgerKeyNonce(nonce_key)
-                }
-
-                SCValType.SCV_CONTRACT_INSTANCE -> {
-                    val instance = SCContractInstance.decode(stream)
-                    ContractInstance(instance)
                 }
 
                 else -> throw IllegalArgumentException("unknown type: $type")

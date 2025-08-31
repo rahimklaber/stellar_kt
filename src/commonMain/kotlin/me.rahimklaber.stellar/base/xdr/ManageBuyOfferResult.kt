@@ -112,7 +112,8 @@ sealed class ManageBuyOfferResult(val type: ManageBuyOfferResultCode) : XdrEleme
 
     companion object : XdrElementDecoder<ManageBuyOfferResult> {
         override fun decode(stream: XdrInputStream): ManageBuyOfferResult {
-            return when (val type = ManageBuyOfferResultCode.decode(stream)) {
+            val type = ManageBuyOfferResultCode.decode(stream)
+            return when (type) {
                 ManageBuyOfferResultCode.MANAGE_BUY_OFFER_SUCCESS -> {
                     val success = ManageOfferSuccessResult.decode(stream)
                     ManageBuyOfferSuccess(success)

@@ -25,7 +25,6 @@ Memo memo;
 
 Operation operations<MAX_OPS_PER_TX>;
 
-// reserved for future use
 union switch (int v)
 {
 case 0:
@@ -61,7 +60,7 @@ data class Transaction(
     companion object : XdrElementDecoder<Transaction> {
         override fun decode(stream: XdrInputStream): Transaction {
             val sourceAccount = MuxedAccount.decode(stream)
-            val fee = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val fee = Uint32.decode(stream)
             val seqNum = SequenceNumber.decode(stream)
             val cond = Preconditions.decode(stream)
             val memo = Memo.decode(stream)
@@ -111,7 +110,8 @@ data class Transaction(
 
         companion object : XdrElementDecoder<TransactionExt> {
             override fun decode(stream: XdrInputStream): TransactionExt {
-                return when (val type = Int.decode(stream)) {
+                val type = Int.decode(stream)
+                return when (type) {
                     0 -> TransactionExtV0
                     1 -> {
                         val sorobanData = SorobanTransactionData.decode(stream)

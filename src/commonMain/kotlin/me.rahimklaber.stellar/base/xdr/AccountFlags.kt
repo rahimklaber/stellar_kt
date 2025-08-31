@@ -34,7 +34,8 @@ enum class AccountFlags(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<AccountFlags> {
         override fun decode(stream: XdrInputStream): AccountFlags {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 1 -> AUTH_REQUIRED_FLAG
                 2 -> AUTH_REVOCABLE_FLAG
                 4 -> AUTH_IMMUTABLE_FLAG

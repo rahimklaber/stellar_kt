@@ -62,9 +62,9 @@ data class TrustLineEntry(
         override fun decode(stream: XdrInputStream): TrustLineEntry {
             val accountID = AccountID.decode(stream)
             val asset = TrustLineAsset.decode(stream)
-            val balance = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
-            val limit = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
-            val flags = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val balance = Int64.decode(stream)
+            val limit = Int64.decode(stream)
+            val flags = Uint32.decode(stream)
             val ext = TrustLineEntryExt.decode(stream)
             return TrustLineEntry(
                 accountID,
@@ -120,7 +120,8 @@ data class TrustLineEntry(
 
         companion object : XdrElementDecoder<TrustLineEntryExt> {
             override fun decode(stream: XdrInputStream): TrustLineEntryExt {
-                return when (val type = Int.decode(stream)) {
+                val type = Int.decode(stream)
+                return when (type) {
                     0 -> TrustLineEntryExtV0
                     1 -> {
                         val v1 = TrustLineEntryV1Anon.decode(stream)
@@ -201,7 +202,8 @@ data class TrustLineEntry(
 
                 companion object : XdrElementDecoder<TrustLineEntryV1AnonExt> {
                     override fun decode(stream: XdrInputStream): TrustLineEntryV1AnonExt {
-                        return when (val type = Int.decode(stream)) {
+                        val type = Int.decode(stream)
+                        return when (type) {
                             0 -> TrustLineEntryV1AnonExtV0
                             2 -> {
                                 val v2 = TrustLineEntryExtensionV2.decode(stream)

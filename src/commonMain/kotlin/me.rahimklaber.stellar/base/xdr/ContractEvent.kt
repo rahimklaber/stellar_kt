@@ -13,7 +13,7 @@ package me.rahimklaber.stellar.base.xdr
 // is first, to change ContractEvent into a union.
 ExtensionPoint ext;
 
-Hash* contractID;
+ContractID* contractID;
 ContractEventType type;
 
 union switch (int v)
@@ -31,7 +31,7 @@ body;
  */
 data class ContractEvent(
     val ext: ExtensionPoint,
-    val contractID: Hash?,
+    val contractID: ContractID?,
     val type: ContractEventType,
     val body: ContractEventBody,
 ) : XdrElement {
@@ -52,7 +52,7 @@ data class ContractEvent(
             val ext = ExtensionPoint.decode(stream)
             val contractIDPresent = stream.readInt()
             val contractID = if (contractIDPresent != 0) {
-                Hash.decode(stream)
+                ContractID.decode(stream)
             } else {
                 null
             }
@@ -94,7 +94,8 @@ data class ContractEvent(
 
         companion object : XdrElementDecoder<ContractEventBody> {
             override fun decode(stream: XdrInputStream): ContractEventBody {
-                return when (val type = Int.decode(stream)) {
+                val type = Int.decode(stream)
+                return when (type) {
                     0 -> {
                         val v0 = ContractEventV0Anon.decode(stream)
                         ContractEventBodyV0(v0)

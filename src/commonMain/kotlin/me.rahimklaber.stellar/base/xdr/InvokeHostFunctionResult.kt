@@ -65,7 +65,8 @@ sealed class InvokeHostFunctionResult(val type: InvokeHostFunctionResultCode) : 
 
     companion object : XdrElementDecoder<InvokeHostFunctionResult> {
         override fun decode(stream: XdrInputStream): InvokeHostFunctionResult {
-            return when (val type = InvokeHostFunctionResultCode.decode(stream)) {
+            val type = InvokeHostFunctionResultCode.decode(stream)
+            return when (type) {
                 InvokeHostFunctionResultCode.INVOKE_HOST_FUNCTION_SUCCESS -> {
                     val success = Hash.decode(stream)
                     InvokeHostFunctionSuccess(success)

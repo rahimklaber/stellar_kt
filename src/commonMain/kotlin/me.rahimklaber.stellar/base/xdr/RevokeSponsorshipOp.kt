@@ -43,7 +43,8 @@ sealed class RevokeSponsorshipOp(val type: RevokeSponsorshipType) : XdrElement {
 
     companion object : XdrElementDecoder<RevokeSponsorshipOp> {
         override fun decode(stream: XdrInputStream): RevokeSponsorshipOp {
-            return when (val type = RevokeSponsorshipType.decode(stream)) {
+            val type = RevokeSponsorshipType.decode(stream)
+            return when (type) {
                 RevokeSponsorshipType.REVOKE_SPONSORSHIP_LEDGER_ENTRY -> {
                     val ledgerKey = LedgerKey.decode(stream)
                     LedgerEntry(ledgerKey)

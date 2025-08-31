@@ -32,8 +32,8 @@ data class SorobanAddressCredentials(
     companion object : XdrElementDecoder<SorobanAddressCredentials> {
         override fun decode(stream: XdrInputStream): SorobanAddressCredentials {
             val address = SCAddress.decode(stream)
-            val nonce = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
-            val signatureExpirationLedger = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val nonce = Int64.decode(stream)
+            val signatureExpirationLedger = Uint32.decode(stream)
             val signature = SCVal.decode(stream)
             return SorobanAddressCredentials(
                 address,

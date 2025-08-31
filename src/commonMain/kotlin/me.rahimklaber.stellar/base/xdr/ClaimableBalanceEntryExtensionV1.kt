@@ -32,7 +32,7 @@ data class ClaimableBalanceEntryExtensionV1(
     companion object : XdrElementDecoder<ClaimableBalanceEntryExtensionV1> {
         override fun decode(stream: XdrInputStream): ClaimableBalanceEntryExtensionV1 {
             val ext = ClaimableBalanceEntryExtensionV1Ext.decode(stream)
-            val flags = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val flags = Uint32.decode(stream)
             return ClaimableBalanceEntryExtensionV1(
                 ext,
                 flags,
@@ -59,7 +59,8 @@ data class ClaimableBalanceEntryExtensionV1(
 
         companion object : XdrElementDecoder<ClaimableBalanceEntryExtensionV1Ext> {
             override fun decode(stream: XdrInputStream): ClaimableBalanceEntryExtensionV1Ext {
-                return when (val type = Int.decode(stream)) {
+                val type = Int.decode(stream)
+                return when (type) {
                     0 -> ClaimableBalanceEntryExtensionV1ExtV0
                     else -> throw IllegalArgumentException("unknown type: $type")
                 }

@@ -31,7 +31,8 @@ sealed class BumpSequenceResult(val type: BumpSequenceResultCode) : XdrElement {
 
     companion object : XdrElementDecoder<BumpSequenceResult> {
         override fun decode(stream: XdrInputStream): BumpSequenceResult {
-            return when (val type = BumpSequenceResultCode.decode(stream)) {
+            val type = BumpSequenceResultCode.decode(stream)
+            return when (type) {
                 BumpSequenceResultCode.BUMP_SEQUENCE_SUCCESS -> BumpSequenceSuccess
                 BumpSequenceResultCode.BUMP_SEQUENCE_BAD_SEQ -> BumpSequenceBadSeq
                 else -> throw IllegalArgumentException("unknown type: $type")

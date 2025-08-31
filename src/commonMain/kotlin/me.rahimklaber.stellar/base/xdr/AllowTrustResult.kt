@@ -66,7 +66,8 @@ sealed class AllowTrustResult(val type: AllowTrustResultCode) : XdrElement {
 
     companion object : XdrElementDecoder<AllowTrustResult> {
         override fun decode(stream: XdrInputStream): AllowTrustResult {
-            return when (val type = AllowTrustResultCode.decode(stream)) {
+            val type = AllowTrustResultCode.decode(stream)
+            return when (type) {
                 AllowTrustResultCode.ALLOW_TRUST_SUCCESS -> AllowTrustSuccess
                 AllowTrustResultCode.ALLOW_TRUST_MALFORMED -> AllowTrustMalformed
                 AllowTrustResultCode.ALLOW_TRUST_NO_TRUST_LINE -> AllowTrustNoTrustLine

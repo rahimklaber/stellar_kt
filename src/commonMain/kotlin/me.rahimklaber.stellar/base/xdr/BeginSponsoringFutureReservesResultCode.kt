@@ -27,7 +27,8 @@ enum class BeginSponsoringFutureReservesResultCode(val value: Int) : XdrElement 
 
     companion object : XdrElementDecoder<BeginSponsoringFutureReservesResultCode> {
         override fun decode(stream: XdrInputStream): BeginSponsoringFutureReservesResultCode {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> BEGIN_SPONSORING_FUTURE_RESERVES_SUCCESS
                 -1 -> BEGIN_SPONSORING_FUTURE_RESERVES_MALFORMED
                 -2 -> BEGIN_SPONSORING_FUTURE_RESERVES_ALREADY_SPONSORED

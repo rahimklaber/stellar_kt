@@ -11,26 +11,24 @@ package me.rahimklaber.stellar.base.xdr
 {
 HOT_ARCHIVE_METAENTRY = -1, // Bucket metadata, should come first.
 HOT_ARCHIVE_ARCHIVED = 0,   // Entry is Archived
-HOT_ARCHIVE_LIVE = 1,       // Entry was previously HOT_ARCHIVE_ARCHIVED, or HOT_ARCHIVE_DELETED, but
+HOT_ARCHIVE_LIVE = 1        // Entry was previously HOT_ARCHIVE_ARCHIVED, but
 // has been added back to the live BucketList.
 // Does not need to be persisted.
-HOT_ARCHIVE_DELETED = 2     // Entry deleted (Note: must be persisted in archive)
 };
  * ```
  */
 enum class HotArchiveBucketEntryType(val value: Int) : XdrElement {
     HOT_ARCHIVE_METAENTRY(-1),
     HOT_ARCHIVE_ARCHIVED(0),
-    HOT_ARCHIVE_LIVE(1),
-    HOT_ARCHIVE_DELETED(2);
+    HOT_ARCHIVE_LIVE(1);
 
     companion object : XdrElementDecoder<HotArchiveBucketEntryType> {
         override fun decode(stream: XdrInputStream): HotArchiveBucketEntryType {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 -1 -> HOT_ARCHIVE_METAENTRY
                 0 -> HOT_ARCHIVE_ARCHIVED
                 1 -> HOT_ARCHIVE_LIVE
-                2 -> HOT_ARCHIVE_DELETED
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)
             }
         }

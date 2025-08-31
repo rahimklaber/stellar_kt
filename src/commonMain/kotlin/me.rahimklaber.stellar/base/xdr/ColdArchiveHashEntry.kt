@@ -28,8 +28,8 @@ data class ColdArchiveHashEntry(
 
     companion object : XdrElementDecoder<ColdArchiveHashEntry> {
         override fun decode(stream: XdrInputStream): ColdArchiveHashEntry {
-            val index = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val level = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val index = Uint32.decode(stream)
+            val level = Uint32.decode(stream)
             val hash = Hash.decode(stream)
             return ColdArchiveHashEntry(
                 index,

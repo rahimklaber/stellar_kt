@@ -79,26 +79,26 @@ data class LedgerHeader(
         baseFee.encode(stream)
         baseReserve.encode(stream)
         maxTxSetSize.encode(stream)
-        val skipListSize = skipList.size
+        skipList.size
         skipList.encodeXdrElements(stream)
         ext.encode(stream)
     }
 
     companion object : XdrElementDecoder<LedgerHeader> {
         override fun decode(stream: XdrInputStream): LedgerHeader {
-            val ledgerVersion = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val ledgerVersion = Uint32.decode(stream)
             val previousLedgerHash = Hash.decode(stream)
             val scpValue = StellarValue.decode(stream)
             val txSetResultHash = Hash.decode(stream)
             val bucketListHash = Hash.decode(stream)
-            val ledgerSeq = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val totalCoins = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
-            val feePool = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
-            val inflationSeq = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val idPool = me.rahimklaber.stellar.base.xdr.Uint64.decode(stream)
-            val baseFee = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val baseReserve = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val maxTxSetSize = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val ledgerSeq = Uint32.decode(stream)
+            val totalCoins = Int64.decode(stream)
+            val feePool = Int64.decode(stream)
+            val inflationSeq = Uint32.decode(stream)
+            val idPool = Uint64.decode(stream)
+            val baseFee = Uint32.decode(stream)
+            val baseReserve = Uint32.decode(stream)
+            val maxTxSetSize = Uint32.decode(stream)
             val skipListSize = 4
             val skipList: List<Hash> = decodeXdrElementsList(skipListSize, stream, Hash.decoder())
             val ext = LedgerHeaderExt.decode(stream)
@@ -153,7 +153,8 @@ data class LedgerHeader(
 
         companion object : XdrElementDecoder<LedgerHeaderExt> {
             override fun decode(stream: XdrInputStream): LedgerHeaderExt {
-                return when (val type = Int.decode(stream)) {
+                val type = Int.decode(stream)
+                return when (type) {
                     0 -> LedgerHeaderExtV0
                     1 -> {
                         val v1 = LedgerHeaderExtensionV1.decode(stream)

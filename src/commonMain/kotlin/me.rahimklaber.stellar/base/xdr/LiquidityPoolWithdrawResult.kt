@@ -60,7 +60,8 @@ sealed class LiquidityPoolWithdrawResult(val type: LiquidityPoolWithdrawResultCo
 
     companion object : XdrElementDecoder<LiquidityPoolWithdrawResult> {
         override fun decode(stream: XdrInputStream): LiquidityPoolWithdrawResult {
-            return when (val type = LiquidityPoolWithdrawResultCode.decode(stream)) {
+            val type = LiquidityPoolWithdrawResultCode.decode(stream)
+            return when (type) {
                 LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_SUCCESS -> LiquidityPoolWithdrawSuccess
                 LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_MALFORMED -> LiquidityPoolWithdrawMalformed
                 LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_NO_TRUST -> LiquidityPoolWithdrawNoTrust

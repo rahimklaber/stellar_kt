@@ -87,7 +87,8 @@ data class ManageOfferSuccessResult(
 
         companion object : XdrElementDecoder<ManageOfferSuccessResultOffer> {
             override fun decode(stream: XdrInputStream): ManageOfferSuccessResultOffer {
-                return when (val type = ManageOfferEffect.decode(stream)) {
+                val type = ManageOfferEffect.decode(stream)
+                return when (type) {
                     ManageOfferEffect.MANAGE_OFFER_CREATED -> {
                         val offer = OfferEntry.decode(stream)
                         ManageOfferCreated(offer)

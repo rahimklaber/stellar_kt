@@ -19,9 +19,8 @@ LedgerEntryChanges txChangesAfter;   // tx level changes after operations are
 SorobanTransactionMetaV2* sorobanMeta; // Soroban-specific meta (only for
 // Soroban transactions).
 
-ContractEvent events<>; // Used for transaction-level events (like fee payment)
-DiagnosticEvent txDiagnosticEvents<>; // Used for transaction-level diagnostic
-//  information
+TransactionEvent events<>; // Used for transaction-level events (like fee payment)
+DiagnosticEvent diagnosticEvents<>; // Used for all diagnostic information
 };
  * ```
  */
@@ -31,8 +30,8 @@ data class TransactionMetaV4(
     val operations: List<OperationMetaV2>,
     val txChangesAfter: LedgerEntryChanges,
     val sorobanMeta: SorobanTransactionMetaV2?,
-    val events: List<ContractEvent>,
-    val txDiagnosticEvents: List<DiagnosticEvent>,
+    val events: List<TransactionEvent>,
+    val diagnosticEvents: List<DiagnosticEvent>,
 ) : XdrElement {
     override fun encode(stream: XdrOutputStream) {
         ext.encode(stream)
@@ -50,9 +49,9 @@ data class TransactionMetaV4(
         val eventsSize = events.size
         stream.writeInt(eventsSize)
         events.encodeXdrElements(stream)
-        val txDiagnosticEventsSize = txDiagnosticEvents.size
-        stream.writeInt(txDiagnosticEventsSize)
-        txDiagnosticEvents.encodeXdrElements(stream)
+        val diagnosticEventsSize = diagnosticEvents.size
+        stream.writeInt(diagnosticEventsSize)
+        diagnosticEvents.encodeXdrElements(stream)
     }
 
     companion object : XdrElementDecoder<TransactionMetaV4> {
@@ -69,9 +68,9 @@ data class TransactionMetaV4(
                 null
             }
             val eventsSize = stream.readInt()
-            val events: List<ContractEvent> = decodeXdrElementsList(eventsSize, stream, ContractEvent.decoder())
-            val txDiagnosticEventsSize = stream.readInt()
-            val txDiagnosticEvents: List<DiagnosticEvent> = decodeXdrElementsList(txDiagnosticEventsSize, stream, DiagnosticEvent.decoder())
+            val events: List<TransactionEvent> = decodeXdrElementsList(eventsSize, stream, TransactionEvent.decoder())
+            val diagnosticEventsSize = stream.readInt()
+            val diagnosticEvents: List<DiagnosticEvent> = decodeXdrElementsList(diagnosticEventsSize, stream, DiagnosticEvent.decoder())
             return TransactionMetaV4(
                 ext,
                 txChangesBefore,
@@ -79,7 +78,7 @@ data class TransactionMetaV4(
                 txChangesAfter,
                 sorobanMeta,
                 events,
-                txDiagnosticEvents,
+                diagnosticEvents,
             )
         }
     }

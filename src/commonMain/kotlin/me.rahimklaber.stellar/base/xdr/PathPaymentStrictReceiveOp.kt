@@ -44,10 +44,10 @@ data class PathPaymentStrictReceiveOp(
     companion object : XdrElementDecoder<PathPaymentStrictReceiveOp> {
         override fun decode(stream: XdrInputStream): PathPaymentStrictReceiveOp {
             val sendAsset = Asset.decode(stream)
-            val sendMax = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val sendMax = Int64.decode(stream)
             val destination = MuxedAccount.decode(stream)
             val destAsset = Asset.decode(stream)
-            val destAmount = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val destAmount = Int64.decode(stream)
             val pathSize = stream.readInt()
             val path: List<Asset> = decodeXdrElementsList(pathSize, stream, Asset.decoder())
             return PathPaymentStrictReceiveOp(

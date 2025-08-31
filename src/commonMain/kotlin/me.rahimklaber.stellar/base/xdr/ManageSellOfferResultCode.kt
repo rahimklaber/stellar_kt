@@ -52,7 +52,8 @@ enum class ManageSellOfferResultCode(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<ManageSellOfferResultCode> {
         override fun decode(stream: XdrInputStream): ManageSellOfferResultCode {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> MANAGE_SELL_OFFER_SUCCESS
                 -1 -> MANAGE_SELL_OFFER_MALFORMED
                 -2 -> MANAGE_SELL_OFFER_SELL_NO_TRUST

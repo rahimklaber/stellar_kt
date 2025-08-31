@@ -70,7 +70,8 @@ enum class OperationType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<OperationType> {
         override fun decode(stream: XdrInputStream): OperationType {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> CREATE_ACCOUNT
                 1 -> PAYMENT
                 2 -> PATH_PAYMENT_STRICT_RECEIVE

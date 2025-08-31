@@ -34,7 +34,8 @@ enum class AllowTrustResultCode(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<AllowTrustResultCode> {
         override fun decode(stream: XdrInputStream): AllowTrustResultCode {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> ALLOW_TRUST_SUCCESS
                 -1 -> ALLOW_TRUST_MALFORMED
                 -2 -> ALLOW_TRUST_NO_TRUST_LINE

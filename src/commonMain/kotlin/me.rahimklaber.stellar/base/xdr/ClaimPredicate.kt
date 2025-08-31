@@ -93,7 +93,8 @@ sealed class ClaimPredicate(val type: ClaimPredicateType) : XdrElement {
 
     companion object : XdrElementDecoder<ClaimPredicate> {
         override fun decode(stream: XdrInputStream): ClaimPredicate {
-            return when (val type = ClaimPredicateType.decode(stream)) {
+            val type = ClaimPredicateType.decode(stream)
+            return when (type) {
                 ClaimPredicateType.CLAIM_PREDICATE_UNCONDITIONAL -> Unconditional
                 ClaimPredicateType.CLAIM_PREDICATE_AND -> {
                     val andPredicatesSize = stream.readInt()

@@ -23,7 +23,7 @@ void;
  * ```
  */
 sealed class AccountMergeResult(val type: AccountMergeResultCode) : XdrElement {
-    fun sourceAccountBalanceOrNull(): AccountMergeSuccess? = if (this is AccountMergeSuccess) this else null
+    fun sourceAccountBalanceOrNull(): AccountMergeSuccess? = this as? AccountMergeSuccess
     data class AccountMergeSuccess(
         val sourceAccountBalance: Int64,
     ) : AccountMergeResult(AccountMergeResultCode.ACCOUNT_MERGE_SUCCESS) {
@@ -77,7 +77,8 @@ sealed class AccountMergeResult(val type: AccountMergeResultCode) : XdrElement {
 
     companion object : XdrElementDecoder<AccountMergeResult> {
         override fun decode(stream: XdrInputStream): AccountMergeResult {
-            return when (val type = AccountMergeResultCode.decode(stream)) {
+            val type = AccountMergeResultCode.decode(stream)
+            return when (type) {
                 AccountMergeResultCode.ACCOUNT_MERGE_SUCCESS -> {
                     val sourceAccountBalance = Int64.decode(stream)
                     AccountMergeSuccess(sourceAccountBalance)

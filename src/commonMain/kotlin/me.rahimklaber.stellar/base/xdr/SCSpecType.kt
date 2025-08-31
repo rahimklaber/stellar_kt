@@ -29,6 +29,7 @@ SC_SPEC_TYPE_BYTES = 14,
 SC_SPEC_TYPE_STRING = 16,
 SC_SPEC_TYPE_SYMBOL = 17,
 SC_SPEC_TYPE_ADDRESS = 19,
+SC_SPEC_TYPE_MUXED_ADDRESS = 20,
 
 // Types with parameters.
 SC_SPEC_TYPE_OPTION = 1000,
@@ -62,6 +63,7 @@ enum class SCSpecType(val value: Int) : XdrElement {
     SC_SPEC_TYPE_STRING(16),
     SC_SPEC_TYPE_SYMBOL(17),
     SC_SPEC_TYPE_ADDRESS(19),
+    SC_SPEC_TYPE_MUXED_ADDRESS(20),
     SC_SPEC_TYPE_OPTION(1000),
     SC_SPEC_TYPE_RESULT(1001),
     SC_SPEC_TYPE_VEC(1002),
@@ -72,7 +74,8 @@ enum class SCSpecType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<SCSpecType> {
         override fun decode(stream: XdrInputStream): SCSpecType {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> SC_SPEC_TYPE_VAL
                 1 -> SC_SPEC_TYPE_BOOL
                 2 -> SC_SPEC_TYPE_VOID
@@ -91,6 +94,7 @@ enum class SCSpecType(val value: Int) : XdrElement {
                 16 -> SC_SPEC_TYPE_STRING
                 17 -> SC_SPEC_TYPE_SYMBOL
                 19 -> SC_SPEC_TYPE_ADDRESS
+                20 -> SC_SPEC_TYPE_MUXED_ADDRESS
                 1000 -> SC_SPEC_TYPE_OPTION
                 1001 -> SC_SPEC_TYPE_RESULT
                 1002 -> SC_SPEC_TYPE_VEC

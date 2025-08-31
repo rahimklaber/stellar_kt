@@ -61,7 +61,7 @@ data class SCPStatement(
     companion object : XdrElementDecoder<SCPStatement> {
         override fun decode(stream: XdrInputStream): SCPStatement {
             val nodeID = NodeID.decode(stream)
-            val slotIndex = me.rahimklaber.stellar.base.xdr.Uint64.decode(stream)
+            val slotIndex = Uint64.decode(stream)
             val pledges = SCPStatementPledges.decode(stream)
             return SCPStatement(
                 nodeID,
@@ -150,7 +150,8 @@ data class SCPStatement(
 
         companion object : XdrElementDecoder<SCPStatementPledges> {
             override fun decode(stream: XdrInputStream): SCPStatementPledges {
-                return when (val type = SCPStatementType.decode(stream)) {
+                val type = SCPStatementType.decode(stream)
+                return when (type) {
                     SCPStatementType.SCP_ST_PREPARE -> {
                         val prepare = SCPStatementPrepare.decode(stream)
                         ScpStPrepare(prepare)
@@ -233,8 +234,8 @@ data class SCPStatement(
                     } else {
                         null
                     }
-                    val nC = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-                    val nH = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+                    val nC = Uint32.decode(stream)
+                    val nH = Uint32.decode(stream)
                     return SCPStatementPrepare(
                         quorumSetHash,
                         ballot,
@@ -279,9 +280,9 @@ data class SCPStatement(
             companion object : XdrElementDecoder<SCPStatementConfirm> {
                 override fun decode(stream: XdrInputStream): SCPStatementConfirm {
                     val ballot = SCPBallot.decode(stream)
-                    val nPrepared = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-                    val nCommit = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-                    val nH = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+                    val nPrepared = Uint32.decode(stream)
+                    val nCommit = Uint32.decode(stream)
+                    val nH = Uint32.decode(stream)
                     val quorumSetHash = Hash.decode(stream)
                     return SCPStatementConfirm(
                         ballot,
@@ -320,7 +321,7 @@ data class SCPStatement(
             companion object : XdrElementDecoder<SCPStatementExternalize> {
                 override fun decode(stream: XdrInputStream): SCPStatementExternalize {
                     val commit = SCPBallot.decode(stream)
-                    val nH = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+                    val nH = Uint32.decode(stream)
                     val commitQuorumSetHash = Hash.decode(stream)
                     return SCPStatementExternalize(
                         commit,

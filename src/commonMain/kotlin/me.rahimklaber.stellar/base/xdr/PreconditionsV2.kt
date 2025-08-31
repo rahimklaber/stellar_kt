@@ -96,7 +96,7 @@ data class PreconditionsV2(
                 null
             }
             val minSeqAge = Duration.decode(stream)
-            val minSeqLedgerGap = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val minSeqLedgerGap = Uint32.decode(stream)
             val extraSignersSize = stream.readInt()
             val extraSigners: List<SignerKey> = decodeXdrElementsList(extraSignersSize, stream, SignerKey.decoder())
             return PreconditionsV2(

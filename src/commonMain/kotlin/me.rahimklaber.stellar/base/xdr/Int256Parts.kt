@@ -30,10 +30,10 @@ data class Int256Parts(
 
     companion object : XdrElementDecoder<Int256Parts> {
         override fun decode(stream: XdrInputStream): Int256Parts {
-            val hi_hi = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
-            val hi_lo = me.rahimklaber.stellar.base.xdr.Uint64.decode(stream)
-            val lo_hi = me.rahimklaber.stellar.base.xdr.Uint64.decode(stream)
-            val lo_lo = me.rahimklaber.stellar.base.xdr.Uint64.decode(stream)
+            val hi_hi = Int64.decode(stream)
+            val hi_lo = Uint64.decode(stream)
+            val lo_hi = Uint64.decode(stream)
+            val lo_lo = Uint64.decode(stream)
             return Int256Parts(
                 hi_hi,
                 hi_lo,

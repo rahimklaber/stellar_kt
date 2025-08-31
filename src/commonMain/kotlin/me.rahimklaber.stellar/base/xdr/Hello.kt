@@ -48,9 +48,9 @@ data class Hello(
 
     companion object : XdrElementDecoder<Hello> {
         override fun decode(stream: XdrInputStream): Hello {
-            val ledgerVersion = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val overlayVersion = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val overlayMinVersion = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val ledgerVersion = Uint32.decode(stream)
+            val overlayVersion = Uint32.decode(stream)
+            val overlayMinVersion = Uint32.decode(stream)
             val networkID = Hash.decode(stream)
             val versionStrSize = stream.readInt()
             val versionStr = decodeString(versionStrSize, stream)

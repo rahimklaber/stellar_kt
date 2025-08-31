@@ -26,7 +26,7 @@ data class InflationPayout(
     companion object : XdrElementDecoder<InflationPayout> {
         override fun decode(stream: XdrInputStream): InflationPayout {
             val destination = AccountID.decode(stream)
-            val amount = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val amount = Int64.decode(stream)
             return InflationPayout(
                 destination,
                 amount,

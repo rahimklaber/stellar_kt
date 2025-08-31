@@ -57,12 +57,12 @@ data class OfferEntry(
     companion object : XdrElementDecoder<OfferEntry> {
         override fun decode(stream: XdrInputStream): OfferEntry {
             val sellerID = AccountID.decode(stream)
-            val offerID = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val offerID = Int64.decode(stream)
             val selling = Asset.decode(stream)
             val buying = Asset.decode(stream)
-            val amount = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val amount = Int64.decode(stream)
             val price = Price.decode(stream)
-            val flags = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val flags = Uint32.decode(stream)
             val ext = OfferEntryExt.decode(stream)
             return OfferEntry(
                 sellerID,
@@ -96,7 +96,8 @@ data class OfferEntry(
 
         companion object : XdrElementDecoder<OfferEntryExt> {
             override fun decode(stream: XdrInputStream): OfferEntryExt {
-                return when (val type = Int.decode(stream)) {
+                val type = Int.decode(stream)
+                return when (type) {
                     0 -> OfferEntryExtV0
                     else -> throw IllegalArgumentException("unknown type: $type")
                 }

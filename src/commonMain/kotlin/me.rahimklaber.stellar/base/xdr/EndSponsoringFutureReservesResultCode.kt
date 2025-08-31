@@ -23,7 +23,8 @@ enum class EndSponsoringFutureReservesResultCode(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<EndSponsoringFutureReservesResultCode> {
         override fun decode(stream: XdrInputStream): EndSponsoringFutureReservesResultCode {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> END_SPONSORING_FUTURE_RESERVES_SUCCESS
                 -1 -> END_SPONSORING_FUTURE_RESERVES_NOT_SPONSORED
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)

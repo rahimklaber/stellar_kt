@@ -20,7 +20,7 @@ value class SequenceNumber(val value: Int64) : XdrElement {
 
     companion object : XdrElementDecoder<SequenceNumber> {
         override fun decode(stream: XdrInputStream): SequenceNumber {
-            val value = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val value = Int64.decode(stream)
             return SequenceNumber(value)
         }
     }

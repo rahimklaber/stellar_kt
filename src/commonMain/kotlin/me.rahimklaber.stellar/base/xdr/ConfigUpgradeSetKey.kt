@@ -8,13 +8,13 @@ package me.rahimklaber.stellar.base.xdr
  * ConfigUpgradeSetKey's original definition in the XDR file is:
  * ```
  * struct ConfigUpgradeSetKey {
-Hash contractID;
+ContractID contractID;
 Hash contentHash;
 };
  * ```
  */
 data class ConfigUpgradeSetKey(
-    val contractID: Hash,
+    val contractID: ContractID,
     val contentHash: Hash,
 ) : XdrElement {
     override fun encode(stream: XdrOutputStream) {
@@ -24,7 +24,7 @@ data class ConfigUpgradeSetKey(
 
     companion object : XdrElementDecoder<ConfigUpgradeSetKey> {
         override fun decode(stream: XdrInputStream): ConfigUpgradeSetKey {
-            val contractID = Hash.decode(stream)
+            val contractID = ContractID.decode(stream)
             val contentHash = Hash.decode(stream)
             return ConfigUpgradeSetKey(
                 contractID,

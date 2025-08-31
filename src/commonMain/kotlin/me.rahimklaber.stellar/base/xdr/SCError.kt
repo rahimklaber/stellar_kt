@@ -118,7 +118,8 @@ sealed class SCError(val type: SCErrorType) : XdrElement {
 
     companion object : XdrElementDecoder<SCError> {
         override fun decode(stream: XdrInputStream): SCError {
-            return when (val type = SCErrorType.decode(stream)) {
+            val type = SCErrorType.decode(stream)
+            return when (type) {
                 SCErrorType.SCE_CONTRACT -> {
                     val contractCode = Uint32.decode(stream)
                     Contract(contractCode)

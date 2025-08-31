@@ -52,7 +52,8 @@ sealed class CreateAccountResult(val type: CreateAccountResultCode) : XdrElement
 
     companion object : XdrElementDecoder<CreateAccountResult> {
         override fun decode(stream: XdrInputStream): CreateAccountResult {
-            return when (val type = CreateAccountResultCode.decode(stream)) {
+            val type = CreateAccountResultCode.decode(stream)
+            return when (type) {
                 CreateAccountResultCode.CREATE_ACCOUNT_SUCCESS -> CreateAccountSuccess
                 CreateAccountResultCode.CREATE_ACCOUNT_MALFORMED -> CreateAccountMalformed
                 CreateAccountResultCode.CREATE_ACCOUNT_UNDERFUNDED -> CreateAccountUnderfunded

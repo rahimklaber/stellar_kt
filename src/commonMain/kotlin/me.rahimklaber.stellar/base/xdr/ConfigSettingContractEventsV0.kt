@@ -27,8 +27,8 @@ data class ConfigSettingContractEventsV0(
 
     companion object : XdrElementDecoder<ConfigSettingContractEventsV0> {
         override fun decode(stream: XdrInputStream): ConfigSettingContractEventsV0 {
-            val txMaxContractEventsSizeBytes = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val feeContractEvents1KB = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val txMaxContractEventsSizeBytes = Uint32.decode(stream)
+            val feeContractEvents1KB = Int64.decode(stream)
             return ConfigSettingContractEventsV0(
                 txMaxContractEventsSizeBytes,
                 feeContractEvents1KB,

@@ -32,9 +32,9 @@ data class TimeSlicedSurveyRequestMessage(
     companion object : XdrElementDecoder<TimeSlicedSurveyRequestMessage> {
         override fun decode(stream: XdrInputStream): TimeSlicedSurveyRequestMessage {
             val request = SurveyRequestMessage.decode(stream)
-            val nonce = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val inboundPeersIndex = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val outboundPeersIndex = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val nonce = Uint32.decode(stream)
+            val inboundPeersIndex = Uint32.decode(stream)
+            val outboundPeersIndex = Uint32.decode(stream)
             return TimeSlicedSurveyRequestMessage(
                 request,
                 nonce,

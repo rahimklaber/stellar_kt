@@ -34,8 +34,8 @@ data class SetTrustLineFlagsOp(
         override fun decode(stream: XdrInputStream): SetTrustLineFlagsOp {
             val trustor = AccountID.decode(stream)
             val asset = Asset.decode(stream)
-            val clearFlags = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val setFlags = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val clearFlags = Uint32.decode(stream)
+            val setFlags = Uint32.decode(stream)
             return SetTrustLineFlagsOp(
                 trustor,
                 asset,

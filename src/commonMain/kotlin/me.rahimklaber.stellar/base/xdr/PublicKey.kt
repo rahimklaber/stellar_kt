@@ -27,7 +27,8 @@ sealed class PublicKey(val type: PublicKeyType) : XdrElement {
 
     companion object : XdrElementDecoder<PublicKey> {
         override fun decode(stream: XdrInputStream): PublicKey {
-            return when (val type = PublicKeyType.decode(stream)) {
+            val type = PublicKeyType.decode(stream)
+            return when (type) {
                 PublicKeyType.PUBLIC_KEY_TYPE_ED25519 -> {
                     val ed25519 = Uint256.decode(stream)
                     Ed25519(ed25519)

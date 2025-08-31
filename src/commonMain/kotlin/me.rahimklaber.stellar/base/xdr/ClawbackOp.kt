@@ -30,7 +30,7 @@ data class ClawbackOp(
         override fun decode(stream: XdrInputStream): ClawbackOp {
             val asset = Asset.decode(stream)
             val from = MuxedAccount.decode(stream)
-            val amount = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val amount = Int64.decode(stream)
             return ClawbackOp(
                 asset,
                 from,

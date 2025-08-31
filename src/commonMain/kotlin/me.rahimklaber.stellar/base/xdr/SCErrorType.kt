@@ -36,7 +36,8 @@ enum class SCErrorType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<SCErrorType> {
         override fun decode(stream: XdrInputStream): SCErrorType {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> SCE_CONTRACT
                 1 -> SCE_WASM_VM
                 2 -> SCE_CONTEXT

@@ -28,7 +28,8 @@ enum class CryptoKeyType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<CryptoKeyType> {
         override fun decode(stream: XdrInputStream): CryptoKeyType {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> KEY_TYPE_ED25519
                 1 -> KEY_TYPE_PRE_AUTH_TX
                 2 -> KEY_TYPE_HASH_X

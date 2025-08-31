@@ -39,9 +39,9 @@ data class ManageBuyOfferOp(
         override fun decode(stream: XdrInputStream): ManageBuyOfferOp {
             val selling = Asset.decode(stream)
             val buying = Asset.decode(stream)
-            val buyAmount = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val buyAmount = Int64.decode(stream)
             val price = Price.decode(stream)
-            val offerID = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val offerID = Int64.decode(stream)
             return ManageBuyOfferOp(
                 selling,
                 buying,

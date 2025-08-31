@@ -47,7 +47,8 @@ sealed class Preconditions(val type: PreconditionType) : XdrElement {
 
     companion object : XdrElementDecoder<Preconditions> {
         override fun decode(stream: XdrInputStream): Preconditions {
-            return when (val type = PreconditionType.decode(stream)) {
+            val type = PreconditionType.decode(stream)
+            return when (type) {
                 PreconditionType.PRECOND_NONE -> PrecondNone
                 PreconditionType.PRECOND_TIME -> {
                     val timeBounds = TimeBounds.decode(stream)

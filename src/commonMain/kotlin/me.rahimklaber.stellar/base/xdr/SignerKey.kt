@@ -71,7 +71,8 @@ sealed class SignerKey(val type: SignerKeyType) : XdrElement {
 
     companion object : XdrElementDecoder<SignerKey> {
         override fun decode(stream: XdrInputStream): SignerKey {
-            return when (val type = SignerKeyType.decode(stream)) {
+            val type = SignerKeyType.decode(stream)
+            return when (type) {
                 SignerKeyType.SIGNER_KEY_TYPE_ED25519 -> {
                     val ed25519 = Uint256.decode(stream)
                     Ed25519(ed25519)
@@ -118,24 +119,6 @@ sealed class SignerKey(val type: SignerKeyType) : XdrElement {
             val payloadSize = payload.size
             stream.writeInt(payloadSize)
             stream.writeBytes(payload)
-        }
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (other == null || this::class != other::class) return false
-
-            other as SignerKeyEd25519SignedPayload
-
-            if (ed25519 != other.ed25519) return false
-            if (!payload.contentEquals(other.payload)) return false
-
-            return true
-        }
-
-        override fun hashCode(): Int {
-            var result = ed25519.hashCode()
-            result = 31 * result + payload.contentHashCode()
-            return result
         }
 
         companion object : XdrElementDecoder<SignerKeyEd25519SignedPayload> {

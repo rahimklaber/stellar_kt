@@ -26,7 +26,7 @@ data class TimeSlicedSurveyResponseMessage(
     companion object : XdrElementDecoder<TimeSlicedSurveyResponseMessage> {
         override fun decode(stream: XdrInputStream): TimeSlicedSurveyResponseMessage {
             val response = SurveyResponseMessage.decode(stream)
-            val nonce = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val nonce = Uint32.decode(stream)
             return TimeSlicedSurveyResponseMessage(
                 response,
                 nonce,

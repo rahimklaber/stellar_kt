@@ -29,7 +29,8 @@ enum class ClawbackResultCode(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<ClawbackResultCode> {
         override fun decode(stream: XdrInputStream): ClawbackResultCode {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> CLAWBACK_SUCCESS
                 -1 -> CLAWBACK_MALFORMED
                 -2 -> CLAWBACK_NOT_CLAWBACK_ENABLED

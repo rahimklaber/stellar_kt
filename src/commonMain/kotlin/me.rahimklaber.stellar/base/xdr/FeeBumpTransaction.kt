@@ -42,7 +42,7 @@ data class FeeBumpTransaction(
     companion object : XdrElementDecoder<FeeBumpTransaction> {
         override fun decode(stream: XdrInputStream): FeeBumpTransaction {
             val feeSource = MuxedAccount.decode(stream)
-            val fee = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val fee = Int64.decode(stream)
             val innerTx = FeeBumpTransactionInnerTx.decode(stream)
             val ext = FeeBumpTransactionExt.decode(stream)
             return FeeBumpTransaction(
@@ -77,7 +77,8 @@ data class FeeBumpTransaction(
 
         companion object : XdrElementDecoder<FeeBumpTransactionInnerTx> {
             override fun decode(stream: XdrInputStream): FeeBumpTransactionInnerTx {
-                return when (val type = EnvelopeType.decode(stream)) {
+                val type = EnvelopeType.decode(stream)
+                return when (type) {
                     EnvelopeType.ENVELOPE_TYPE_TX -> {
                         val v1 = TransactionV1Envelope.decode(stream)
                         Tx(v1)
@@ -108,7 +109,8 @@ data class FeeBumpTransaction(
 
         companion object : XdrElementDecoder<FeeBumpTransactionExt> {
             override fun decode(stream: XdrInputStream): FeeBumpTransactionExt {
-                return when (val type = Int.decode(stream)) {
+                val type = Int.decode(stream)
+                return when (type) {
                     0 -> FeeBumpTransactionExtV0
                     else -> throw IllegalArgumentException("unknown type: $type")
                 }

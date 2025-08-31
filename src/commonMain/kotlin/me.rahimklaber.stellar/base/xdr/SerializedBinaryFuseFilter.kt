@@ -52,48 +52,16 @@ data class SerializedBinaryFuseFilter(
         stream.writeBytes(fingerprints)
     }
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || this::class != other::class) return false
-
-        other as SerializedBinaryFuseFilter
-
-        if (type != other.type) return false
-        if (inputHashSeed != other.inputHashSeed) return false
-        if (filterSeed != other.filterSeed) return false
-        if (segmentLength != other.segmentLength) return false
-        if (segementLengthMask != other.segementLengthMask) return false
-        if (segmentCount != other.segmentCount) return false
-        if (segmentCountLength != other.segmentCountLength) return false
-        if (fingerprintLength != other.fingerprintLength) return false
-        if (!fingerprints.contentEquals(other.fingerprints)) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = type.hashCode()
-        result = 31 * result + inputHashSeed.hashCode()
-        result = 31 * result + filterSeed.hashCode()
-        result = 31 * result + segmentLength.hashCode()
-        result = 31 * result + segementLengthMask.hashCode()
-        result = 31 * result + segmentCount.hashCode()
-        result = 31 * result + segmentCountLength.hashCode()
-        result = 31 * result + fingerprintLength.hashCode()
-        result = 31 * result + fingerprints.contentHashCode()
-        return result
-    }
-
     companion object : XdrElementDecoder<SerializedBinaryFuseFilter> {
         override fun decode(stream: XdrInputStream): SerializedBinaryFuseFilter {
             val type = BinaryFuseFilterType.decode(stream)
             val inputHashSeed = ShortHashSeed.decode(stream)
             val filterSeed = ShortHashSeed.decode(stream)
-            val segmentLength = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val segementLengthMask = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val segmentCount = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val segmentCountLength = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val fingerprintLength = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val segmentLength = Uint32.decode(stream)
+            val segementLengthMask = Uint32.decode(stream)
+            val segmentCount = Uint32.decode(stream)
+            val segmentCountLength = Uint32.decode(stream)
+            val fingerprintLength = Uint32.decode(stream)
             val fingerprintsSize = stream.readInt()
             val fingerprints = stream.readBytes(fingerprintsSize)
             return SerializedBinaryFuseFilter(

@@ -25,8 +25,8 @@ data class LedgerBounds(
 
     companion object : XdrElementDecoder<LedgerBounds> {
         override fun decode(stream: XdrInputStream): LedgerBounds {
-            val minLedger = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val maxLedger = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val minLedger = Uint32.decode(stream)
+            val maxLedger = Uint32.decode(stream)
             return LedgerBounds(
                 minLedger,
                 maxLedger,

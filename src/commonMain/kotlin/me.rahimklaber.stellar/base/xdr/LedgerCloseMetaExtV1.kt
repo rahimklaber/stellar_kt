@@ -26,7 +26,7 @@ data class LedgerCloseMetaExtV1(
     companion object : XdrElementDecoder<LedgerCloseMetaExtV1> {
         override fun decode(stream: XdrInputStream): LedgerCloseMetaExtV1 {
             val ext = ExtensionPoint.decode(stream)
-            val sorobanFeeWrite1KB = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val sorobanFeeWrite1KB = Int64.decode(stream)
             return LedgerCloseMetaExtV1(
                 ext,
                 sorobanFeeWrite1KB,

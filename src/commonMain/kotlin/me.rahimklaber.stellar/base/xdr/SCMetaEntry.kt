@@ -27,7 +27,8 @@ sealed class SCMetaEntry(val type: SCMetaKind) : XdrElement {
 
     companion object : XdrElementDecoder<SCMetaEntry> {
         override fun decode(stream: XdrInputStream): SCMetaEntry {
-            return when (val type = SCMetaKind.decode(stream)) {
+            val type = SCMetaKind.decode(stream)
+            return when (type) {
                 SCMetaKind.SC_META_V0 -> {
                     val v0 = SCMetaV0.decode(stream)
                     ScMetaV0(v0)

@@ -34,7 +34,8 @@ enum class LiquidityPoolWithdrawResultCode(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<LiquidityPoolWithdrawResultCode> {
         override fun decode(stream: XdrInputStream): LiquidityPoolWithdrawResultCode {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> LIQUIDITY_POOL_WITHDRAW_SUCCESS
                 -1 -> LIQUIDITY_POOL_WITHDRAW_MALFORMED
                 -2 -> LIQUIDITY_POOL_WITHDRAW_NO_TRUST

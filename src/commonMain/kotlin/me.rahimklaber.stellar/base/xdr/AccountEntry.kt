@@ -72,16 +72,16 @@ data class AccountEntry(
     companion object : XdrElementDecoder<AccountEntry> {
         override fun decode(stream: XdrInputStream): AccountEntry {
             val accountID = AccountID.decode(stream)
-            val balance = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val balance = Int64.decode(stream)
             val seqNum = SequenceNumber.decode(stream)
-            val numSubEntries = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val numSubEntries = Uint32.decode(stream)
             val inflationDestPresent = stream.readInt()
             val inflationDest = if (inflationDestPresent != 0) {
                 AccountID.decode(stream)
             } else {
                 null
             }
-            val flags = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val flags = Uint32.decode(stream)
             val homeDomain = String32.decode(stream)
             val thresholds = Thresholds.decode(stream)
             val signersSize = stream.readInt()
@@ -133,7 +133,8 @@ data class AccountEntry(
 
         companion object : XdrElementDecoder<AccountEntryExt> {
             override fun decode(stream: XdrInputStream): AccountEntryExt {
-                return when (val type = Int.decode(stream)) {
+                val type = Int.decode(stream)
+                return when (type) {
                     0 -> AccountEntryExtV0
                     1 -> {
                         val v1 = AccountEntryExtensionV1.decode(stream)

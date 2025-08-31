@@ -35,8 +35,8 @@ data class LiquidityPoolDepositOp(
     companion object : XdrElementDecoder<LiquidityPoolDepositOp> {
         override fun decode(stream: XdrInputStream): LiquidityPoolDepositOp {
             val liquidityPoolID = PoolID.decode(stream)
-            val maxAmountA = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
-            val maxAmountB = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val maxAmountA = Int64.decode(stream)
+            val maxAmountB = Int64.decode(stream)
             val minPrice = Price.decode(stream)
             val maxPrice = Price.decode(stream)
             return LiquidityPoolDepositOp(

@@ -62,7 +62,7 @@ data class TransactionResult(
 
     companion object : XdrElementDecoder<TransactionResult> {
         override fun decode(stream: XdrInputStream): TransactionResult {
-            val feeCharged = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val feeCharged = Int64.decode(stream)
             val result = TransactionResultResult.decode(stream)
             val ext = TransactionResultExt.decode(stream)
             return TransactionResult(
@@ -237,7 +237,8 @@ data class TransactionResult(
 
         companion object : XdrElementDecoder<TransactionResultResult> {
             override fun decode(stream: XdrInputStream): TransactionResultResult {
-                return when (val type = TransactionResultCode.decode(stream)) {
+                val type = TransactionResultCode.decode(stream)
+                return when (type) {
                     TransactionResultCode.txFEE_BUMP_INNER_SUCCESS -> {
                         val innerResultPair = InnerTransactionResultPair.decode(stream)
                         TxfeeBumpInnerSuccess(innerResultPair)
@@ -300,7 +301,8 @@ data class TransactionResult(
 
         companion object : XdrElementDecoder<TransactionResultExt> {
             override fun decode(stream: XdrInputStream): TransactionResultExt {
-                return when (val type = Int.decode(stream)) {
+                val type = Int.decode(stream)
+                return when (type) {
                     0 -> TransactionResultExtV0
                     else -> throw IllegalArgumentException("unknown type: $type")
                 }

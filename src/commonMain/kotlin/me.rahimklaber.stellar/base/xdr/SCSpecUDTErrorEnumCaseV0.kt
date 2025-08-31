@@ -36,7 +36,7 @@ data class SCSpecUDTErrorEnumCaseV0(
             val doc = decodeString(docSize, stream)
             val nameSize = stream.readInt()
             val name = decodeString(nameSize, stream)
-            val value = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val value = Uint32.decode(stream)
             return SCSpecUDTErrorEnumCaseV0(
                 doc,
                 name,

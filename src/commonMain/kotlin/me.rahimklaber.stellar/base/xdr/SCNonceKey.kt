@@ -22,7 +22,7 @@ value class SCNonceKey(val nonce: Int64) : XdrElement {
 
     companion object : XdrElementDecoder<SCNonceKey> {
         override fun decode(stream: XdrInputStream): SCNonceKey {
-            val nonce = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val nonce = Int64.decode(stream)
             return SCNonceKey(
                 nonce,
             )

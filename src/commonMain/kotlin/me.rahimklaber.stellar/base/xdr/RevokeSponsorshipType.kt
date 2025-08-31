@@ -20,7 +20,8 @@ enum class RevokeSponsorshipType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<RevokeSponsorshipType> {
         override fun decode(stream: XdrInputStream): RevokeSponsorshipType {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> REVOKE_SPONSORSHIP_LEDGER_ENTRY
                 1 -> REVOKE_SPONSORSHIP_SIGNER
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)

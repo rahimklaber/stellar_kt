@@ -50,7 +50,8 @@ sealed class BeginSponsoringFutureReservesResult(val type: BeginSponsoringFuture
 
     companion object : XdrElementDecoder<BeginSponsoringFutureReservesResult> {
         override fun decode(stream: XdrInputStream): BeginSponsoringFutureReservesResult {
-            return when (val type = BeginSponsoringFutureReservesResultCode.decode(stream)) {
+            val type = BeginSponsoringFutureReservesResultCode.decode(stream)
+            return when (type) {
                 BeginSponsoringFutureReservesResultCode.BEGIN_SPONSORING_FUTURE_RESERVES_SUCCESS -> BeginSponsoringFutureReservesSuccess
                 BeginSponsoringFutureReservesResultCode.BEGIN_SPONSORING_FUTURE_RESERVES_MALFORMED -> BeginSponsoringFutureReservesMalformed
                 BeginSponsoringFutureReservesResultCode.BEGIN_SPONSORING_FUTURE_RESERVES_ALREADY_SPONSORED -> BeginSponsoringFutureReservesAlreadySponsored

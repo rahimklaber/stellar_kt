@@ -31,7 +31,8 @@ enum class RevokeSponsorshipResultCode(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<RevokeSponsorshipResultCode> {
         override fun decode(stream: XdrInputStream): RevokeSponsorshipResultCode {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> REVOKE_SPONSORSHIP_SUCCESS
                 -1 -> REVOKE_SPONSORSHIP_DOES_NOT_EXIST
                 -2 -> REVOKE_SPONSORSHIP_NOT_SPONSOR

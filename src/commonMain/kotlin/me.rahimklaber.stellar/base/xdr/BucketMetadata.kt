@@ -35,7 +35,7 @@ data class BucketMetadata(
 
     companion object : XdrElementDecoder<BucketMetadata> {
         override fun decode(stream: XdrInputStream): BucketMetadata {
-            val ledgerVersion = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val ledgerVersion = Uint32.decode(stream)
             val ext = BucketMetadataExt.decode(stream)
             return BucketMetadata(
                 ledgerVersion,
@@ -75,7 +75,8 @@ data class BucketMetadata(
 
         companion object : XdrElementDecoder<BucketMetadataExt> {
             override fun decode(stream: XdrInputStream): BucketMetadataExt {
-                return when (val type = Int.decode(stream)) {
+                val type = Int.decode(stream)
+                return when (type) {
                     0 -> BucketMetadataExtV0
                     1 -> {
                         val bucketListType = BucketListType.decode(stream)

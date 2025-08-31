@@ -28,7 +28,7 @@ data class ChangeTrustOp(
     companion object : XdrElementDecoder<ChangeTrustOp> {
         override fun decode(stream: XdrInputStream): ChangeTrustOp {
             val line = ChangeTrustAsset.decode(stream)
-            val limit = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val limit = Int64.decode(stream)
             return ChangeTrustOp(
                 line,
                 limit,

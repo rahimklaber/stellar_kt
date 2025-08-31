@@ -29,8 +29,8 @@ data class TimeSlicedSurveyStartCollectingMessage(
     companion object : XdrElementDecoder<TimeSlicedSurveyStartCollectingMessage> {
         override fun decode(stream: XdrInputStream): TimeSlicedSurveyStartCollectingMessage {
             val surveyorID = NodeID.decode(stream)
-            val nonce = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val ledgerNum = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val nonce = Uint32.decode(stream)
+            val ledgerNum = Uint32.decode(stream)
             return TimeSlicedSurveyStartCollectingMessage(
                 surveyorID,
                 nonce,

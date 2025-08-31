@@ -30,8 +30,8 @@ data class ContractCostParamEntry(
     companion object : XdrElementDecoder<ContractCostParamEntry> {
         override fun decode(stream: XdrInputStream): ContractCostParamEntry {
             val ext = ExtensionPoint.decode(stream)
-            val constTerm = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
-            val linearTerm = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val constTerm = Int64.decode(stream)
+            val linearTerm = Int64.decode(stream)
             return ContractCostParamEntry(
                 ext,
                 constTerm,

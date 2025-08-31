@@ -24,7 +24,8 @@ enum class SCPStatementType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<SCPStatementType> {
         override fun decode(stream: XdrInputStream): SCPStatementType {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> SCP_ST_PREPARE
                 1 -> SCP_ST_CONFIRM
                 2 -> SCP_ST_EXTERNALIZE

@@ -52,7 +52,8 @@ sealed class ClawbackResult(val type: ClawbackResultCode) : XdrElement {
 
     companion object : XdrElementDecoder<ClawbackResult> {
         override fun decode(stream: XdrInputStream): ClawbackResult {
-            return when (val type = ClawbackResultCode.decode(stream)) {
+            val type = ClawbackResultCode.decode(stream)
+            return when (type) {
                 ClawbackResultCode.CLAWBACK_SUCCESS -> ClawbackSuccess
                 ClawbackResultCode.CLAWBACK_MALFORMED -> ClawbackMalformed
                 ClawbackResultCode.CLAWBACK_NOT_CLAWBACK_ENABLED -> ClawbackNotClawbackEnabled

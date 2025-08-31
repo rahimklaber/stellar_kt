@@ -53,7 +53,7 @@ data class TransactionV0(
     companion object : XdrElementDecoder<TransactionV0> {
         override fun decode(stream: XdrInputStream): TransactionV0 {
             val sourceAccountEd25519 = Uint256.decode(stream)
-            val fee = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val fee = Uint32.decode(stream)
             val seqNum = SequenceNumber.decode(stream)
             val timeBoundsPresent = stream.readInt()
             val timeBounds = if (timeBoundsPresent != 0) {
@@ -96,7 +96,8 @@ data class TransactionV0(
 
         companion object : XdrElementDecoder<TransactionV0Ext> {
             override fun decode(stream: XdrInputStream): TransactionV0Ext {
-                return when (val type = Int.decode(stream)) {
+                val type = Int.decode(stream)
+                return when (type) {
                     0 -> TransactionV0ExtV0
                     else -> throw IllegalArgumentException("unknown type: $type")
                 }

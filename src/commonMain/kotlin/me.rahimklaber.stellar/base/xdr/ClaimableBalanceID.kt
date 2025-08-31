@@ -27,7 +27,8 @@ sealed class ClaimableBalanceID(val type: ClaimableBalanceIDType) : XdrElement {
 
     companion object : XdrElementDecoder<ClaimableBalanceID> {
         override fun decode(stream: XdrInputStream): ClaimableBalanceID {
-            return when (val type = ClaimableBalanceIDType.decode(stream)) {
+            val type = ClaimableBalanceIDType.decode(stream)
+            return when (type) {
                 ClaimableBalanceIDType.CLAIMABLE_BALANCE_ID_TYPE_V0 -> {
                     val v0 = Hash.decode(stream)
                     V0(v0)

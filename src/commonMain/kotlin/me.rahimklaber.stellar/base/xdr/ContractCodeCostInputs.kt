@@ -52,16 +52,16 @@ data class ContractCodeCostInputs(
     companion object : XdrElementDecoder<ContractCodeCostInputs> {
         override fun decode(stream: XdrInputStream): ContractCodeCostInputs {
             val ext = ExtensionPoint.decode(stream)
-            val nInstructions = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val nFunctions = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val nGlobals = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val nTableEntries = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val nTypes = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val nDataSegments = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val nElemSegments = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val nImports = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val nExports = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val nDataSegmentBytes = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val nInstructions = Uint32.decode(stream)
+            val nFunctions = Uint32.decode(stream)
+            val nGlobals = Uint32.decode(stream)
+            val nTableEntries = Uint32.decode(stream)
+            val nTypes = Uint32.decode(stream)
+            val nDataSegments = Uint32.decode(stream)
+            val nElemSegments = Uint32.decode(stream)
+            val nImports = Uint32.decode(stream)
+            val nExports = Uint32.decode(stream)
+            val nDataSegmentBytes = Uint32.decode(stream)
             return ContractCodeCostInputs(
                 ext,
                 nInstructions,

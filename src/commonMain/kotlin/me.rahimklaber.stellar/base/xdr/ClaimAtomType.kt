@@ -22,7 +22,8 @@ enum class ClaimAtomType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<ClaimAtomType> {
         override fun decode(stream: XdrInputStream): ClaimAtomType {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> CLAIM_ATOM_TYPE_V0
                 1 -> CLAIM_ATOM_TYPE_ORDER_BOOK
                 2 -> CLAIM_ATOM_TYPE_LIQUIDITY_POOL

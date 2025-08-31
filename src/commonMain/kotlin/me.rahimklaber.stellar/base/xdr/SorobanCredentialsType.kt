@@ -20,7 +20,8 @@ enum class SorobanCredentialsType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<SorobanCredentialsType> {
         override fun decode(stream: XdrInputStream): SorobanCredentialsType {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> SOROBAN_CREDENTIALS_SOURCE_ACCOUNT
                 1 -> SOROBAN_CREDENTIALS_ADDRESS
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)

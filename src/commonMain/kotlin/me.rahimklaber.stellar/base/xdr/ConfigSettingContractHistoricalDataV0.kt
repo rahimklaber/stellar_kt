@@ -23,7 +23,7 @@ value class ConfigSettingContractHistoricalDataV0(val feeHistorical1KB: Int64) :
 
     companion object : XdrElementDecoder<ConfigSettingContractHistoricalDataV0> {
         override fun decode(stream: XdrInputStream): ConfigSettingContractHistoricalDataV0 {
-            val feeHistorical1KB = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val feeHistorical1KB = Int64.decode(stream)
             return ConfigSettingContractHistoricalDataV0(
                 feeHistorical1KB,
             )

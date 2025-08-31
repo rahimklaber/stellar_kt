@@ -61,7 +61,8 @@ sealed class ClaimClaimableBalanceResult(val type: ClaimClaimableBalanceResultCo
 
     companion object : XdrElementDecoder<ClaimClaimableBalanceResult> {
         override fun decode(stream: XdrInputStream): ClaimClaimableBalanceResult {
-            return when (val type = ClaimClaimableBalanceResultCode.decode(stream)) {
+            val type = ClaimClaimableBalanceResultCode.decode(stream)
+            return when (type) {
                 ClaimClaimableBalanceResultCode.CLAIM_CLAIMABLE_BALANCE_SUCCESS -> ClaimClaimableBalanceSuccess
                 ClaimClaimableBalanceResultCode.CLAIM_CLAIMABLE_BALANCE_DOES_NOT_EXIST -> ClaimClaimableBalanceDoesNotExist
                 ClaimClaimableBalanceResultCode.CLAIM_CLAIMABLE_BALANCE_CANNOT_CLAIM -> ClaimClaimableBalanceCannotClaim

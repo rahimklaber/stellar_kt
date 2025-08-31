@@ -29,8 +29,8 @@ data class TimeSlicedSurveyStopCollectingMessage(
     companion object : XdrElementDecoder<TimeSlicedSurveyStopCollectingMessage> {
         override fun decode(stream: XdrInputStream): TimeSlicedSurveyStopCollectingMessage {
             val surveyorID = NodeID.decode(stream)
-            val nonce = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val ledgerNum = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val nonce = Uint32.decode(stream)
+            val ledgerNum = Uint32.decode(stream)
             return TimeSlicedSurveyStopCollectingMessage(
                 surveyorID,
                 nonce,

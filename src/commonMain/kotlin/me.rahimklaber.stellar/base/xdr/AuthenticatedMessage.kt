@@ -32,7 +32,8 @@ sealed class AuthenticatedMessage(val type: Uint32) : XdrElement {
 
     companion object : XdrElementDecoder<AuthenticatedMessage> {
         override fun decode(stream: XdrInputStream): AuthenticatedMessage {
-            return when (val type = Uint32.decode(stream)) {
+            val type = Uint32.decode(stream)
+            return when (type) {
                 0u -> {
                     val v0 = AuthenticatedMessageV0Anon.decode(stream)
                     AuthenticatedMessageV0(v0)
@@ -67,7 +68,7 @@ sealed class AuthenticatedMessage(val type: Uint32) : XdrElement {
 
         companion object : XdrElementDecoder<AuthenticatedMessageV0Anon> {
             override fun decode(stream: XdrInputStream): AuthenticatedMessageV0Anon {
-                val sequence = me.rahimklaber.stellar.base.xdr.Uint64.decode(stream)
+                val sequence = Uint64.decode(stream)
                 val message = StellarMessage.decode(stream)
                 val mac = HmacSha256Mac.decode(stream)
                 return AuthenticatedMessageV0Anon(

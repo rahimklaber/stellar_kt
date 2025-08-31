@@ -22,7 +22,8 @@ enum class ContractEventType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<ContractEventType> {
         override fun decode(stream: XdrInputStream): ContractEventType {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> SYSTEM
                 1 -> CONTRACT
                 2 -> DIAGNOSTIC

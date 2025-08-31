@@ -32,9 +32,9 @@ data class ConfigSettingContractBandwidthV0(
 
     companion object : XdrElementDecoder<ConfigSettingContractBandwidthV0> {
         override fun decode(stream: XdrInputStream): ConfigSettingContractBandwidthV0 {
-            val ledgerMaxTxsSizeBytes = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val txMaxSizeBytes = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
-            val feeTxSize1KB = me.rahimklaber.stellar.base.xdr.Int64.decode(stream)
+            val ledgerMaxTxsSizeBytes = Uint32.decode(stream)
+            val txMaxSizeBytes = Uint32.decode(stream)
+            val feeTxSize1KB = Int64.decode(stream)
             return ConfigSettingContractBandwidthV0(
                 ledgerMaxTxsSizeBytes,
                 txMaxSizeBytes,

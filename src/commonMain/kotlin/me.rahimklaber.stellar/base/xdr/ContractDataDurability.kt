@@ -19,7 +19,8 @@ enum class ContractDataDurability(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<ContractDataDurability> {
         override fun decode(stream: XdrInputStream): ContractDataDurability {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> TEMPORARY
                 1 -> PERSISTENT
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)

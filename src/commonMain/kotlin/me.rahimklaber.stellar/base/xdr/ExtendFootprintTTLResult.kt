@@ -47,7 +47,8 @@ sealed class ExtendFootprintTTLResult(val type: ExtendFootprintTTLResultCode) : 
 
     companion object : XdrElementDecoder<ExtendFootprintTTLResult> {
         override fun decode(stream: XdrInputStream): ExtendFootprintTTLResult {
-            return when (val type = ExtendFootprintTTLResultCode.decode(stream)) {
+            val type = ExtendFootprintTTLResultCode.decode(stream)
+            return when (type) {
                 ExtendFootprintTTLResultCode.EXTEND_FOOTPRINT_TTL_SUCCESS -> ExtendFootprintTtlSuccess
                 ExtendFootprintTTLResultCode.EXTEND_FOOTPRINT_TTL_MALFORMED -> ExtendFootprintTtlMalformed
                 ExtendFootprintTTLResultCode.EXTEND_FOOTPRINT_TTL_RESOURCE_LIMIT_EXCEEDED -> ExtendFootprintTtlResourceLimitExceeded

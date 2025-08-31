@@ -27,9 +27,9 @@ data class EvictionIterator(
 
     companion object : XdrElementDecoder<EvictionIterator> {
         override fun decode(stream: XdrInputStream): EvictionIterator {
-            val bucketListLevel = me.rahimklaber.stellar.base.xdr.Uint32.decode(stream)
+            val bucketListLevel = Uint32.decode(stream)
             val isCurrBucket = stream.readBoolean()
-            val bucketFileOffset = me.rahimklaber.stellar.base.xdr.Uint64.decode(stream)
+            val bucketFileOffset = Uint64.decode(stream)
             return EvictionIterator(
                 bucketListLevel,
                 isCurrBucket,

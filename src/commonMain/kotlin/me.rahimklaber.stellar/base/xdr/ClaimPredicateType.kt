@@ -28,7 +28,8 @@ enum class ClaimPredicateType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<ClaimPredicateType> {
         override fun decode(stream: XdrInputStream): ClaimPredicateType {
-            return when (val value = stream.readInt()) {
+            val value = stream.readInt()
+            return when (value) {
                 0 -> CLAIM_PREDICATE_UNCONDITIONAL
                 1 -> CLAIM_PREDICATE_AND
                 2 -> CLAIM_PREDICATE_OR

@@ -59,7 +59,8 @@ sealed class RevokeSponsorshipResult(val type: RevokeSponsorshipResultCode) : Xd
 
     companion object : XdrElementDecoder<RevokeSponsorshipResult> {
         override fun decode(stream: XdrInputStream): RevokeSponsorshipResult {
-            return when (val type = RevokeSponsorshipResultCode.decode(stream)) {
+            val type = RevokeSponsorshipResultCode.decode(stream)
+            return when (type) {
                 RevokeSponsorshipResultCode.REVOKE_SPONSORSHIP_SUCCESS -> RevokeSponsorshipSuccess
                 RevokeSponsorshipResultCode.REVOKE_SPONSORSHIP_DOES_NOT_EXIST -> RevokeSponsorshipDoesNotExist
                 RevokeSponsorshipResultCode.REVOKE_SPONSORSHIP_NOT_SPONSOR -> RevokeSponsorshipNotSponsor
