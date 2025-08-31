@@ -53,7 +53,7 @@ object StrKey
 fun StrKey.encodeToScAddress(address: String): SCAddress{
     return when(decodeVersionByte(address)){
         ACCOUNT_ID -> SCAddress.Account(encodeToAccountIDXDR(address))
-        CONTRACT -> SCAddress.Contract(Hash(decodeContractAddress(address)))
+        CONTRACT -> SCAddress.Contract(ContractID(Hash(decodeContractAddress(address))))
        else -> throw IllegalArgumentException("could not decode $address as ScAddress")
     }
 }
@@ -130,7 +130,7 @@ fun StrKey.encodeContract(hash: ByteArray): String{
 fun StrKey.encodeScAddress(address: SCAddress): String{
     return when(address){
         is SCAddress.Account -> encodeAccountId((address.accountId.value as PublicKey.Ed25519).ed25519.value)
-        is SCAddress.Contract -> encodeContract(address.contractId.value)
+        is SCAddress.Contract -> encodeContract(address.contractId.value.value)
         else -> TODO("implement new address types")
     }
 }

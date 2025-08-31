@@ -26,6 +26,10 @@ fun <T : XdrElement> XdrElementDecoder<T>.decoder(): (XdrInputStream) -> T = thi
 fun decodeULong(stream: XdrInputStream): ULong = stream.readLong().toULong()
 fun ULong.Companion.decoder(): (XdrInputStream) -> ULong = ::decodeULong
 
+fun decodeUInt(stream: XdrInputStream): UInt = stream.readInt().toUInt()
+fun UInt.Companion.decoder(): (XdrInputStream) -> UInt = ::decodeUInt
+
+
 fun decodeString(count: Int, stream: XdrInputStream): String {
     return stream.readBytes(count).decodeToString()
 }
@@ -36,6 +40,10 @@ fun <T : XdrElement> List<T>.encodeXdrElements(stream: XdrOutputStream) {
 
 fun List<ULong>.encodeXdrElementsULong(stream: XdrOutputStream) {
     forEach { stream.writeLong(it.toLong()) }
+}
+
+fun List<UInt>.encodeXdrElementsUInt(stream: XdrOutputStream) {
+    forEach { stream.writeInt(it.toInt()) }
 }
 
 fun XdrOutputStream.writeBoolean(value: Boolean) = if (value) writeInt(1) else writeInt(0)
