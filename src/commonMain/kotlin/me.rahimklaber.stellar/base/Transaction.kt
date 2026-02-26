@@ -94,6 +94,10 @@ data class Transaction(
     val signatures: List<DecoratedSignature>
         get() = _signatures
 
+    fun clearSignatures() {
+        _signatures.clear()
+    }
+
     fun toV1Xdr(): Transaction {
         val ext = if (sorobanData == null) {
             Transaction.TransactionExt.TransactionExtV0

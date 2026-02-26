@@ -144,6 +144,7 @@ data class GetLedgersResponse(
 
 interface SorobanClient {
     suspend fun getAccount(account: String): Account
+    suspend fun getAccounts(accounts: List<String>): List<Account>
     suspend fun getLatestLedger(): LatestLedgerResponse
     suspend fun simulateTransaction(txXdr: String): SimulateTransactionResponse
     suspend fun sendTransaction(txXdr: String): SendTransactionResponse
@@ -231,6 +232,18 @@ class SorobanClientImpl(
         val accountEntry = LedgerEntry.LedgerEntryData.fromXdrBase64(entries.entries.first().xdr) as LedgerEntry.LedgerEntryData.Account
 
         return Account(account, accountEntry.account.seqNum.value)
+
+    }
+
+    override suspend fun getAccounts(accounts: List<String>): List<Account> {
+        val entries = getLedgerEntries(
+            accounts.map { LedgerKey.Account(LedgerKey.LedgerKeyAccount(StrKey.encodeToAccountIDXDR(it))).toXdrBase64() }
+        )
+
+        return entries.entries.map {
+            val accountEntry = LedgerEntry.LedgerEntryData.fromXdrBase64(it.xdr) as LedgerEntry.LedgerEntryData.Account
+            Account(it.key, accountEntry.account.seqNum.value)
+        }
 
     }
 
