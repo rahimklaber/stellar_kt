@@ -1,6 +1,6 @@
 package me.rahimklaber.stellar.base
 
-import io.matthewnelson.encoding.builders.Base32Default
+import io.matthewnelson.encoding.base32.Base32
 import io.matthewnelson.encoding.core.Decoder.Companion.decodeToByteArray
 import io.matthewnelson.encoding.core.Encoder.Companion.encodeToCharArray
 import kotlinx.io.Buffer
@@ -42,10 +42,10 @@ private val b32Table by lazy {
     table
 }
 
-private val base32Encoding = Base32Default {
-    lineBreakInterval = 0
-    encodeToLowercase = false
-    padEncoded = false
+private val base32Encoding = Base32.Default.Builder {
+    lineBreak(0)
+    encodeLowercase(false)
+    padEncoded(false)
 }
 //doing it like this to add some context
 object StrKey

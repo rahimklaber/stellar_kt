@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
-    kotlin("multiplatform") version "2.1.10"
-    kotlin("plugin.serialization") version "2.1.10"
+    kotlin("multiplatform") version "2.3.10"
+    kotlin("plugin.serialization") version "2.3.10"
     `maven-publish`
     signing
 }
@@ -15,13 +15,13 @@ repositories {
     maven("https://jitpack.io")
     maven("https://repo.kotlin.link")
 }
-val ktor_version = "3.1.1"
-var encoding = "1.2.1"
-val coroutinesVersion = "1.10.1"
-val serializationVersion = "1.8.0"
+val ktor_version = "3.4.0"
+var encoding = "2.6.0"
+val coroutinesVersion = "1.10.2"
+val serializationVersion = "1.10.0"
 val datetimeVersion = "0.6.1"
-val cryptoVersion = "0.9.2"
-val kotlinxIoVersion = "0.7.0"
+val cryptoVersion = "0.9.5"
+val kotlinxIoVersion = "0.9.0"
 
 
 kotlin {
@@ -38,8 +38,6 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:$datetimeVersion")
-
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
 
                 implementation("io.ktor:ktor-client-core:$ktor_version")
@@ -50,8 +48,7 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-io-core:$kotlinxIoVersion")
 
                 implementation("com.ionspin.kotlin:multiplatform-crypto-libsodium-bindings:$cryptoVersion")
-                implementation("io.matthewnelson.kotlin-components:encoding-base32:$encoding")
-
+                implementation("io.matthewnelson.encoding:base32:${encoding}")
             }
         }
         val commonTest by getting {
