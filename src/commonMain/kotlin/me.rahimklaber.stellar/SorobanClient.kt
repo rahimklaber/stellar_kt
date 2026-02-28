@@ -100,7 +100,7 @@ data class JsonRpcError(
 )
 
 class JsonRpcException(val error: JsonRpcError) :
-    RuntimeException("RPC error ${'$'}{error.code}: ${'$'}{error.message}")
+    RuntimeException("RPC error ${error.code}: ${error.message}")
 
 class JsonRpcClient(
     val url: String,
