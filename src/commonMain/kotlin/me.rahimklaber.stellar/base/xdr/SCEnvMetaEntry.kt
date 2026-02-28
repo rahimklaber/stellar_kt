@@ -37,7 +37,6 @@ sealed class SCEnvMetaEntry(val type: SCEnvMetaKind) : XdrElement {
                     InterfaceVersion(interfaceVersion)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

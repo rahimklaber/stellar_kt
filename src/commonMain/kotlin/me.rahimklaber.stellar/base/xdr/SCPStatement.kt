@@ -172,7 +172,6 @@ data class SCPStatement(
                         ScpStNominate(nominate)
                     }
 
-                    else -> throw IllegalArgumentException("unknown type: $type")
                 }
             }
         }

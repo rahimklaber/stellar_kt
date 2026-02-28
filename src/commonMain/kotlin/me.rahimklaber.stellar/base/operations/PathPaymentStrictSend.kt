@@ -14,7 +14,7 @@ data class PathPaymentStrictSend(
     val destAsset: Asset,
     val destMin: TokenAmount,
     val path: List<Asset>
-): Operation {
+) : Operation {
     override fun toXdr(): me.rahimklaber.stellar.base.xdr.Operation {
         return me.rahimklaber.stellar.base.xdr.Operation(
             sourceAccount = sourceAccount?.let { StrKey.encodeToMuxedAccountXDR(it) },

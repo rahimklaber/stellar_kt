@@ -21,37 +21,43 @@ void;
  * ```
  */
 sealed class SetTrustLineFlagsResult(val type: SetTrustLineFlagsResultCode) : XdrElement {
-    data object SetTrustLineFlagsSuccess : SetTrustLineFlagsResult(SetTrustLineFlagsResultCode.SET_TRUST_LINE_FLAGS_SUCCESS) {
+    data object SetTrustLineFlagsSuccess :
+        SetTrustLineFlagsResult(SetTrustLineFlagsResultCode.SET_TRUST_LINE_FLAGS_SUCCESS) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object SetTrustLineFlagsMalformed : SetTrustLineFlagsResult(SetTrustLineFlagsResultCode.SET_TRUST_LINE_FLAGS_MALFORMED) {
+    data object SetTrustLineFlagsMalformed :
+        SetTrustLineFlagsResult(SetTrustLineFlagsResultCode.SET_TRUST_LINE_FLAGS_MALFORMED) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object SetTrustLineFlagsNoTrustLine : SetTrustLineFlagsResult(SetTrustLineFlagsResultCode.SET_TRUST_LINE_FLAGS_NO_TRUST_LINE) {
+    data object SetTrustLineFlagsNoTrustLine :
+        SetTrustLineFlagsResult(SetTrustLineFlagsResultCode.SET_TRUST_LINE_FLAGS_NO_TRUST_LINE) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object SetTrustLineFlagsCantRevoke : SetTrustLineFlagsResult(SetTrustLineFlagsResultCode.SET_TRUST_LINE_FLAGS_CANT_REVOKE) {
+    data object SetTrustLineFlagsCantRevoke :
+        SetTrustLineFlagsResult(SetTrustLineFlagsResultCode.SET_TRUST_LINE_FLAGS_CANT_REVOKE) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object SetTrustLineFlagsInvalidState : SetTrustLineFlagsResult(SetTrustLineFlagsResultCode.SET_TRUST_LINE_FLAGS_INVALID_STATE) {
+    data object SetTrustLineFlagsInvalidState :
+        SetTrustLineFlagsResult(SetTrustLineFlagsResultCode.SET_TRUST_LINE_FLAGS_INVALID_STATE) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object SetTrustLineFlagsLowReserve : SetTrustLineFlagsResult(SetTrustLineFlagsResultCode.SET_TRUST_LINE_FLAGS_LOW_RESERVE) {
+    data object SetTrustLineFlagsLowReserve :
+        SetTrustLineFlagsResult(SetTrustLineFlagsResultCode.SET_TRUST_LINE_FLAGS_LOW_RESERVE) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
@@ -67,7 +73,6 @@ sealed class SetTrustLineFlagsResult(val type: SetTrustLineFlagsResultCode) : Xd
                 SetTrustLineFlagsResultCode.SET_TRUST_LINE_FLAGS_CANT_REVOKE -> SetTrustLineFlagsCantRevoke
                 SetTrustLineFlagsResultCode.SET_TRUST_LINE_FLAGS_INVALID_STATE -> SetTrustLineFlagsInvalidState
                 SetTrustLineFlagsResultCode.SET_TRUST_LINE_FLAGS_LOW_RESERVE -> SetTrustLineFlagsLowReserve
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

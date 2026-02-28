@@ -289,7 +289,6 @@ sealed class SCSpecTypeDef(val type: SCSpecType) : XdrElement {
                     Udt(udt)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

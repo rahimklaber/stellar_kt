@@ -47,18 +47,19 @@ private val base32Encoding = Base32.Default.Builder {
     encodeLowercase(false)
     padEncoded(false)
 }
+
 //doing it like this to add some context
 object StrKey
 
-fun StrKey.encodeToScAddress(address: String): SCAddress{
-    return when(decodeVersionByte(address)){
+fun StrKey.encodeToScAddress(address: String): SCAddress {
+    return when (decodeVersionByte(address)) {
         ACCOUNT_ID -> SCAddress.Account(encodeToAccountIDXDR(address))
         CONTRACT -> SCAddress.Contract(ContractID(Hash(decodeContractAddress(address))))
-       else -> throw IllegalArgumentException("could not decode $address as ScAddress")
+        else -> throw IllegalArgumentException("could not decode $address as ScAddress")
     }
 }
 
-fun StrKey.encodeToAccountIDXDR(account: String) : AccountID {
+fun StrKey.encodeToAccountIDXDR(account: String): AccountID {
     return AccountID(PublicKey.Ed25519(decodeAccountId(account).toUint256()))
 }
 
@@ -82,7 +83,7 @@ fun StrKey.encodeMuxedAccount(account: MuxedAccount): String {
  */
 fun StrKey.encodeToMuxedAccountXDR(account: String): MuxedAccount {
 
-    return when(decodeVersionByte(account)){
+    return when (decodeVersionByte(account)) {
         ACCOUNT_ID -> MuxedAccount.KeyTypeEd25519(decodeAccountId(account).toUint256())
         MUXED -> {
             val stream = xdrStream()
@@ -99,23 +100,25 @@ fun StrKey.encodeToMuxedAccountXDR(account: String): MuxedAccount {
             )
             muxedAccount
         }
+
         else -> throw IllegalArgumentException("could not decode $account as MuxedAccountXDR")
 
     }
 }
-fun StrKey.decodeAccountId(account: String) : ByteArray{
+
+fun StrKey.decodeAccountId(account: String): ByteArray {
     return decodeCheck(ACCOUNT_ID, account.toCharArray())
 }
 
-fun StrKey.decodeMuxedAccountId(account: String) : ByteArray{
+fun StrKey.decodeMuxedAccountId(account: String): ByteArray {
     return decodeCheck(MUXED, account.toCharArray())
 }
 
-fun StrKey.decodeSecretSeed(secretSeed: String): ByteArray{
+fun StrKey.decodeSecretSeed(secretSeed: String): ByteArray {
     return decodeCheck(SEED, secretSeed.toCharArray())
 }
 
-fun StrKey.decodeContractAddress(address: String): ByteArray{
+fun StrKey.decodeContractAddress(address: String): ByteArray {
     return decodeCheck(CONTRACT, address.toCharArray())
 }
 
@@ -123,12 +126,12 @@ fun StrKey.encodeAccountId(pubkey: ByteArray): String {
     return encodeCheck(ACCOUNT_ID, pubkey)
 }
 
-fun StrKey.encodeContract(hash: ByteArray): String{
+fun StrKey.encodeContract(hash: ByteArray): String {
     return encodeCheck(CONTRACT, hash)
 }
 
-fun StrKey.encodeScAddress(address: SCAddress): String{
-    return when(address){
+fun StrKey.encodeScAddress(address: SCAddress): String {
+    return when (address) {
         is SCAddress.Account -> encodeAccountId((address.accountId.value as PublicKey.Ed25519).ed25519.value)
         is SCAddress.Contract -> encodeContract(address.contractId.value.value)
         else -> TODO("implement new address types")
@@ -188,19 +191,19 @@ fun StrKey.decodeCheck(versionByte: VersionByte, encoded: CharArray): ByteArray 
 }
 
 fun StrKey.encodeCheck(versionByte: VersionByte, data: ByteArray): String {
-        val outputStream = Buffer()
-        outputStream.writeByte(versionByte.getValue().toByte())
-        outputStream.write(data)
-        val payload: ByteArray = outputStream.readByteArray()
-        val checksum: ByteArray = calculateChecksum(payload)
-        outputStream.write(payload)
-        outputStream.write(checksum)
-        val unencoded: ByteArray = outputStream.readByteArray()
+    val outputStream = Buffer()
+    outputStream.writeByte(versionByte.getValue().toByte())
+    outputStream.write(data)
+    val payload: ByteArray = outputStream.readByteArray()
+    val checksum: ByteArray = calculateChecksum(payload)
+    outputStream.write(payload)
+    outputStream.write(checksum)
+    val unencoded: ByteArray = outputStream.readByteArray()
 //        if (VersionByte.SEED !== versionByte) {
-            return unencoded.encodeToCharArray(base32Encoding).concatToString()
+    return unencoded.encodeToCharArray(base32Encoding).concatToString()
 //            return base32Encoding.encode(unencoded).toCharArray()
 //        }
-                //todo
+    //todo
 //        // Why not use base32Encoding.encode here?
 //        // We don't want secret seed to be stored as String in memory because of security reasons. It's impossible
 //        // to erase it from memory when we want it to be erased (ASAP).

@@ -22,8 +22,7 @@ enum class InflationResultCode(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<InflationResultCode> {
         override fun decode(stream: XdrInputStream): InflationResultCode {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> INFLATION_SUCCESS
                 -1 -> INFLATION_NOT_TIME
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)

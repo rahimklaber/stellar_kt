@@ -56,7 +56,6 @@ sealed class BeginSponsoringFutureReservesResult(val type: BeginSponsoringFuture
                 BeginSponsoringFutureReservesResultCode.BEGIN_SPONSORING_FUTURE_RESERVES_MALFORMED -> BeginSponsoringFutureReservesMalformed
                 BeginSponsoringFutureReservesResultCode.BEGIN_SPONSORING_FUTURE_RESERVES_ALREADY_SPONSORED -> BeginSponsoringFutureReservesAlreadySponsored
                 BeginSponsoringFutureReservesResultCode.BEGIN_SPONSORING_FUTURE_RESERVES_RECURSIVE -> BeginSponsoringFutureReservesRecursive
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

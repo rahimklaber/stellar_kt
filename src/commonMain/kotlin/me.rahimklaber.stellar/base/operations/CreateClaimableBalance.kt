@@ -4,29 +4,33 @@ import me.rahimklaber.stellar.base.*
 import me.rahimklaber.stellar.base.xdr.ClaimPredicate
 import me.rahimklaber.stellar.base.xdr.CreateClaimableBalanceOp
 
-sealed interface Predicate{
-    fun toXdr() : ClaimPredicate
+sealed interface Predicate {
+    fun toXdr(): ClaimPredicate
+
     data object Unconditional : Predicate {
         override fun toXdr(): ClaimPredicate {
             return ClaimPredicate.Unconditional
         }
     }
 
-    data class Not(val predicate: Predicate) : Predicate{
+    data class Not(val predicate: Predicate) : Predicate {
         override fun toXdr(): ClaimPredicate {
             return ClaimPredicate.Not(predicate.toXdr())
         }
     }
-    data class And(val predicates: List<Predicate>) : Predicate{
+
+    data class And(val predicates: List<Predicate>) : Predicate {
         override fun toXdr(): ClaimPredicate {
             return ClaimPredicate.And(predicates.map(Predicate::toXdr))
         }
     }
-    data class Or(val predicates: List<Predicate>) : Predicate{
+
+    data class Or(val predicates: List<Predicate>) : Predicate {
         override fun toXdr(): ClaimPredicate {
             return ClaimPredicate.Or(predicates.map(Predicate::toXdr))
         }
     }
+
     data class AbsBefore(val epochSeconds: Long) : Predicate {
         override fun toXdr(): ClaimPredicate {
             return ClaimPredicate.BeforeAbsoluteTime(epochSeconds)
@@ -40,45 +44,54 @@ sealed interface Predicate{
     }
 
 }
-abstract class PredicateScope{
+
+abstract class PredicateScope {
     protected abstract fun addPredicate(predicate: Predicate)
-    fun unconditional(){
+    fun unconditional() {
         addPredicate(Predicate.Unconditional)
     }
-    fun and(block: BinaryPredicateScope.() -> Unit){
+
+    fun and(block: BinaryPredicateScope.() -> Unit) {
         addPredicate(PredicateDSl.predicateAnd(block))
     }
-    fun or(block: BinaryPredicateScope.() -> Unit){
+
+    fun or(block: BinaryPredicateScope.() -> Unit) {
         addPredicate(PredicateDSl.predicateOr(block))
     }
-    fun not(block: UnaryPredicateScope.() -> Unit){
+
+    fun not(block: UnaryPredicateScope.() -> Unit) {
         addPredicate(PredicateDSl.predicateNot(block))
     }
-    fun absBefore(epochSeconds: Long){
+
+    fun absBefore(epochSeconds: Long) {
         addPredicate(PredicateDSl.predicateAbsBefore(epochSeconds))
     }
-    fun relBefore(secondsSinceClose: Long){
+
+    fun relBefore(secondsSinceClose: Long) {
         addPredicate(PredicateDSl.predicateRelBefore(secondsSinceClose))
     }
 }
-class BinaryPredicateScope(internal val predicates : MutableList<Predicate> = mutableListOf()): PredicateScope(){
+
+class BinaryPredicateScope(internal val predicates: MutableList<Predicate> = mutableListOf()) : PredicateScope() {
 
     override fun addPredicate(predicate: Predicate) {
-        check(predicates.size < 2){"max amount of child predicates is 2"}
+        check(predicates.size < 2) { "max amount of child predicates is 2" }
         predicates.add(predicate)
     }
 
 }
-class UnaryPredicateScope(internal var predicate : Predicate? = null): PredicateScope() {
+
+class UnaryPredicateScope(internal var predicate: Predicate? = null) : PredicateScope() {
 
     override fun addPredicate(predicate: Predicate) {
-        check(this.predicate == null){"Not predicate can only have one child"}
+        check(this.predicate == null) { "Not predicate can only have one child" }
         this.predicate = predicate
     }
 
 }
 
 object PredicateDSl
+
 fun PredicateDSl.predicateNot(block: UnaryPredicateScope.() -> Unit): Predicate {
     val scope = UnaryPredicateScope()
     block(scope)
@@ -101,20 +114,21 @@ fun PredicateDSl.predicateUnconditional() = Predicate.Unconditional
 fun PredicateDSl.predicateRelBefore(secondsSinceClose: Long) = Predicate.RelBefore(secondsSinceClose)
 fun PredicateDSl.predicateAbsBefore(epochSeconds: Long) = Predicate.AbsBefore(epochSeconds)
 
-data class Claimant(val destination: String, val predicate: Predicate){
+data class Claimant(val destination: String, val predicate: Predicate) {
     fun toXdr(): me.rahimklaber.stellar.base.xdr.Claimant {
         return me.rahimklaber.stellar.base.xdr.Claimant.V0(
-           me.rahimklaber.stellar.base.xdr.Claimant.ClaimantV0Anon(
-               StrKey.encodeToAccountIDXDR(destination),
-               predicate.toXdr()
-           )
+            me.rahimklaber.stellar.base.xdr.Claimant.ClaimantV0Anon(
+                StrKey.encodeToAccountIDXDR(destination),
+                predicate.toXdr()
+            )
         )
     }
 }
+
 data class CreateClaimableBalance(
     override val sourceAccount: String? = null,
     val asset: Asset,
-    val amount : TokenAmount,
+    val amount: TokenAmount,
     val claimants: List<Claimant>
 
 ) : Operation {

@@ -21,37 +21,43 @@ void;
  * ```
  */
 sealed class RevokeSponsorshipResult(val type: RevokeSponsorshipResultCode) : XdrElement {
-    data object RevokeSponsorshipSuccess : RevokeSponsorshipResult(RevokeSponsorshipResultCode.REVOKE_SPONSORSHIP_SUCCESS) {
+    data object RevokeSponsorshipSuccess :
+        RevokeSponsorshipResult(RevokeSponsorshipResultCode.REVOKE_SPONSORSHIP_SUCCESS) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object RevokeSponsorshipDoesNotExist : RevokeSponsorshipResult(RevokeSponsorshipResultCode.REVOKE_SPONSORSHIP_DOES_NOT_EXIST) {
+    data object RevokeSponsorshipDoesNotExist :
+        RevokeSponsorshipResult(RevokeSponsorshipResultCode.REVOKE_SPONSORSHIP_DOES_NOT_EXIST) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object RevokeSponsorshipNotSponsor : RevokeSponsorshipResult(RevokeSponsorshipResultCode.REVOKE_SPONSORSHIP_NOT_SPONSOR) {
+    data object RevokeSponsorshipNotSponsor :
+        RevokeSponsorshipResult(RevokeSponsorshipResultCode.REVOKE_SPONSORSHIP_NOT_SPONSOR) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object RevokeSponsorshipLowReserve : RevokeSponsorshipResult(RevokeSponsorshipResultCode.REVOKE_SPONSORSHIP_LOW_RESERVE) {
+    data object RevokeSponsorshipLowReserve :
+        RevokeSponsorshipResult(RevokeSponsorshipResultCode.REVOKE_SPONSORSHIP_LOW_RESERVE) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object RevokeSponsorshipOnlyTransferable : RevokeSponsorshipResult(RevokeSponsorshipResultCode.REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE) {
+    data object RevokeSponsorshipOnlyTransferable :
+        RevokeSponsorshipResult(RevokeSponsorshipResultCode.REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object RevokeSponsorshipMalformed : RevokeSponsorshipResult(RevokeSponsorshipResultCode.REVOKE_SPONSORSHIP_MALFORMED) {
+    data object RevokeSponsorshipMalformed :
+        RevokeSponsorshipResult(RevokeSponsorshipResultCode.REVOKE_SPONSORSHIP_MALFORMED) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
@@ -67,7 +73,6 @@ sealed class RevokeSponsorshipResult(val type: RevokeSponsorshipResultCode) : Xd
                 RevokeSponsorshipResultCode.REVOKE_SPONSORSHIP_LOW_RESERVE -> RevokeSponsorshipLowReserve
                 RevokeSponsorshipResultCode.REVOKE_SPONSORSHIP_ONLY_TRANSFERABLE -> RevokeSponsorshipOnlyTransferable
                 RevokeSponsorshipResultCode.REVOKE_SPONSORSHIP_MALFORMED -> RevokeSponsorshipMalformed
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

@@ -34,7 +34,6 @@ sealed class SurveyResponseBody(val type: SurveyMessageResponseType) : XdrElemen
                     SurveyTopologyResponseV2(topologyResponseBodyV2)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

@@ -50,8 +50,7 @@ enum class ConfigSettingID(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<ConfigSettingID> {
         override fun decode(stream: XdrInputStream): ConfigSettingID {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> CONFIG_SETTING_CONTRACT_MAX_SIZE_BYTES
                 1 -> CONFIG_SETTING_CONTRACT_COMPUTE_V0
                 2 -> CONFIG_SETTING_CONTRACT_LEDGER_COST_V0

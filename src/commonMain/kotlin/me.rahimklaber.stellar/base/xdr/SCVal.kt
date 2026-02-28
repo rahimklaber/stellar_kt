@@ -408,7 +408,6 @@ sealed class SCVal(val type: SCValType) : XdrElement {
                     LedgerKeyNonce(nonce_key)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

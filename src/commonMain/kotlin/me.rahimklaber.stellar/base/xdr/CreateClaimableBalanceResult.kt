@@ -32,7 +32,8 @@ sealed class CreateClaimableBalanceResult(val type: CreateClaimableBalanceResult
         }
     }
 
-    data object CreateClaimableBalanceMalformed : CreateClaimableBalanceResult(CreateClaimableBalanceResultCode.CREATE_CLAIMABLE_BALANCE_MALFORMED) {
+    data object CreateClaimableBalanceMalformed :
+        CreateClaimableBalanceResult(CreateClaimableBalanceResultCode.CREATE_CLAIMABLE_BALANCE_MALFORMED) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
@@ -45,7 +46,8 @@ sealed class CreateClaimableBalanceResult(val type: CreateClaimableBalanceResult
         }
     }
 
-    data object CreateClaimableBalanceNoTrust : CreateClaimableBalanceResult(CreateClaimableBalanceResultCode.CREATE_CLAIMABLE_BALANCE_NO_TRUST) {
+    data object CreateClaimableBalanceNoTrust :
+        CreateClaimableBalanceResult(CreateClaimableBalanceResultCode.CREATE_CLAIMABLE_BALANCE_NO_TRUST) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
@@ -79,7 +81,6 @@ sealed class CreateClaimableBalanceResult(val type: CreateClaimableBalanceResult
                 CreateClaimableBalanceResultCode.CREATE_CLAIMABLE_BALANCE_NO_TRUST -> CreateClaimableBalanceNoTrust
                 CreateClaimableBalanceResultCode.CREATE_CLAIMABLE_BALANCE_NOT_AUTHORIZED -> CreateClaimableBalanceNotAuthorized
                 CreateClaimableBalanceResultCode.CREATE_CLAIMABLE_BALANCE_UNDERFUNDED -> CreateClaimableBalanceUnderfunded
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

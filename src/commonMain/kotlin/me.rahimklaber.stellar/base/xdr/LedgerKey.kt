@@ -228,7 +228,6 @@ sealed class LedgerKey(val type: LedgerEntryType) : XdrElement {
                     Ttl(ttl)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

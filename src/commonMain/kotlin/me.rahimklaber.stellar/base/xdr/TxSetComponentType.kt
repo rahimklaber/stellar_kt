@@ -20,8 +20,7 @@ enum class TxSetComponentType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<TxSetComponentType> {
         override fun decode(stream: XdrInputStream): TxSetComponentType {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> TXSET_COMP_TXS_MAYBE_DISCOUNTED_FEE
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)
             }

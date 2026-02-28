@@ -85,8 +85,7 @@ data class SorobanTransactionData(
 
         companion object : XdrElementDecoder<SorobanTransactionDataExt> {
             override fun decode(stream: XdrInputStream): SorobanTransactionDataExt {
-                val type = Int.decode(stream)
-                return when (type) {
+                return when (val type = Int.decode(stream)) {
                     0 -> SorobanTransactionDataExtV0
                     1 -> {
                         val resourceExt = SorobanResourcesExtV0.decode(stream)

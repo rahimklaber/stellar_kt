@@ -31,8 +31,7 @@ enum class InvokeHostFunctionResultCode(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<InvokeHostFunctionResultCode> {
         override fun decode(stream: XdrInputStream): InvokeHostFunctionResultCode {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> INVOKE_HOST_FUNCTION_SUCCESS
                 -1 -> INVOKE_HOST_FUNCTION_MALFORMED
                 -2 -> INVOKE_HOST_FUNCTION_TRAPPED

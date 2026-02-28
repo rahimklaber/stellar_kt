@@ -153,8 +153,7 @@ data class LedgerHeader(
 
         companion object : XdrElementDecoder<LedgerHeaderExt> {
             override fun decode(stream: XdrInputStream): LedgerHeaderExt {
-                val type = Int.decode(stream)
-                return when (type) {
+                return when (val type = Int.decode(stream)) {
                     0 -> LedgerHeaderExtV0
                     1 -> {
                         val v1 = LedgerHeaderExtensionV1.decode(stream)

@@ -35,7 +35,6 @@ sealed class BumpSequenceResult(val type: BumpSequenceResultCode) : XdrElement {
             return when (type) {
                 BumpSequenceResultCode.BUMP_SEQUENCE_SUCCESS -> BumpSequenceSuccess
                 BumpSequenceResultCode.BUMP_SEQUENCE_BAD_SEQ -> BumpSequenceBadSeq
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

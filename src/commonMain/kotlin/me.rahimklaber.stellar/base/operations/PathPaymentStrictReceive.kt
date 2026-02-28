@@ -1,6 +1,9 @@
 package me.rahimklaber.stellar.base.operations
 
-import me.rahimklaber.stellar.base.*
+import me.rahimklaber.stellar.base.Asset
+import me.rahimklaber.stellar.base.StrKey
+import me.rahimklaber.stellar.base.TokenAmount
+import me.rahimklaber.stellar.base.encodeToMuxedAccountXDR
 import me.rahimklaber.stellar.base.xdr.PathPaymentStrictReceiveOp
 
 data class PathPaymentStrictReceive(
@@ -11,7 +14,7 @@ data class PathPaymentStrictReceive(
     val destAmount: TokenAmount,
     val path: List<Asset> = emptyList(),
     override val sourceAccount: String? = null,
-): Operation{
+) : Operation {
     override fun toXdr(): me.rahimklaber.stellar.base.xdr.Operation {
         return me.rahimklaber.stellar.base.xdr.Operation(
             sourceAccount = sourceAccount?.let { StrKey.encodeToMuxedAccountXDR(it) },

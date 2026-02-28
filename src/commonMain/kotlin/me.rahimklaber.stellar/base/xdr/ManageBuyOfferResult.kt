@@ -44,25 +44,29 @@ sealed class ManageBuyOfferResult(val type: ManageBuyOfferResultCode) : XdrEleme
         }
     }
 
-    data object ManageBuyOfferSellNoTrust : ManageBuyOfferResult(ManageBuyOfferResultCode.MANAGE_BUY_OFFER_SELL_NO_TRUST) {
+    data object ManageBuyOfferSellNoTrust :
+        ManageBuyOfferResult(ManageBuyOfferResultCode.MANAGE_BUY_OFFER_SELL_NO_TRUST) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object ManageBuyOfferBuyNoTrust : ManageBuyOfferResult(ManageBuyOfferResultCode.MANAGE_BUY_OFFER_BUY_NO_TRUST) {
+    data object ManageBuyOfferBuyNoTrust :
+        ManageBuyOfferResult(ManageBuyOfferResultCode.MANAGE_BUY_OFFER_BUY_NO_TRUST) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object ManageBuyOfferSellNotAuthorized : ManageBuyOfferResult(ManageBuyOfferResultCode.MANAGE_BUY_OFFER_SELL_NOT_AUTHORIZED) {
+    data object ManageBuyOfferSellNotAuthorized :
+        ManageBuyOfferResult(ManageBuyOfferResultCode.MANAGE_BUY_OFFER_SELL_NOT_AUTHORIZED) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object ManageBuyOfferBuyNotAuthorized : ManageBuyOfferResult(ManageBuyOfferResultCode.MANAGE_BUY_OFFER_BUY_NOT_AUTHORIZED) {
+    data object ManageBuyOfferBuyNotAuthorized :
+        ManageBuyOfferResult(ManageBuyOfferResultCode.MANAGE_BUY_OFFER_BUY_NOT_AUTHORIZED) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
@@ -74,7 +78,8 @@ sealed class ManageBuyOfferResult(val type: ManageBuyOfferResultCode) : XdrEleme
         }
     }
 
-    data object ManageBuyOfferUnderfunded : ManageBuyOfferResult(ManageBuyOfferResultCode.MANAGE_BUY_OFFER_UNDERFUNDED) {
+    data object ManageBuyOfferUnderfunded :
+        ManageBuyOfferResult(ManageBuyOfferResultCode.MANAGE_BUY_OFFER_UNDERFUNDED) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
@@ -86,13 +91,15 @@ sealed class ManageBuyOfferResult(val type: ManageBuyOfferResultCode) : XdrEleme
         }
     }
 
-    data object ManageBuyOfferSellNoIssuer : ManageBuyOfferResult(ManageBuyOfferResultCode.MANAGE_BUY_OFFER_SELL_NO_ISSUER) {
+    data object ManageBuyOfferSellNoIssuer :
+        ManageBuyOfferResult(ManageBuyOfferResultCode.MANAGE_BUY_OFFER_SELL_NO_ISSUER) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object ManageBuyOfferBuyNoIssuer : ManageBuyOfferResult(ManageBuyOfferResultCode.MANAGE_BUY_OFFER_BUY_NO_ISSUER) {
+    data object ManageBuyOfferBuyNoIssuer :
+        ManageBuyOfferResult(ManageBuyOfferResultCode.MANAGE_BUY_OFFER_BUY_NO_ISSUER) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
@@ -131,7 +138,6 @@ sealed class ManageBuyOfferResult(val type: ManageBuyOfferResultCode) : XdrEleme
                 ManageBuyOfferResultCode.MANAGE_BUY_OFFER_BUY_NO_ISSUER -> ManageBuyOfferBuyNoIssuer
                 ManageBuyOfferResultCode.MANAGE_BUY_OFFER_NOT_FOUND -> ManageBuyOfferNotFound
                 ManageBuyOfferResultCode.MANAGE_BUY_OFFER_LOW_RESERVE -> ManageBuyOfferLowReserve
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

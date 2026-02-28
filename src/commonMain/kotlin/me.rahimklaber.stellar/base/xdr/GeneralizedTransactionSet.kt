@@ -28,8 +28,7 @@ sealed class GeneralizedTransactionSet(val type: Int) : XdrElement {
 
     companion object : XdrElementDecoder<GeneralizedTransactionSet> {
         override fun decode(stream: XdrInputStream): GeneralizedTransactionSet {
-            val type = Int.decode(stream)
-            return when (type) {
+            return when (val type = Int.decode(stream)) {
                 1 -> {
                     val v1TxSet = TransactionSetV1.decode(stream)
                     GeneralizedTransactionSetV1(v1TxSet)

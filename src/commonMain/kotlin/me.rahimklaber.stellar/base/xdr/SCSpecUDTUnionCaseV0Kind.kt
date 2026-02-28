@@ -20,8 +20,7 @@ enum class SCSpecUDTUnionCaseV0Kind(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<SCSpecUDTUnionCaseV0Kind> {
         override fun decode(stream: XdrInputStream): SCSpecUDTUnionCaseV0Kind {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> SC_SPEC_UDT_UNION_CASE_VOID_V0
                 1 -> SC_SPEC_UDT_UNION_CASE_TUPLE_V0
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)

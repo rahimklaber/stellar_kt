@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @SerialName("bump_sequence")
-data class BumpSequenceResponse (
+data class BumpSequenceResponse(
     override val id: String, //long?
     @SerialName("paging_token") override val pagingToken: String,
     @SerialName("transaction_hash") override val transactionHash: String,
@@ -14,6 +14,6 @@ data class BumpSequenceResponse (
     @SerialName("created_at") override val createdAt: String,
     @SerialName("type_i") override val typeI: Int,
     @SerialName("type") override val type: String,
-    @SerialName("bump_to") val bumpTo : String,
+    @SerialName("bump_to") val bumpTo: String,
     @SerialName("_links") override val links: Links
 ) : OperationResponse

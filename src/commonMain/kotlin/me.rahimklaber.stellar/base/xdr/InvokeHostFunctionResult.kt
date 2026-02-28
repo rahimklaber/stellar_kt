@@ -31,13 +31,15 @@ sealed class InvokeHostFunctionResult(val type: InvokeHostFunctionResultCode) : 
         }
     }
 
-    data object InvokeHostFunctionMalformed : InvokeHostFunctionResult(InvokeHostFunctionResultCode.INVOKE_HOST_FUNCTION_MALFORMED) {
+    data object InvokeHostFunctionMalformed :
+        InvokeHostFunctionResult(InvokeHostFunctionResultCode.INVOKE_HOST_FUNCTION_MALFORMED) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object InvokeHostFunctionTrapped : InvokeHostFunctionResult(InvokeHostFunctionResultCode.INVOKE_HOST_FUNCTION_TRAPPED) {
+    data object InvokeHostFunctionTrapped :
+        InvokeHostFunctionResult(InvokeHostFunctionResultCode.INVOKE_HOST_FUNCTION_TRAPPED) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
@@ -50,7 +52,8 @@ sealed class InvokeHostFunctionResult(val type: InvokeHostFunctionResultCode) : 
         }
     }
 
-    data object InvokeHostFunctionEntryArchived : InvokeHostFunctionResult(InvokeHostFunctionResultCode.INVOKE_HOST_FUNCTION_ENTRY_ARCHIVED) {
+    data object InvokeHostFunctionEntryArchived :
+        InvokeHostFunctionResult(InvokeHostFunctionResultCode.INVOKE_HOST_FUNCTION_ENTRY_ARCHIVED) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
@@ -77,7 +80,6 @@ sealed class InvokeHostFunctionResult(val type: InvokeHostFunctionResultCode) : 
                 InvokeHostFunctionResultCode.INVOKE_HOST_FUNCTION_RESOURCE_LIMIT_EXCEEDED -> InvokeHostFunctionResourceLimitExceeded
                 InvokeHostFunctionResultCode.INVOKE_HOST_FUNCTION_ENTRY_ARCHIVED -> InvokeHostFunctionEntryArchived
                 InvokeHostFunctionResultCode.INVOKE_HOST_FUNCTION_INSUFFICIENT_REFUNDABLE_FEE -> InvokeHostFunctionInsufficientRefundableFee
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

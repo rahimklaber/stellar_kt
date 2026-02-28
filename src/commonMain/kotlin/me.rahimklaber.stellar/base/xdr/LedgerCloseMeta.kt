@@ -51,8 +51,7 @@ sealed class LedgerCloseMeta(val type: Int) : XdrElement {
 
     companion object : XdrElementDecoder<LedgerCloseMeta> {
         override fun decode(stream: XdrInputStream): LedgerCloseMeta {
-            val type = Int.decode(stream)
-            return when (type) {
+            return when (val type = Int.decode(stream)) {
                 0 -> {
                     val v0 = me.rahimklaber.stellar.base.xdr.LedgerCloseMetaV0.decode(stream)
                     LedgerCloseMetaV0(v0)

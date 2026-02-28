@@ -31,7 +31,8 @@ data class TransactionV0Envelope(
         override fun decode(stream: XdrInputStream): TransactionV0Envelope {
             val tx = TransactionV0.decode(stream)
             val signaturesSize = stream.readInt()
-            val signatures: List<DecoratedSignature> = decodeXdrElementsList(signaturesSize, stream, DecoratedSignature.decoder())
+            val signatures: List<DecoratedSignature> =
+                decodeXdrElementsList(signaturesSize, stream, DecoratedSignature.decoder())
             return TransactionV0Envelope(
                 tx,
                 signatures,

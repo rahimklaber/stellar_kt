@@ -6,9 +6,9 @@ sealed interface Operation {
     val sourceAccount: String?
     fun toXdr(): Operation
 
-    companion object{
+    companion object {
         fun fromXdr(xdr: Operation): me.rahimklaber.stellar.base.operations.Operation {
-            return when(xdr.body){
+            return when (xdr.body) {
                 is Operation.OperationBody.InvokeHostFunction -> InvokeHostFunction.fromXdr(xdr)
                 else -> TODO()
             }

@@ -59,8 +59,7 @@ data class LedgerHeaderExtensionV1(
 
         companion object : XdrElementDecoder<LedgerHeaderExtensionV1Ext> {
             override fun decode(stream: XdrInputStream): LedgerHeaderExtensionV1Ext {
-                val type = Int.decode(stream)
-                return when (type) {
+                return when (val type = Int.decode(stream)) {
                     0 -> LedgerHeaderExtensionV1ExtV0
                     else -> throw IllegalArgumentException("unknown type: $type")
                 }

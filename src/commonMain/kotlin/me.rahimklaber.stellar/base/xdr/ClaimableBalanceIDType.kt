@@ -18,8 +18,7 @@ enum class ClaimableBalanceIDType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<ClaimableBalanceIDType> {
         override fun decode(stream: XdrInputStream): ClaimableBalanceIDType {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> CLAIMABLE_BALANCE_ID_TYPE_V0
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)
             }

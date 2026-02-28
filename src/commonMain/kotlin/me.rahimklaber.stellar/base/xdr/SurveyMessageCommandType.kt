@@ -18,8 +18,7 @@ enum class SurveyMessageCommandType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<SurveyMessageCommandType> {
         override fun decode(stream: XdrInputStream): SurveyMessageCommandType {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 1 -> TIME_SLICED_SURVEY_TOPOLOGY
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)
             }

@@ -9,9 +9,6 @@ import io.ktor.utils.io.*
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.json.Json
 import me.rahimklaber.stellar.base.Asset
-import kotlin.collections.component1
-import kotlin.collections.component2
-import kotlin.collections.set
 
 
 /**
@@ -72,12 +69,12 @@ abstract class RequestBuilder<T : Response>(
 
         while (true) {
             bodyChannel.awaitContent()
-            val line = bodyChannel.readUTF8Line() ?: error("expected a line")
+            val line = bodyChannel.readLine() ?: error("expected a line")
 
             when {
                 line.startsWith("event") -> {
                     if (line.startsWith("event: close")) {
-                        cursor(latestCursor.toString())
+                        cursor(latestCursor)
                         bodyChannel = accessxclient.get(accessxbuildUrl()) {
                             header("Accept", ContentType.Text.EventStream)
 

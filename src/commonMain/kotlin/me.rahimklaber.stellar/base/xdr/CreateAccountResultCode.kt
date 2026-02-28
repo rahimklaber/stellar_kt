@@ -30,8 +30,7 @@ enum class CreateAccountResultCode(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<CreateAccountResultCode> {
         override fun decode(stream: XdrInputStream): CreateAccountResultCode {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> CREATE_ACCOUNT_SUCCESS
                 -1 -> CREATE_ACCOUNT_MALFORMED
                 -2 -> CREATE_ACCOUNT_UNDERFUNDED

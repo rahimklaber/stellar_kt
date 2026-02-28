@@ -34,7 +34,6 @@ sealed class PublicKey(val type: PublicKeyType) : XdrElement {
                     Ed25519(ed25519)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

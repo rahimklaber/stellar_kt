@@ -21,31 +21,36 @@ void;
  * ```
  */
 sealed class LiquidityPoolWithdrawResult(val type: LiquidityPoolWithdrawResultCode) : XdrElement {
-    data object LiquidityPoolWithdrawSuccess : LiquidityPoolWithdrawResult(LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_SUCCESS) {
+    data object LiquidityPoolWithdrawSuccess :
+        LiquidityPoolWithdrawResult(LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_SUCCESS) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object LiquidityPoolWithdrawMalformed : LiquidityPoolWithdrawResult(LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_MALFORMED) {
+    data object LiquidityPoolWithdrawMalformed :
+        LiquidityPoolWithdrawResult(LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_MALFORMED) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object LiquidityPoolWithdrawNoTrust : LiquidityPoolWithdrawResult(LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_NO_TRUST) {
+    data object LiquidityPoolWithdrawNoTrust :
+        LiquidityPoolWithdrawResult(LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_NO_TRUST) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object LiquidityPoolWithdrawUnderfunded : LiquidityPoolWithdrawResult(LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED) {
+    data object LiquidityPoolWithdrawUnderfunded :
+        LiquidityPoolWithdrawResult(LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object LiquidityPoolWithdrawLineFull : LiquidityPoolWithdrawResult(LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_LINE_FULL) {
+    data object LiquidityPoolWithdrawLineFull :
+        LiquidityPoolWithdrawResult(LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_LINE_FULL) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
@@ -60,8 +65,7 @@ sealed class LiquidityPoolWithdrawResult(val type: LiquidityPoolWithdrawResultCo
 
     companion object : XdrElementDecoder<LiquidityPoolWithdrawResult> {
         override fun decode(stream: XdrInputStream): LiquidityPoolWithdrawResult {
-            val type = LiquidityPoolWithdrawResultCode.decode(stream)
-            return when (type) {
+            return when (val type = LiquidityPoolWithdrawResultCode.decode(stream)) {
                 LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_SUCCESS -> LiquidityPoolWithdrawSuccess
                 LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_MALFORMED -> LiquidityPoolWithdrawMalformed
                 LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_NO_TRUST -> LiquidityPoolWithdrawNoTrust

@@ -22,8 +22,7 @@ enum class BumpSequenceResultCode(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<BumpSequenceResultCode> {
         override fun decode(stream: XdrInputStream): BumpSequenceResultCode {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> BUMP_SEQUENCE_SUCCESS
                 -1 -> BUMP_SEQUENCE_BAD_SEQ
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)

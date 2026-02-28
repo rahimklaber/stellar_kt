@@ -11,7 +11,10 @@ import kotlinx.serialization.json.*
 import me.rahimklaber.stellar.base.Account
 import me.rahimklaber.stellar.base.StrKey
 import me.rahimklaber.stellar.base.encodeToAccountIDXDR
-import me.rahimklaber.stellar.base.xdr.*
+import me.rahimklaber.stellar.base.xdr.LedgerEntry
+import me.rahimklaber.stellar.base.xdr.LedgerKey
+import me.rahimklaber.stellar.base.xdr.fromXdrBase64
+import me.rahimklaber.stellar.base.xdr.toXdrBase64
 
 val json = Json {
     ignoreUnknownKeys = true
@@ -35,7 +38,7 @@ data class GetEventRequest(
     val filters: List<EventFilter>,
     val startLedger: Int? = null,
     val pagination: Pagination? = null
-){
+) {
 
 
     @Serializable
@@ -83,7 +86,8 @@ data class JsonRpcError(
     val data: JsonElement? = null,
 )
 
-class JsonRpcException(val error: JsonRpcError) : RuntimeException("RPC error ${'$'}{error.code}: ${'$'}{error.message}")
+class JsonRpcException(val error: JsonRpcError) :
+    RuntimeException("RPC error ${'$'}{error.code}: ${'$'}{error.message}")
 
 class JsonRpcClient(
     val url: String,
@@ -98,7 +102,7 @@ class JsonRpcClient(
 ) {
 
     private fun jsonFromReq(req: JsonRpcRequest): JsonObject {
-        val map: MutableMap<String,JsonElement> =
+        val map: MutableMap<String, JsonElement> =
             mutableMapOf(
                 "jsonrpc" to JsonPrimitive("2.0"),
                 "id" to JsonPrimitive(req.id),
@@ -242,7 +246,7 @@ data class GetTransactionResponse(
     val ledger: Int? = null,
     val createdAt: String? = null,
     val applicationOrder: Int? = null,
-    val feeBump:Boolean? = null,
+    val feeBump: Boolean? = null,
     val envelopeXdr: String? = null,
     val resultXdr: String? = null,
     val resultMetaXdr: String? = null
@@ -302,9 +306,10 @@ class SorobanClientImpl(
             )
         )
 
-        require(entries.entries.size == 1){"Account not found"}
+        require(entries.entries.size == 1) { "Account not found" }
 
-        val accountEntry = LedgerEntry.LedgerEntryData.fromXdrBase64(entries.entries.first().xdr) as LedgerEntry.LedgerEntryData.Account
+        val accountEntry =
+            LedgerEntry.LedgerEntryData.fromXdrBase64(entries.entries.first().xdr) as LedgerEntry.LedgerEntryData.Account
 
         return Account(account, accountEntry.account.seqNum.value)
 
@@ -312,7 +317,9 @@ class SorobanClientImpl(
 
     override suspend fun getAccounts(accounts: List<String>): List<Account> {
         val entries = getLedgerEntries(
-            accounts.map { LedgerKey.Account(LedgerKey.LedgerKeyAccount(StrKey.encodeToAccountIDXDR(it))).toXdrBase64() }
+            accounts.map {
+                LedgerKey.Account(LedgerKey.LedgerKeyAccount(StrKey.encodeToAccountIDXDR(it))).toXdrBase64()
+            }
         )
 
         return entries.entries.map {

@@ -46,7 +46,8 @@ data class SCSpecUDTStructV0(
             val nameSize = stream.readInt()
             val name = decodeString(nameSize, stream)
             val fieldsSize = stream.readInt()
-            val fields: List<SCSpecUDTStructFieldV0> = decodeXdrElementsList(fieldsSize, stream, SCSpecUDTStructFieldV0.decoder())
+            val fields: List<SCSpecUDTStructFieldV0> =
+                decodeXdrElementsList(fieldsSize, stream, SCSpecUDTStructFieldV0.decoder())
             return SCSpecUDTStructV0(
                 doc,
                 lib,

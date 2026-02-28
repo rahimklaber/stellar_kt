@@ -170,7 +170,6 @@ sealed class SCError(val type: SCErrorType) : XdrElement {
                     Auth(code)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

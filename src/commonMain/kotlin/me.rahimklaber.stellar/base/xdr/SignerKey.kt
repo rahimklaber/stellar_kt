@@ -93,7 +93,6 @@ sealed class SignerKey(val type: SignerKeyType) : XdrElement {
                     Ed25519SignedPayload(ed25519SignedPayload)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

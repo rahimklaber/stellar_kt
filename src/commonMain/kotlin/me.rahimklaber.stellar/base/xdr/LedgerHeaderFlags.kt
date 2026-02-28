@@ -22,8 +22,7 @@ enum class LedgerHeaderFlags(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<LedgerHeaderFlags> {
         override fun decode(stream: XdrInputStream): LedgerHeaderFlags {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 1 -> DISABLE_LIQUIDITY_POOL_TRADING_FLAG
                 2 -> DISABLE_LIQUIDITY_POOL_DEPOSIT_FLAG
                 4 -> DISABLE_LIQUIDITY_POOL_WITHDRAWAL_FLAG

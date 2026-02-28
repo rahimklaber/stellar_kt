@@ -32,8 +32,7 @@ sealed class AuthenticatedMessage(val type: Uint32) : XdrElement {
 
     companion object : XdrElementDecoder<AuthenticatedMessage> {
         override fun decode(stream: XdrInputStream): AuthenticatedMessage {
-            val type = Uint32.decode(stream)
-            return when (type) {
+            return when (val type = Uint32.decode(stream)) {
                 0u -> {
                     val v0 = AuthenticatedMessageV0Anon.decode(stream)
                     AuthenticatedMessageV0(v0)

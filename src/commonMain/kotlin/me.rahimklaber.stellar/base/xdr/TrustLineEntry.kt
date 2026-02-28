@@ -120,8 +120,7 @@ data class TrustLineEntry(
 
         companion object : XdrElementDecoder<TrustLineEntryExt> {
             override fun decode(stream: XdrInputStream): TrustLineEntryExt {
-                val type = Int.decode(stream)
-                return when (type) {
+                return when (val type = Int.decode(stream)) {
                     0 -> TrustLineEntryExtV0
                     1 -> {
                         val v1 = TrustLineEntryV1Anon.decode(stream)
@@ -202,8 +201,7 @@ data class TrustLineEntry(
 
                 companion object : XdrElementDecoder<TrustLineEntryV1AnonExt> {
                     override fun decode(stream: XdrInputStream): TrustLineEntryV1AnonExt {
-                        val type = Int.decode(stream)
-                        return when (type) {
+                        return when (val type = Int.decode(stream)) {
                             0 -> TrustLineEntryV1AnonExtV0
                             2 -> {
                                 val v2 = TrustLineEntryExtensionV2.decode(stream)

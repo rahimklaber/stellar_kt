@@ -54,8 +54,7 @@ enum class PathPaymentStrictReceiveResultCode(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<PathPaymentStrictReceiveResultCode> {
         override fun decode(stream: XdrInputStream): PathPaymentStrictReceiveResultCode {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> PATH_PAYMENT_STRICT_RECEIVE_SUCCESS
                 -1 -> PATH_PAYMENT_STRICT_RECEIVE_MALFORMED
                 -2 -> PATH_PAYMENT_STRICT_RECEIVE_UNDERFUNDED

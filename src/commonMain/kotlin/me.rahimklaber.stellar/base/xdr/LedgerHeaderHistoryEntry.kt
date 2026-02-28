@@ -65,8 +65,7 @@ data class LedgerHeaderHistoryEntry(
 
         companion object : XdrElementDecoder<LedgerHeaderHistoryEntryExt> {
             override fun decode(stream: XdrInputStream): LedgerHeaderHistoryEntryExt {
-                val type = Int.decode(stream)
-                return when (type) {
+                return when (val type = Int.decode(stream)) {
                     0 -> LedgerHeaderHistoryEntryExtV0
                     else -> throw IllegalArgumentException("unknown type: $type")
                 }

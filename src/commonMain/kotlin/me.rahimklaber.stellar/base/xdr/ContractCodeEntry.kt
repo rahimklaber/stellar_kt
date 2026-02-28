@@ -87,8 +87,7 @@ data class ContractCodeEntry(
 
         companion object : XdrElementDecoder<ContractCodeEntryExt> {
             override fun decode(stream: XdrInputStream): ContractCodeEntryExt {
-                val type = Int.decode(stream)
-                return when (type) {
+                return when (val type = Int.decode(stream)) {
                     0 -> ContractCodeEntryExtV0
                     1 -> {
                         val v1 = ContractCodeEntryV1Anon.decode(stream)

@@ -119,7 +119,6 @@ sealed class SCSpecEntry(val type: SCSpecEntryKind) : XdrElement {
                     ScSpecEntryEventV0(eventV0)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

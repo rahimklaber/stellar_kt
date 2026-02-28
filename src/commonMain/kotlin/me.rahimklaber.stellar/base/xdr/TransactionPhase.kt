@@ -41,11 +41,11 @@ sealed class TransactionPhase(val type: Int) : XdrElement {
 
     companion object : XdrElementDecoder<TransactionPhase> {
         override fun decode(stream: XdrInputStream): TransactionPhase {
-            val type = Int.decode(stream)
-            return when (type) {
+            return when (val type = Int.decode(stream)) {
                 0 -> {
                     val v0ComponentsSize = stream.readInt()
-                    val v0Components: List<TxSetComponent> = decodeXdrElementsList(v0ComponentsSize, stream, TxSetComponent.decoder())
+                    val v0Components: List<TxSetComponent> =
+                        decodeXdrElementsList(v0ComponentsSize, stream, TxSetComponent.decoder())
                     TransactionPhaseV0(v0Components)
                 }
 

@@ -140,7 +140,6 @@ sealed class OperationResult(val type: OperationResultCode) : XdrElement {
                 OperationResultCode.opTOO_MANY_SUBENTRIES -> OptooManySubentries
                 OperationResultCode.opEXCEEDED_WORK_LIMIT -> OpexceededWorkLimit
                 OperationResultCode.opTOO_MANY_SPONSORING -> OptooManySponsoring
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }
@@ -228,7 +227,9 @@ sealed class OperationResult(val type: OperationResultCode) : XdrElement {
             }
         }
 
-        fun pathPaymentStrictReceiveResultOrNull(): PathPaymentStrictReceive? = if (this is PathPaymentStrictReceive) this else null
+        fun pathPaymentStrictReceiveResultOrNull(): PathPaymentStrictReceive? =
+            if (this is PathPaymentStrictReceive) this else null
+
         data class PathPaymentStrictReceive(
             val pathPaymentStrictReceiveResult: PathPaymentStrictReceiveResult,
         ) : OperationResultTr(OperationType.PATH_PAYMENT_STRICT_RECEIVE) {
@@ -248,7 +249,9 @@ sealed class OperationResult(val type: OperationResultCode) : XdrElement {
             }
         }
 
-        fun createPassiveSellOfferResultOrNull(): CreatePassiveSellOffer? = if (this is CreatePassiveSellOffer) this else null
+        fun createPassiveSellOfferResultOrNull(): CreatePassiveSellOffer? =
+            if (this is CreatePassiveSellOffer) this else null
+
         data class CreatePassiveSellOffer(
             val createPassiveSellOfferResult: ManageSellOfferResult,
         ) : OperationResultTr(OperationType.CREATE_PASSIVE_SELL_OFFER) {
@@ -338,7 +341,9 @@ sealed class OperationResult(val type: OperationResultCode) : XdrElement {
             }
         }
 
-        fun pathPaymentStrictSendResultOrNull(): PathPaymentStrictSend? = if (this is PathPaymentStrictSend) this else null
+        fun pathPaymentStrictSendResultOrNull(): PathPaymentStrictSend? =
+            if (this is PathPaymentStrictSend) this else null
+
         data class PathPaymentStrictSend(
             val pathPaymentStrictSendResult: PathPaymentStrictSendResult,
         ) : OperationResultTr(OperationType.PATH_PAYMENT_STRICT_SEND) {
@@ -348,7 +353,9 @@ sealed class OperationResult(val type: OperationResultCode) : XdrElement {
             }
         }
 
-        fun createClaimableBalanceResultOrNull(): CreateClaimableBalance? = if (this is CreateClaimableBalance) this else null
+        fun createClaimableBalanceResultOrNull(): CreateClaimableBalance? =
+            if (this is CreateClaimableBalance) this else null
+
         data class CreateClaimableBalance(
             val createClaimableBalanceResult: CreateClaimableBalanceResult,
         ) : OperationResultTr(OperationType.CREATE_CLAIMABLE_BALANCE) {
@@ -358,7 +365,9 @@ sealed class OperationResult(val type: OperationResultCode) : XdrElement {
             }
         }
 
-        fun claimClaimableBalanceResultOrNull(): ClaimClaimableBalance? = if (this is ClaimClaimableBalance) this else null
+        fun claimClaimableBalanceResultOrNull(): ClaimClaimableBalance? =
+            if (this is ClaimClaimableBalance) this else null
+
         data class ClaimClaimableBalance(
             val claimClaimableBalanceResult: ClaimClaimableBalanceResult,
         ) : OperationResultTr(OperationType.CLAIM_CLAIMABLE_BALANCE) {
@@ -368,7 +377,9 @@ sealed class OperationResult(val type: OperationResultCode) : XdrElement {
             }
         }
 
-        fun beginSponsoringFutureReservesResultOrNull(): BeginSponsoringFutureReserves? = if (this is BeginSponsoringFutureReserves) this else null
+        fun beginSponsoringFutureReservesResultOrNull(): BeginSponsoringFutureReserves? =
+            if (this is BeginSponsoringFutureReserves) this else null
+
         data class BeginSponsoringFutureReserves(
             val beginSponsoringFutureReservesResult: BeginSponsoringFutureReservesResult,
         ) : OperationResultTr(OperationType.BEGIN_SPONSORING_FUTURE_RESERVES) {
@@ -378,7 +389,9 @@ sealed class OperationResult(val type: OperationResultCode) : XdrElement {
             }
         }
 
-        fun endSponsoringFutureReservesResultOrNull(): EndSponsoringFutureReserves? = if (this is EndSponsoringFutureReserves) this else null
+        fun endSponsoringFutureReservesResultOrNull(): EndSponsoringFutureReserves? =
+            if (this is EndSponsoringFutureReserves) this else null
+
         data class EndSponsoringFutureReserves(
             val endSponsoringFutureReservesResult: EndSponsoringFutureReservesResult,
         ) : OperationResultTr(OperationType.END_SPONSORING_FUTURE_RESERVES) {
@@ -408,7 +421,9 @@ sealed class OperationResult(val type: OperationResultCode) : XdrElement {
             }
         }
 
-        fun clawbackClaimableBalanceResultOrNull(): ClawbackClaimableBalance? = if (this is ClawbackClaimableBalance) this else null
+        fun clawbackClaimableBalanceResultOrNull(): ClawbackClaimableBalance? =
+            if (this is ClawbackClaimableBalance) this else null
+
         data class ClawbackClaimableBalance(
             val clawbackClaimableBalanceResult: ClawbackClaimableBalanceResult,
         ) : OperationResultTr(OperationType.CLAWBACK_CLAIMABLE_BALANCE) {
@@ -438,7 +453,9 @@ sealed class OperationResult(val type: OperationResultCode) : XdrElement {
             }
         }
 
-        fun liquidityPoolWithdrawResultOrNull(): LiquidityPoolWithdraw? = if (this is LiquidityPoolWithdraw) this else null
+        fun liquidityPoolWithdrawResultOrNull(): LiquidityPoolWithdraw? =
+            if (this is LiquidityPoolWithdraw) this else null
+
         data class LiquidityPoolWithdraw(
             val liquidityPoolWithdrawResult: LiquidityPoolWithdrawResult,
         ) : OperationResultTr(OperationType.LIQUIDITY_POOL_WITHDRAW) {
@@ -616,8 +633,6 @@ sealed class OperationResult(val type: OperationResultCode) : XdrElement {
                         val restoreFootprintResult = RestoreFootprintResult.decode(stream)
                         RestoreFootprint(restoreFootprintResult)
                     }
-
-                    else -> throw IllegalArgumentException("unknown type: $type")
                 }
             }
         }

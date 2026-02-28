@@ -43,8 +43,7 @@ sealed class MuxedAccount(val type: CryptoKeyType) : XdrElement {
 
     companion object : XdrElementDecoder<MuxedAccount> {
         override fun decode(stream: XdrInputStream): MuxedAccount {
-            val type = CryptoKeyType.decode(stream)
-            return when (type) {
+            return when (val type = CryptoKeyType.decode(stream)) {
                 CryptoKeyType.KEY_TYPE_ED25519 -> {
                     val ed25519 = Uint256.decode(stream)
                     KeyTypeEd25519(ed25519)

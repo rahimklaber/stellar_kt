@@ -27,8 +27,7 @@ sealed class SCPHistoryEntry(val type: Int) : XdrElement {
 
     companion object : XdrElementDecoder<SCPHistoryEntry> {
         override fun decode(stream: XdrInputStream): SCPHistoryEntry {
-            val type = Int.decode(stream)
-            return when (type) {
+            return when (val type = Int.decode(stream)) {
                 0 -> {
                     val v0 = me.rahimklaber.stellar.base.xdr.SCPHistoryEntryV0.decode(stream)
                     SCPHistoryEntryV0(v0)

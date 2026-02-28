@@ -36,8 +36,7 @@ enum class SCErrorCode(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<SCErrorCode> {
         override fun decode(stream: XdrInputStream): SCErrorCode {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> SCEC_ARITH_DOMAIN
                 1 -> SCEC_INDEX_BOUNDS
                 2 -> SCEC_INVALID_INPUT

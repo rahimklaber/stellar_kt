@@ -158,7 +158,9 @@ sealed class StellarMessage(val type: MessageType) : XdrElement {
         }
     }
 
-    fun signedTimeSlicedSurveyRequestMessageOrNull(): TimeSlicedSurveyRequest? = if (this is TimeSlicedSurveyRequest) this else null
+    fun signedTimeSlicedSurveyRequestMessageOrNull(): TimeSlicedSurveyRequest? =
+        if (this is TimeSlicedSurveyRequest) this else null
+
     data class TimeSlicedSurveyRequest(
         val signedTimeSlicedSurveyRequestMessage: SignedTimeSlicedSurveyRequestMessage,
     ) : StellarMessage(MessageType.TIME_SLICED_SURVEY_REQUEST) {
@@ -168,7 +170,9 @@ sealed class StellarMessage(val type: MessageType) : XdrElement {
         }
     }
 
-    fun signedTimeSlicedSurveyResponseMessageOrNull(): TimeSlicedSurveyResponse? = if (this is TimeSlicedSurveyResponse) this else null
+    fun signedTimeSlicedSurveyResponseMessageOrNull(): TimeSlicedSurveyResponse? =
+        if (this is TimeSlicedSurveyResponse) this else null
+
     data class TimeSlicedSurveyResponse(
         val signedTimeSlicedSurveyResponseMessage: SignedTimeSlicedSurveyResponseMessage,
     ) : StellarMessage(MessageType.TIME_SLICED_SURVEY_RESPONSE) {
@@ -394,7 +398,6 @@ sealed class StellarMessage(val type: MessageType) : XdrElement {
                     FloodDemand(floodDemand)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

@@ -77,11 +77,11 @@ sealed class TransactionMeta(val type: Int) : XdrElement {
 
     companion object : XdrElementDecoder<TransactionMeta> {
         override fun decode(stream: XdrInputStream): TransactionMeta {
-            val type = Int.decode(stream)
-            return when (type) {
+            return when (val type = Int.decode(stream)) {
                 0 -> {
                     val operationsSize = stream.readInt()
-                    val operations: List<OperationMeta> = decodeXdrElementsList(operationsSize, stream, OperationMeta.decoder())
+                    val operations: List<OperationMeta> =
+                        decodeXdrElementsList(operationsSize, stream, OperationMeta.decoder())
                     TransactionMetaV0(operations)
                 }
 

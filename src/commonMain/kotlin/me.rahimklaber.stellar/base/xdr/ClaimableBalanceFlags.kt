@@ -20,8 +20,7 @@ enum class ClaimableBalanceFlags(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<ClaimableBalanceFlags> {
         override fun decode(stream: XdrInputStream): ClaimableBalanceFlags {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 1 -> CLAIMABLE_BALANCE_CLAWBACK_ENABLED_FLAG
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)
             }

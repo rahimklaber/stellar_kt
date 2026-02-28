@@ -87,7 +87,6 @@ data class ArchivalProof(
                         Nonexistence(existenceProof)
                     }
 
-                    else -> throw IllegalArgumentException("unknown type: $type")
                 }
             }
         }

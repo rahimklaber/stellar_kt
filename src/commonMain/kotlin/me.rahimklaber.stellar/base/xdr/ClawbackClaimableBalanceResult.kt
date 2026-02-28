@@ -56,7 +56,6 @@ sealed class ClawbackClaimableBalanceResult(val type: ClawbackClaimableBalanceRe
                 ClawbackClaimableBalanceResultCode.CLAWBACK_CLAIMABLE_BALANCE_DOES_NOT_EXIST -> ClawbackClaimableBalanceDoesNotExist
                 ClawbackClaimableBalanceResultCode.CLAWBACK_CLAIMABLE_BALANCE_NOT_ISSUER -> ClawbackClaimableBalanceNotIssuer
                 ClawbackClaimableBalanceResultCode.CLAWBACK_CLAIMABLE_BALANCE_NOT_CLAWBACK_ENABLED -> ClawbackClaimableBalanceNotClawbackEnabled
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

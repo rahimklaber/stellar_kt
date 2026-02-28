@@ -33,7 +33,8 @@ data class NonexistenceProofBody(
     companion object : XdrElementDecoder<NonexistenceProofBody> {
         override fun decode(stream: XdrInputStream): NonexistenceProofBody {
             val entriesToProveSize = stream.readInt()
-            val entriesToProve: List<ColdArchiveBucketEntry> = decodeXdrElementsList(entriesToProveSize, stream, ColdArchiveBucketEntry.decoder())
+            val entriesToProve: List<ColdArchiveBucketEntry> =
+                decodeXdrElementsList(entriesToProveSize, stream, ColdArchiveBucketEntry.decoder())
             val proofLevelsSize = stream.readInt()
             val proofLevels: List<ProofLevel> = decodeXdrElementsList(proofLevelsSize, stream, ProofLevel.decoder())
             return NonexistenceProofBody(

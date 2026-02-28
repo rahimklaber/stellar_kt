@@ -55,7 +55,6 @@ sealed class RevokeSponsorshipOp(val type: RevokeSponsorshipType) : XdrElement {
                     Signer(signer)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

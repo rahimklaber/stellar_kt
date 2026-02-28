@@ -39,8 +39,7 @@ sealed class PersistedSCPState(val type: Int) : XdrElement {
 
     companion object : XdrElementDecoder<PersistedSCPState> {
         override fun decode(stream: XdrInputStream): PersistedSCPState {
-            val type = Int.decode(stream)
-            return when (type) {
+            return when (val type = Int.decode(stream)) {
                 0 -> {
                     val v0 = me.rahimklaber.stellar.base.xdr.PersistedSCPStateV0.decode(stream)
                     PersistedSCPStateV0(v0)

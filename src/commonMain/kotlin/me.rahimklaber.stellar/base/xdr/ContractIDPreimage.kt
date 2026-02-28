@@ -55,7 +55,6 @@ sealed class ContractIDPreimage(val type: ContractIDPreimageType) : XdrElement {
                     FromAsset(fromAsset)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

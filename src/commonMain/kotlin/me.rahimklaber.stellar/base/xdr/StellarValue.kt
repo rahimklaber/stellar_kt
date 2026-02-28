@@ -101,7 +101,6 @@ data class StellarValue(
                         Signed(lcValueSignature)
                     }
 
-                    else -> throw IllegalArgumentException("unknown type: $type")
                 }
             }
         }

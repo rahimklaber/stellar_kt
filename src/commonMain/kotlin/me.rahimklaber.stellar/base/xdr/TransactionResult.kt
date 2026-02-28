@@ -251,13 +251,15 @@ data class TransactionResult(
 
                     TransactionResultCode.txSUCCESS -> {
                         val resultsSize = stream.readInt()
-                        val results: List<OperationResult> = decodeXdrElementsList(resultsSize, stream, OperationResult.decoder())
+                        val results: List<OperationResult> =
+                            decodeXdrElementsList(resultsSize, stream, OperationResult.decoder())
                         Txsuccess(results)
                     }
 
                     TransactionResultCode.txFAILED -> {
                         val resultsSize = stream.readInt()
-                        val results: List<OperationResult> = decodeXdrElementsList(resultsSize, stream, OperationResult.decoder())
+                        val results: List<OperationResult> =
+                            decodeXdrElementsList(resultsSize, stream, OperationResult.decoder())
                         Txfailed(results)
                     }
 
@@ -276,7 +278,6 @@ data class TransactionResult(
                     TransactionResultCode.txBAD_MIN_SEQ_AGE_OR_GAP -> TxbadMinSeqAgeOrGap
                     TransactionResultCode.txMALFORMED -> Txmalformed
                     TransactionResultCode.txSOROBAN_INVALID -> TxsorobanInvalid
-                    else -> throw IllegalArgumentException("unknown type: $type")
                 }
             }
         }
@@ -301,8 +302,7 @@ data class TransactionResult(
 
         companion object : XdrElementDecoder<TransactionResultExt> {
             override fun decode(stream: XdrInputStream): TransactionResultExt {
-                val type = Int.decode(stream)
-                return when (type) {
+                return when (val type = Int.decode(stream)) {
                     0 -> TransactionResultExtV0
                     else -> throw IllegalArgumentException("unknown type: $type")
                 }

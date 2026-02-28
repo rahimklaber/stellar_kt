@@ -20,8 +20,7 @@ enum class ContractIDPreimageType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<ContractIDPreimageType> {
         override fun decode(stream: XdrInputStream): ContractIDPreimageType {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> CONTRACT_ID_PREIMAGE_FROM_ADDRESS
                 1 -> CONTRACT_ID_PREIMAGE_FROM_ASSET
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)

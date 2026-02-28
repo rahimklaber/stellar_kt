@@ -20,8 +20,7 @@ enum class BucketListType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<BucketListType> {
         override fun decode(stream: XdrInputStream): BucketListType {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> LIVE
                 1 -> HOT_ARCHIVE
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)

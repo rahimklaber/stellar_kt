@@ -38,7 +38,6 @@ sealed class Claimant(val type: ClaimantType) : XdrElement {
                     V0(v0)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

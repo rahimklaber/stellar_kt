@@ -9,7 +9,7 @@ import me.rahimklaber.stellar.base.xdr.fromHex
 data class ClawBackClaimableBalance(
     override val sourceAccount: String? = null,
     val balanceId: String //hex string of claimablebalanceIdXdr
-): Operation {
+) : Operation {
     override fun toXdr(): me.rahimklaber.stellar.base.xdr.Operation {
         val source = sourceAccount?.let {
             StrKey.encodeToMuxedAccountXDR(it)

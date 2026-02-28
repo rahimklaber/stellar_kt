@@ -91,7 +91,6 @@ sealed class AccountMergeResult(val type: AccountMergeResultCode) : XdrElement {
                 AccountMergeResultCode.ACCOUNT_MERGE_SEQNUM_TOO_FAR -> AccountMergeSeqnumTooFar
                 AccountMergeResultCode.ACCOUNT_MERGE_DEST_FULL -> AccountMergeDestFull
                 AccountMergeResultCode.ACCOUNT_MERGE_IS_SPONSOR -> AccountMergeIsSponsor
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

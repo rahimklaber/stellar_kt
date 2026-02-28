@@ -22,8 +22,7 @@ enum class PreconditionType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<PreconditionType> {
         override fun decode(stream: XdrInputStream): PreconditionType {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> PRECOND_NONE
                 1 -> PRECOND_TIME
                 2 -> PRECOND_V2

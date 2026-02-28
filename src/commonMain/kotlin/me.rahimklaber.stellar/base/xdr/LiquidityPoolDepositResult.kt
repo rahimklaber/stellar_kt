@@ -23,49 +23,57 @@ void;
  * ```
  */
 sealed class LiquidityPoolDepositResult(val type: LiquidityPoolDepositResultCode) : XdrElement {
-    data object LiquidityPoolDepositSuccess : LiquidityPoolDepositResult(LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_SUCCESS) {
+    data object LiquidityPoolDepositSuccess :
+        LiquidityPoolDepositResult(LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_SUCCESS) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object LiquidityPoolDepositMalformed : LiquidityPoolDepositResult(LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_MALFORMED) {
+    data object LiquidityPoolDepositMalformed :
+        LiquidityPoolDepositResult(LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_MALFORMED) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object LiquidityPoolDepositNoTrust : LiquidityPoolDepositResult(LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_NO_TRUST) {
+    data object LiquidityPoolDepositNoTrust :
+        LiquidityPoolDepositResult(LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_NO_TRUST) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object LiquidityPoolDepositNotAuthorized : LiquidityPoolDepositResult(LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_NOT_AUTHORIZED) {
+    data object LiquidityPoolDepositNotAuthorized :
+        LiquidityPoolDepositResult(LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_NOT_AUTHORIZED) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object LiquidityPoolDepositUnderfunded : LiquidityPoolDepositResult(LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_UNDERFUNDED) {
+    data object LiquidityPoolDepositUnderfunded :
+        LiquidityPoolDepositResult(LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_UNDERFUNDED) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object LiquidityPoolDepositLineFull : LiquidityPoolDepositResult(LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_LINE_FULL) {
+    data object LiquidityPoolDepositLineFull :
+        LiquidityPoolDepositResult(LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_LINE_FULL) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object LiquidityPoolDepositBadPrice : LiquidityPoolDepositResult(LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_BAD_PRICE) {
+    data object LiquidityPoolDepositBadPrice :
+        LiquidityPoolDepositResult(LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_BAD_PRICE) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object LiquidityPoolDepositPoolFull : LiquidityPoolDepositResult(LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_POOL_FULL) {
+    data object LiquidityPoolDepositPoolFull :
+        LiquidityPoolDepositResult(LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_POOL_FULL) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
@@ -83,7 +91,6 @@ sealed class LiquidityPoolDepositResult(val type: LiquidityPoolDepositResultCode
                 LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_LINE_FULL -> LiquidityPoolDepositLineFull
                 LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_BAD_PRICE -> LiquidityPoolDepositBadPrice
                 LiquidityPoolDepositResultCode.LIQUIDITY_POOL_DEPOSIT_POOL_FULL -> LiquidityPoolDepositPoolFull
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

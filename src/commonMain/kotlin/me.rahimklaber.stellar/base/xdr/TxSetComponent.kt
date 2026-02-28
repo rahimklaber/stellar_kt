@@ -19,7 +19,9 @@ TransactionEnvelope txs<>;
  * ```
  */
 sealed class TxSetComponent(val type: TxSetComponentType) : XdrElement {
-    fun txsMaybeDiscountedFeeOrNull(): TxsetCompTxsMaybeDiscountedFee? = if (this is TxsetCompTxsMaybeDiscountedFee) this else null
+    fun txsMaybeDiscountedFeeOrNull(): TxsetCompTxsMaybeDiscountedFee? =
+        if (this is TxsetCompTxsMaybeDiscountedFee) this else null
+
     data class TxsetCompTxsMaybeDiscountedFee(
         val txsMaybeDiscountedFee: TxSetComponentTxsMaybeDiscountedFee,
     ) : TxSetComponent(TxSetComponentType.TXSET_COMP_TXS_MAYBE_DISCOUNTED_FEE) {
@@ -38,7 +40,6 @@ sealed class TxSetComponent(val type: TxSetComponentType) : XdrElement {
                     TxsetCompTxsMaybeDiscountedFee(txsMaybeDiscountedFee)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }
@@ -78,7 +79,8 @@ sealed class TxSetComponent(val type: TxSetComponentType) : XdrElement {
                     null
                 }
                 val txsSize = stream.readInt()
-                val txs: List<TransactionEnvelope> = decodeXdrElementsList(txsSize, stream, TransactionEnvelope.decoder())
+                val txs: List<TransactionEnvelope> =
+                    decodeXdrElementsList(txsSize, stream, TransactionEnvelope.decoder())
                 return TxSetComponentTxsMaybeDiscountedFee(
                     baseFee,
                     txs,

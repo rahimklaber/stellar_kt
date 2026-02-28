@@ -100,7 +100,6 @@ data class ManageOfferSuccessResult(
                     }
 
                     ManageOfferEffect.MANAGE_OFFER_DELETED -> ManageOfferDeleted
-                    else -> throw IllegalArgumentException("unknown type: $type")
                 }
             }
         }

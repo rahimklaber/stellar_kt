@@ -15,7 +15,7 @@ data class LiquidityPoolDeposit(
     val maxAmountB: TokenAmount,
     val minPrice: Price,
     val maxPrice: Price,
-): Operation {
+) : Operation {
     override fun toXdr(): me.rahimklaber.stellar.base.xdr.Operation {
         val source = sourceAccount?.let {
             StrKey.encodeToMuxedAccountXDR(it)

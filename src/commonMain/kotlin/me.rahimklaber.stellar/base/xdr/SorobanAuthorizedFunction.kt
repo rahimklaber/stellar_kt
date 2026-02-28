@@ -76,7 +76,6 @@ sealed class SorobanAuthorizedFunction(val type: SorobanAuthorizedFunctionType) 
                     CreateContractV2HostFn(createContractV2HostFn)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

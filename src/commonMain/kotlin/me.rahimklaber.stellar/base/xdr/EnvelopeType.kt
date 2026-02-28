@@ -36,8 +36,7 @@ enum class EnvelopeType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<EnvelopeType> {
         override fun decode(stream: XdrInputStream): EnvelopeType {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> ENVELOPE_TYPE_TX_V0
                 1 -> ENVELOPE_TYPE_SCP
                 2 -> ENVELOPE_TYPE_TX

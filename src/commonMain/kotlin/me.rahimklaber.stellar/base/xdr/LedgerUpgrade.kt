@@ -139,7 +139,6 @@ sealed class LedgerUpgrade(val type: LedgerUpgradeType) : XdrElement {
                     MaxSorobanTxSetSize(newMaxSorobanTxSetSize)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

@@ -60,7 +60,6 @@ sealed class Preconditions(val type: PreconditionType) : XdrElement {
                     PrecondV2(v2)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

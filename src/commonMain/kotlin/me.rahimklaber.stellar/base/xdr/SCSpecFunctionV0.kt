@@ -41,7 +41,8 @@ data class SCSpecFunctionV0(
             val doc = decodeString(docSize, stream)
             val name = SCSymbol.decode(stream)
             val inputsSize = stream.readInt()
-            val inputs: List<SCSpecFunctionInputV0> = decodeXdrElementsList(inputsSize, stream, SCSpecFunctionInputV0.decoder())
+            val inputs: List<SCSpecFunctionInputV0> =
+                decodeXdrElementsList(inputsSize, stream, SCSpecFunctionInputV0.decoder())
             val outputsSize = stream.readInt()
             val outputs: List<SCSpecTypeDef> = decodeXdrElementsList(outputsSize, stream, SCSpecTypeDef.decoder())
             return SCSpecFunctionV0(

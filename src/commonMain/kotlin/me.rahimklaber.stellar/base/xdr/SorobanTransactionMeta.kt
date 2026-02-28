@@ -46,7 +46,8 @@ data class SorobanTransactionMeta(
             val events: List<ContractEvent> = decodeXdrElementsList(eventsSize, stream, ContractEvent.decoder())
             val returnValue = SCVal.decode(stream)
             val diagnosticEventsSize = stream.readInt()
-            val diagnosticEvents: List<DiagnosticEvent> = decodeXdrElementsList(diagnosticEventsSize, stream, DiagnosticEvent.decoder())
+            val diagnosticEvents: List<DiagnosticEvent> =
+                decodeXdrElementsList(diagnosticEventsSize, stream, DiagnosticEvent.decoder())
             return SorobanTransactionMeta(
                 ext,
                 events,

@@ -27,8 +27,7 @@ enum class ClawbackClaimableBalanceResultCode(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<ClawbackClaimableBalanceResultCode> {
         override fun decode(stream: XdrInputStream): ClawbackClaimableBalanceResultCode {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> CLAWBACK_CLAIMABLE_BALANCE_SUCCESS
                 -1 -> CLAWBACK_CLAIMABLE_BALANCE_DOES_NOT_EXIST
                 -2 -> CLAWBACK_CLAIMABLE_BALANCE_NOT_ISSUER

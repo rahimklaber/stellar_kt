@@ -34,7 +34,6 @@ sealed class ClaimableBalanceID(val type: ClaimableBalanceIDType) : XdrElement {
                     V0(v0)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

@@ -39,8 +39,7 @@ enum class PaymentResultCode(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<PaymentResultCode> {
         override fun decode(stream: XdrInputStream): PaymentResultCode {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> PAYMENT_SUCCESS
                 -1 -> PAYMENT_MALFORMED
                 -2 -> PAYMENT_UNDERFUNDED

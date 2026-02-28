@@ -95,7 +95,6 @@ data class PeerAddress(
                         Ipv6(ipv6)
                     }
 
-                    else -> throw IllegalArgumentException("unknown type: $type")
                 }
             }
         }

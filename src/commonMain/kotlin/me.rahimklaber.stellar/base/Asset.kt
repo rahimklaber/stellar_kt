@@ -10,9 +10,9 @@ sealed interface Asset {
     val code: String
     val issuer: String
 
-    fun toXdr() : me.rahimklaber.stellar.base.xdr.Asset
+    fun toXdr(): me.rahimklaber.stellar.base.xdr.Asset
 
-    data object Native: Asset {
+    data object Native : Asset {
         override val code: String = "XLM"
         override val issuer: String = ""
 
@@ -20,9 +20,10 @@ sealed interface Asset {
             return me.rahimklaber.stellar.base.xdr.Asset.Native
         }
     }
-    data class AlphaNum(override val code: String, override val issuer: String): Asset{
+
+    data class AlphaNum(override val code: String, override val issuer: String) : Asset {
         override fun toXdr(): me.rahimklaber.stellar.base.xdr.Asset {
-            return if(code.length > 4){
+            return if (code.length > 4) {
                 var bytes = code.encodeToByteArray()
                 if (bytes.size < 12) {
                     bytes += ByteArray(12 - bytes.size)
@@ -33,15 +34,17 @@ sealed interface Asset {
                         StrKey.encodeToAccountIDXDR(issuer)
                     )
                 )
-            }else{
+            } else {
                 var bytes = code.encodeToByteArray()
                 if (bytes.size < 4) {
                     bytes += ByteArray(4 - bytes.size)
                 }
-                me.rahimklaber.stellar.base.xdr.Asset.CreditAlphanum4(AlphaNum4(
-                    AssetCode4(bytes),
-                    StrKey.encodeToAccountIDXDR(issuer)
-                ))
+                me.rahimklaber.stellar.base.xdr.Asset.CreditAlphanum4(
+                    AlphaNum4(
+                        AssetCode4(bytes),
+                        StrKey.encodeToAccountIDXDR(issuer)
+                    )
+                )
             }
         }
     }

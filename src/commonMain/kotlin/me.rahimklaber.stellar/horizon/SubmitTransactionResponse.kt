@@ -1,8 +1,9 @@
 package me.rahimklaber.stellar.horizon
 
-import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.time.Instant
+
 //TODO need to check which fields are optional.
 // Something will prob go wrong if the submit failed.
 @Serializable

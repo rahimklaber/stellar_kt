@@ -24,8 +24,7 @@ enum class SignerKeyType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<SignerKeyType> {
         override fun decode(stream: XdrInputStream): SignerKeyType {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> SIGNER_KEY_TYPE_ED25519
                 1 -> SIGNER_KEY_TYPE_PRE_AUTH_TX
                 2 -> SIGNER_KEY_TYPE_HASH_X

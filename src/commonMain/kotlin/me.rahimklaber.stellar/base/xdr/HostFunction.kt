@@ -88,7 +88,6 @@ sealed class HostFunction(val type: HostFunctionType) : XdrElement {
                     CreateContractV2(createContractV2)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

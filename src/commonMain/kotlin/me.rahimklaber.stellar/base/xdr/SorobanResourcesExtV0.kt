@@ -3,8 +3,6 @@
 
 package me.rahimklaber.stellar.base.xdr
 
-import me.rahimklaber.stellar.base.xdr.encodeXdrElements
-import me.rahimklaber.stellar.base.xdr.encodeXdrElementsUInt
 import kotlin.jvm.JvmInline
 
 
@@ -31,7 +29,8 @@ value class SorobanResourcesExtV0(val archivedSorobanEntries: List<Uint32>) : Xd
     companion object : XdrElementDecoder<SorobanResourcesExtV0> {
         override fun decode(stream: XdrInputStream): SorobanResourcesExtV0 {
             val archivedSorobanEntriesSize = stream.readInt()
-            val archivedSorobanEntries: List<Uint32> = decodeXdrElementsList(archivedSorobanEntriesSize, stream, Uint32.decoder())
+            val archivedSorobanEntries: List<Uint32> =
+                decodeXdrElementsList(archivedSorobanEntriesSize, stream, Uint32.decoder())
             return SorobanResourcesExtV0(
                 archivedSorobanEntries,
             )

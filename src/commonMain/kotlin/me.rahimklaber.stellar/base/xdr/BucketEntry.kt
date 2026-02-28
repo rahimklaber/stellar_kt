@@ -83,7 +83,6 @@ sealed class BucketEntry(val type: BucketEntryType) : XdrElement {
                     Metaentry(metaEntry)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

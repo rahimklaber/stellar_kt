@@ -67,7 +67,9 @@ data class TransactionHistoryEntry(
             }
         }
 
-        fun generalizedTxSetOrNull(): TransactionHistoryEntryExtV1? = if (this is TransactionHistoryEntryExtV1) this else null
+        fun generalizedTxSetOrNull(): TransactionHistoryEntryExtV1? =
+            if (this is TransactionHistoryEntryExtV1) this else null
+
         data class TransactionHistoryEntryExtV1(
             val generalizedTxSet: GeneralizedTransactionSet,
         ) : TransactionHistoryEntryExt(1) {
@@ -79,8 +81,7 @@ data class TransactionHistoryEntry(
 
         companion object : XdrElementDecoder<TransactionHistoryEntryExt> {
             override fun decode(stream: XdrInputStream): TransactionHistoryEntryExt {
-                val type = Int.decode(stream)
-                return when (type) {
+                return when (val type = Int.decode(stream)) {
                     0 -> TransactionHistoryEntryExtV0
                     1 -> {
                         val generalizedTxSet = GeneralizedTransactionSet.decode(stream)

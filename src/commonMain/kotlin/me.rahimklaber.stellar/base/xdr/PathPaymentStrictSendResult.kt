@@ -44,19 +44,22 @@ sealed class PathPaymentStrictSendResult(val type: PathPaymentStrictSendResultCo
         }
     }
 
-    data object PathPaymentStrictSendMalformed : PathPaymentStrictSendResult(PathPaymentStrictSendResultCode.PATH_PAYMENT_STRICT_SEND_MALFORMED) {
+    data object PathPaymentStrictSendMalformed :
+        PathPaymentStrictSendResult(PathPaymentStrictSendResultCode.PATH_PAYMENT_STRICT_SEND_MALFORMED) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object PathPaymentStrictSendUnderfunded : PathPaymentStrictSendResult(PathPaymentStrictSendResultCode.PATH_PAYMENT_STRICT_SEND_UNDERFUNDED) {
+    data object PathPaymentStrictSendUnderfunded :
+        PathPaymentStrictSendResult(PathPaymentStrictSendResultCode.PATH_PAYMENT_STRICT_SEND_UNDERFUNDED) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object PathPaymentStrictSendSrcNoTrust : PathPaymentStrictSendResult(PathPaymentStrictSendResultCode.PATH_PAYMENT_STRICT_SEND_SRC_NO_TRUST) {
+    data object PathPaymentStrictSendSrcNoTrust :
+        PathPaymentStrictSendResult(PathPaymentStrictSendResultCode.PATH_PAYMENT_STRICT_SEND_SRC_NO_TRUST) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
@@ -76,7 +79,8 @@ sealed class PathPaymentStrictSendResult(val type: PathPaymentStrictSendResultCo
         }
     }
 
-    data object PathPaymentStrictSendNoTrust : PathPaymentStrictSendResult(PathPaymentStrictSendResultCode.PATH_PAYMENT_STRICT_SEND_NO_TRUST) {
+    data object PathPaymentStrictSendNoTrust :
+        PathPaymentStrictSendResult(PathPaymentStrictSendResultCode.PATH_PAYMENT_STRICT_SEND_NO_TRUST) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
@@ -89,7 +93,8 @@ sealed class PathPaymentStrictSendResult(val type: PathPaymentStrictSendResultCo
         }
     }
 
-    data object PathPaymentStrictSendLineFull : PathPaymentStrictSendResult(PathPaymentStrictSendResultCode.PATH_PAYMENT_STRICT_SEND_LINE_FULL) {
+    data object PathPaymentStrictSendLineFull :
+        PathPaymentStrictSendResult(PathPaymentStrictSendResultCode.PATH_PAYMENT_STRICT_SEND_LINE_FULL) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
@@ -151,7 +156,6 @@ sealed class PathPaymentStrictSendResult(val type: PathPaymentStrictSendResultCo
                 PathPaymentStrictSendResultCode.PATH_PAYMENT_STRICT_SEND_TOO_FEW_OFFERS -> PathPaymentStrictSendTooFewOffers
                 PathPaymentStrictSendResultCode.PATH_PAYMENT_STRICT_SEND_OFFER_CROSS_SELF -> PathPaymentStrictSendOfferCrossSelf
                 PathPaymentStrictSendResultCode.PATH_PAYMENT_STRICT_SEND_UNDER_DESTMIN -> PathPaymentStrictSendUnderDestmin
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

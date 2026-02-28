@@ -85,8 +85,7 @@ sealed class HashIDPreimage(val type: EnvelopeType) : XdrElement {
 
     companion object : XdrElementDecoder<HashIDPreimage> {
         override fun decode(stream: XdrInputStream): HashIDPreimage {
-            val type = EnvelopeType.decode(stream)
-            return when (type) {
+            return when (val type = EnvelopeType.decode(stream)) {
                 EnvelopeType.ENVELOPE_TYPE_OP_ID -> {
                     val operationID = HashIDPreimageOperationID.decode(stream)
                     OpId(operationID)

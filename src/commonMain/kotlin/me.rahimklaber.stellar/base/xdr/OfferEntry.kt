@@ -96,8 +96,7 @@ data class OfferEntry(
 
         companion object : XdrElementDecoder<OfferEntryExt> {
             override fun decode(stream: XdrInputStream): OfferEntryExt {
-                val type = Int.decode(stream)
-                return when (type) {
+                return when (val type = Int.decode(stream)) {
                     0 -> OfferEntryExtV0
                     else -> throw IllegalArgumentException("unknown type: $type")
                 }

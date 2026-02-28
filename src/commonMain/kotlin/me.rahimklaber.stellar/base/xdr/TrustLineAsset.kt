@@ -82,7 +82,6 @@ sealed class TrustLineAsset(val type: AssetType) : XdrElement {
                     PoolShare(liquidityPoolID)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

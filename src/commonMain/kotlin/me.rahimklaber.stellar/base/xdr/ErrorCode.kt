@@ -26,8 +26,7 @@ enum class ErrorCode(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<ErrorCode> {
         override fun decode(stream: XdrInputStream): ErrorCode {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> ERR_MISC
                 1 -> ERR_DATA
                 2 -> ERR_CONF

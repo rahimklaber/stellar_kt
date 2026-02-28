@@ -39,8 +39,7 @@ sealed class StoredTransactionSet(val type: Int) : XdrElement {
 
     companion object : XdrElementDecoder<StoredTransactionSet> {
         override fun decode(stream: XdrInputStream): StoredTransactionSet {
-            val type = Int.decode(stream)
-            return when (type) {
+            return when (val type = Int.decode(stream)) {
                 0 -> {
                     val txSet = TransactionSet.decode(stream)
                     StoredTransactionSetV0(txSet)

@@ -5,7 +5,7 @@ import me.rahimklaber.stellar.base.xdr.*
 class KeyPair internal constructor(
     private val publicKey: ByteArray,
     private val privateKey: ByteArray?
-){
+) {
 
     val accountId by lazy {
         StrKey.encodeAccountId(publicKey)
@@ -20,7 +20,7 @@ class KeyPair internal constructor(
         }
 
     fun sign(data: ByteArray): ByteArray {
-        return Crypto.sign(data, privateKey?: error("Cannot sign without private key"))
+        return Crypto.sign(data, privateKey ?: error("Cannot sign without private key"))
             .copyOf(64)
     }
 
@@ -32,10 +32,10 @@ class KeyPair internal constructor(
             readAllBytes()
         }
 
-        SignatureHint(pubKeyXdrBytes.copyOfRange(pubKeyXdrBytes.size -4, pubKeyXdrBytes.size))
+        SignatureHint(pubKeyXdrBytes.copyOfRange(pubKeyXdrBytes.size - 4, pubKeyXdrBytes.size))
     }
 
-    fun signDecorated(data: ByteArray) : DecoratedSignature{
+    fun signDecorated(data: ByteArray): DecoratedSignature {
         val signatureBytes = sign(data)
 
         return DecoratedSignature(
@@ -67,11 +67,12 @@ class KeyPair internal constructor(
 
 fun KeyPair.Companion.random(): KeyPair {
     val (pub, priv) = Crypto.randomKeyPair()
-    return KeyPair(pub,priv)
+    return KeyPair(pub, priv)
 }
+
 fun KeyPair.Companion.fromFromPrivateKey(privateKey: ByteArray): KeyPair {
     val (pub, priv) = Crypto.keyPairFromPrivate(privateKey)
-    return KeyPair(pub,priv)
+    return KeyPair(pub, priv)
 }
 
 fun KeyPair.Companion.fromPublicKey(publicKey: ByteArray): KeyPair {

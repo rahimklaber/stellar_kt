@@ -102,7 +102,6 @@ sealed class SCAddress(val type: SCAddressType) : XdrElement {
                     LiquidityPool(liquidityPoolId)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

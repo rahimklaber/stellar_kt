@@ -30,8 +30,7 @@ enum class LedgerUpgradeType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<LedgerUpgradeType> {
         override fun decode(stream: XdrInputStream): LedgerUpgradeType {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 1 -> LEDGER_UPGRADE_VERSION
                 2 -> LEDGER_UPGRADE_BASE_FEE
                 3 -> LEDGER_UPGRADE_MAX_TX_SET_SIZE

@@ -38,7 +38,6 @@ sealed class EndSponsoringFutureReservesResult(val type: EndSponsoringFutureRese
             return when (type) {
                 EndSponsoringFutureReservesResultCode.END_SPONSORING_FUTURE_RESERVES_SUCCESS -> EndSponsoringFutureReservesSuccess
                 EndSponsoringFutureReservesResultCode.END_SPONSORING_FUTURE_RESERVES_NOT_SPONSORED -> EndSponsoringFutureReservesNotSponsored
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

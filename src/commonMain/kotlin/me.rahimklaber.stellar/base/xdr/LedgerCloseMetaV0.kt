@@ -52,9 +52,11 @@ data class LedgerCloseMetaV0(
             val ledgerHeader = LedgerHeaderHistoryEntry.decode(stream)
             val txSet = TransactionSet.decode(stream)
             val txProcessingSize = stream.readInt()
-            val txProcessing: List<TransactionResultMeta> = decodeXdrElementsList(txProcessingSize, stream, TransactionResultMeta.decoder())
+            val txProcessing: List<TransactionResultMeta> =
+                decodeXdrElementsList(txProcessingSize, stream, TransactionResultMeta.decoder())
             val upgradesProcessingSize = stream.readInt()
-            val upgradesProcessing: List<UpgradeEntryMeta> = decodeXdrElementsList(upgradesProcessingSize, stream, UpgradeEntryMeta.decoder())
+            val upgradesProcessing: List<UpgradeEntryMeta> =
+                decodeXdrElementsList(upgradesProcessingSize, stream, UpgradeEntryMeta.decoder())
             val scpInfoSize = stream.readInt()
             val scpInfo: List<SCPHistoryEntry> = decodeXdrElementsList(scpInfoSize, stream, SCPHistoryEntry.decoder())
             return LedgerCloseMetaV0(

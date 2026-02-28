@@ -110,8 +110,7 @@ data class Transaction(
 
         companion object : XdrElementDecoder<TransactionExt> {
             override fun decode(stream: XdrInputStream): TransactionExt {
-                val type = Int.decode(stream)
-                return when (type) {
+                return when (val type = Int.decode(stream)) {
                     0 -> TransactionExtV0
                     1 -> {
                         val sorobanData = SorobanTransactionData.decode(stream)

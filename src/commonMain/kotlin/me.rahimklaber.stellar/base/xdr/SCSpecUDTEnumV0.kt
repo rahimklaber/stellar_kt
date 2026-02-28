@@ -46,7 +46,8 @@ data class SCSpecUDTEnumV0(
             val nameSize = stream.readInt()
             val name = decodeString(nameSize, stream)
             val casesSize = stream.readInt()
-            val cases: List<SCSpecUDTEnumCaseV0> = decodeXdrElementsList(casesSize, stream, SCSpecUDTEnumCaseV0.decoder())
+            val cases: List<SCSpecUDTEnumCaseV0> =
+                decodeXdrElementsList(casesSize, stream, SCSpecUDTEnumCaseV0.decoder())
             return SCSpecUDTEnumV0(
                 doc,
                 lib,

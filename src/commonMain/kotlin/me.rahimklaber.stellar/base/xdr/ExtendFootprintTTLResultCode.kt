@@ -27,8 +27,7 @@ enum class ExtendFootprintTTLResultCode(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<ExtendFootprintTTLResultCode> {
         override fun decode(stream: XdrInputStream): ExtendFootprintTTLResultCode {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> EXTEND_FOOTPRINT_TTL_SUCCESS
                 -1 -> EXTEND_FOOTPRINT_TTL_MALFORMED
                 -2 -> EXTEND_FOOTPRINT_TTL_RESOURCE_LIMIT_EXCEEDED

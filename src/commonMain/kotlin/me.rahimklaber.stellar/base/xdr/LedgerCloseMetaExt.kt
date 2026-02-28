@@ -35,8 +35,7 @@ sealed class LedgerCloseMetaExt(val type: Int) : XdrElement {
 
     companion object : XdrElementDecoder<LedgerCloseMetaExt> {
         override fun decode(stream: XdrInputStream): LedgerCloseMetaExt {
-            val type = Int.decode(stream)
-            return when (type) {
+            return when (val type = Int.decode(stream)) {
                 0 -> LedgerCloseMetaExtV0
                 1 -> {
                     val v1 = me.rahimklaber.stellar.base.xdr.LedgerCloseMetaExtV1.decode(stream)

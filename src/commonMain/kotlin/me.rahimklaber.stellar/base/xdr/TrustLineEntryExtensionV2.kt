@@ -59,8 +59,7 @@ data class TrustLineEntryExtensionV2(
 
         companion object : XdrElementDecoder<TrustLineEntryExtensionV2Ext> {
             override fun decode(stream: XdrInputStream): TrustLineEntryExtensionV2Ext {
-                val type = Int.decode(stream)
-                return when (type) {
+                return when (val type = Int.decode(stream)) {
                     0 -> TrustLineEntryExtensionV2ExtV0
                     else -> throw IllegalArgumentException("unknown type: $type")
                 }

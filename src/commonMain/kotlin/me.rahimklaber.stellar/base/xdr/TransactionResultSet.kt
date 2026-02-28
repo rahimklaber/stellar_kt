@@ -26,7 +26,8 @@ value class TransactionResultSet(val results: List<TransactionResultPair>) : Xdr
     companion object : XdrElementDecoder<TransactionResultSet> {
         override fun decode(stream: XdrInputStream): TransactionResultSet {
             val resultsSize = stream.readInt()
-            val results: List<TransactionResultPair> = decodeXdrElementsList(resultsSize, stream, TransactionResultPair.decoder())
+            val results: List<TransactionResultPair> =
+                decodeXdrElementsList(resultsSize, stream, TransactionResultPair.decoder())
             return TransactionResultSet(
                 results,
             )

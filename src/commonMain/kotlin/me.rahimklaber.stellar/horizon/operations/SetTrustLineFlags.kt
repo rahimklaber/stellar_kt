@@ -6,15 +6,15 @@ import kotlinx.serialization.Serializable
 @SerialName("set_trust_line_flags")
 @Serializable
 data class SetTrustLineFlags(
-    override val id : String, //long?
-    @SerialName("paging_token") override val pagingToken : String,
-    @SerialName("transaction_hash") override val transactionHash : String,
-    @SerialName("transaction_successful") override val transactionSuccessful : Boolean,
-    @SerialName("source_account") override val sourceAccount : String,
-    @SerialName("created_at") override val createdAt : String,
+    override val id: String, //long?
+    @SerialName("paging_token") override val pagingToken: String,
+    @SerialName("transaction_hash") override val transactionHash: String,
+    @SerialName("transaction_successful") override val transactionSuccessful: Boolean,
+    @SerialName("source_account") override val sourceAccount: String,
+    @SerialName("created_at") override val createdAt: String,
     @SerialName("type_i") override val typeI: Int,
     @SerialName("type") override val type: String,
-    @SerialName("_links") override val links : Links,
+    @SerialName("_links") override val links: Links,
     val trustor: String,
     @SerialName("set_flags") val setFlags: List<Int> = listOf(),
     @SerialName("set_flags_s") val setFlagsS: List<String> = listOf(),

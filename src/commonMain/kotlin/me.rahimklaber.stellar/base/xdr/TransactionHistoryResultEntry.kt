@@ -65,8 +65,7 @@ data class TransactionHistoryResultEntry(
 
         companion object : XdrElementDecoder<TransactionHistoryResultEntryExt> {
             override fun decode(stream: XdrInputStream): TransactionHistoryResultEntryExt {
-                val type = Int.decode(stream)
-                return when (type) {
+                return when (val type = Int.decode(stream)) {
                     0 -> TransactionHistoryResultEntryExtV0
                     else -> throw IllegalArgumentException("unknown type: $type")
                 }

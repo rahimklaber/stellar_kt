@@ -31,7 +31,8 @@ data class FeeBumpTransactionEnvelope(
         override fun decode(stream: XdrInputStream): FeeBumpTransactionEnvelope {
             val tx = FeeBumpTransaction.decode(stream)
             val signaturesSize = stream.readInt()
-            val signatures: List<DecoratedSignature> = decodeXdrElementsList(signaturesSize, stream, DecoratedSignature.decoder())
+            val signatures: List<DecoratedSignature> =
+                decodeXdrElementsList(signaturesSize, stream, DecoratedSignature.decoder())
             return FeeBumpTransactionEnvelope(
                 tx,
                 signatures,

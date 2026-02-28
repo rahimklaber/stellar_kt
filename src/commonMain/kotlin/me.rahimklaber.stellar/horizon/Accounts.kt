@@ -20,7 +20,7 @@ class AccountRequestBuilder(client: HttpClient, horizonUrl: String) :
     RequestBuilder<AccountResponse>(client, horizonUrl, "accounts") {
     suspend fun account(accountId: String): AccountResponse {
         addPath(accountId)
-       return client.get(buildUrl()).body()
+        return client.get(buildUrl()).body()
     }
 
     /**
@@ -116,7 +116,7 @@ data class AccountResponse(
     val balances: Array<Balance>,
     val signers: Array<Signer>,
     val data: Map<String, String>,
-): Response {
+) : Response {
     @Serializable(with = AccountLinksSerializer::class)
     data class Links(
         val self: String,
@@ -147,17 +147,18 @@ class AccountLinksSerializer : KSerializer<AccountResponse.Links> {
             element("trades", hrefSerializer.descriptor)
             element("data", hrefSerializer.descriptor)
         }
+
     //Todo: Should I deal with templates? Don't think so.
     override fun deserialize(decoder: Decoder): AccountResponse.Links =
         decoder.decodeStructure(descriptor) {
             var self: String? = null
-            var transactions : String?  = null
-            var operations : String?  = null
-            var payments : String?  = null
-            var effects : String?  = null
-            var offers : String?  = null
-            var trades : String?  = null
-            var data : String?  = null
+            var transactions: String? = null
+            var operations: String? = null
+            var payments: String? = null
+            var effects: String? = null
+            var offers: String? = null
+            var trades: String? = null
+            var data: String? = null
             while (true) {
                 when (decodeElementIndex(descriptor)) {
                     0 -> self = decoder.decodeSerializableValue(hrefSerializer)
@@ -180,7 +181,7 @@ class AccountLinksSerializer : KSerializer<AccountResponse.Links> {
             require(offers != null)
             require(trades != null)
             require(data != null)
-            AccountResponse.Links(self, transactions, operations,payments, effects, offers, trades, data)
+            AccountResponse.Links(self, transactions, operations, payments, effects, offers, trades, data)
         }
 
     override fun serialize(encoder: Encoder, value: AccountResponse.Links) {

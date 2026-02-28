@@ -21,7 +21,8 @@ void;
  * ```
  */
 sealed class ClaimClaimableBalanceResult(val type: ClaimClaimableBalanceResultCode) : XdrElement {
-    data object ClaimClaimableBalanceSuccess : ClaimClaimableBalanceResult(ClaimClaimableBalanceResultCode.CLAIM_CLAIMABLE_BALANCE_SUCCESS) {
+    data object ClaimClaimableBalanceSuccess :
+        ClaimClaimableBalanceResult(ClaimClaimableBalanceResultCode.CLAIM_CLAIMABLE_BALANCE_SUCCESS) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
@@ -34,19 +35,22 @@ sealed class ClaimClaimableBalanceResult(val type: ClaimClaimableBalanceResultCo
         }
     }
 
-    data object ClaimClaimableBalanceCannotClaim : ClaimClaimableBalanceResult(ClaimClaimableBalanceResultCode.CLAIM_CLAIMABLE_BALANCE_CANNOT_CLAIM) {
+    data object ClaimClaimableBalanceCannotClaim :
+        ClaimClaimableBalanceResult(ClaimClaimableBalanceResultCode.CLAIM_CLAIMABLE_BALANCE_CANNOT_CLAIM) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object ClaimClaimableBalanceLineFull : ClaimClaimableBalanceResult(ClaimClaimableBalanceResultCode.CLAIM_CLAIMABLE_BALANCE_LINE_FULL) {
+    data object ClaimClaimableBalanceLineFull :
+        ClaimClaimableBalanceResult(ClaimClaimableBalanceResultCode.CLAIM_CLAIMABLE_BALANCE_LINE_FULL) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object ClaimClaimableBalanceNoTrust : ClaimClaimableBalanceResult(ClaimClaimableBalanceResultCode.CLAIM_CLAIMABLE_BALANCE_NO_TRUST) {
+    data object ClaimClaimableBalanceNoTrust :
+        ClaimClaimableBalanceResult(ClaimClaimableBalanceResultCode.CLAIM_CLAIMABLE_BALANCE_NO_TRUST) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
@@ -69,7 +73,6 @@ sealed class ClaimClaimableBalanceResult(val type: ClaimClaimableBalanceResultCo
                 ClaimClaimableBalanceResultCode.CLAIM_CLAIMABLE_BALANCE_LINE_FULL -> ClaimClaimableBalanceLineFull
                 ClaimClaimableBalanceResultCode.CLAIM_CLAIMABLE_BALANCE_NO_TRUST -> ClaimClaimableBalanceNoTrust
                 ClaimClaimableBalanceResultCode.CLAIM_CLAIMABLE_BALANCE_NOT_AUTHORIZED -> ClaimClaimableBalanceNotAuthorized
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

@@ -27,8 +27,7 @@ enum class TrustLineFlags(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<TrustLineFlags> {
         override fun decode(stream: XdrInputStream): TrustLineFlags {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 1 -> AUTHORIZED_FLAG
                 2 -> AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG
                 4 -> TRUSTLINE_CLAWBACK_ENABLED_FLAG

@@ -53,7 +53,8 @@ data class SCSpecEventV0(
             val prefixTopicsSize = stream.readInt()
             val prefixTopics: List<SCSymbol> = decodeXdrElementsList(prefixTopicsSize, stream, SCSymbol.decoder())
             val paramsSize = stream.readInt()
-            val params: List<SCSpecEventParamV0> = decodeXdrElementsList(paramsSize, stream, SCSpecEventParamV0.decoder())
+            val params: List<SCSpecEventParamV0> =
+                decodeXdrElementsList(paramsSize, stream, SCSpecEventParamV0.decoder())
             val dataFormat = SCSpecEventDataFormat.decode(stream)
             return SCSpecEventV0(
                 doc,

@@ -1,7 +1,6 @@
 package me.rahimklaber.stellar.base
 
 import me.rahimklaber.stellar.base.operations.Operation
-import me.rahimklaber.stellar.base.xdr.Preconditions
 
 
 class TransactionBuilder(
@@ -10,8 +9,8 @@ class TransactionBuilder(
 ) {
     private val _operations = mutableListOf<Operation>()
 
-    val operations : List<Operation>
-        get () = _operations.toList()
+    val operations: List<Operation>
+        get() = _operations.toList()
     var fee = 100u
         private set
     var memo: Memo = Memo.None

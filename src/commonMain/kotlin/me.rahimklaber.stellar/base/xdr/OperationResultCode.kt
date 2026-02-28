@@ -31,8 +31,7 @@ enum class OperationResultCode(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<OperationResultCode> {
         override fun decode(stream: XdrInputStream): OperationResultCode {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> opINNER
                 -1 -> opBAD_AUTH
                 -2 -> opNO_ACCOUNT

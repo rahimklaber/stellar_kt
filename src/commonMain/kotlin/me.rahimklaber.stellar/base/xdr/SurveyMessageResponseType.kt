@@ -18,8 +18,7 @@ enum class SurveyMessageResponseType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<SurveyMessageResponseType> {
         override fun decode(stream: XdrInputStream): SurveyMessageResponseType {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 2 -> SURVEY_TOPOLOGY_RESPONSE_V2
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)
             }

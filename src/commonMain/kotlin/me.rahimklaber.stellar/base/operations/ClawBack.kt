@@ -1,6 +1,9 @@
 package me.rahimklaber.stellar.base.operations
 
-import me.rahimklaber.stellar.base.*
+import me.rahimklaber.stellar.base.Asset
+import me.rahimklaber.stellar.base.StrKey
+import me.rahimklaber.stellar.base.TokenAmount
+import me.rahimklaber.stellar.base.encodeToMuxedAccountXDR
 import me.rahimklaber.stellar.base.xdr.ClawbackOp
 
 data class ClawBack(

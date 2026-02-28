@@ -24,8 +24,7 @@ enum class AssetType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<AssetType> {
         override fun decode(stream: XdrInputStream): AssetType {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> ASSET_TYPE_NATIVE
                 1 -> ASSET_TYPE_CREDIT_ALPHANUM4
                 2 -> ASSET_TYPE_CREDIT_ALPHANUM12

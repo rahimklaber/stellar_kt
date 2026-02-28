@@ -59,7 +59,6 @@ sealed class ClawbackResult(val type: ClawbackResultCode) : XdrElement {
                 ClawbackResultCode.CLAWBACK_NOT_CLAWBACK_ENABLED -> ClawbackNotClawbackEnabled
                 ClawbackResultCode.CLAWBACK_NO_TRUST -> ClawbackNoTrust
                 ClawbackResultCode.CLAWBACK_UNDERFUNDED -> ClawbackUnderfunded
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

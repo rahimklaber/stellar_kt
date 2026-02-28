@@ -68,7 +68,8 @@ sealed class SetOptionsResult(val type: SetOptionsResultCode) : XdrElement {
         }
     }
 
-    data object SetOptionsThresholdOutOfRange : SetOptionsResult(SetOptionsResultCode.SET_OPTIONS_THRESHOLD_OUT_OF_RANGE) {
+    data object SetOptionsThresholdOutOfRange :
+        SetOptionsResult(SetOptionsResultCode.SET_OPTIONS_THRESHOLD_OUT_OF_RANGE) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
@@ -86,7 +87,8 @@ sealed class SetOptionsResult(val type: SetOptionsResultCode) : XdrElement {
         }
     }
 
-    data object SetOptionsAuthRevocableRequired : SetOptionsResult(SetOptionsResultCode.SET_OPTIONS_AUTH_REVOCABLE_REQUIRED) {
+    data object SetOptionsAuthRevocableRequired :
+        SetOptionsResult(SetOptionsResultCode.SET_OPTIONS_AUTH_REVOCABLE_REQUIRED) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
@@ -107,7 +109,6 @@ sealed class SetOptionsResult(val type: SetOptionsResultCode) : XdrElement {
                 SetOptionsResultCode.SET_OPTIONS_BAD_SIGNER -> SetOptionsBadSigner
                 SetOptionsResultCode.SET_OPTIONS_INVALID_HOME_DOMAIN -> SetOptionsInvalidHomeDomain
                 SetOptionsResultCode.SET_OPTIONS_AUTH_REVOCABLE_REQUIRED -> SetOptionsAuthRevocableRequired
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

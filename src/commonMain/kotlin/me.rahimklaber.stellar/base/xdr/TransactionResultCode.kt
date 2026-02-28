@@ -58,8 +58,7 @@ enum class TransactionResultCode(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<TransactionResultCode> {
         override fun decode(stream: XdrInputStream): TransactionResultCode {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 1 -> txFEE_BUMP_INNER_SUCCESS
                 0 -> txSUCCESS
                 -1 -> txFAILED

@@ -98,13 +98,15 @@ sealed class ClaimPredicate(val type: ClaimPredicateType) : XdrElement {
                 ClaimPredicateType.CLAIM_PREDICATE_UNCONDITIONAL -> Unconditional
                 ClaimPredicateType.CLAIM_PREDICATE_AND -> {
                     val andPredicatesSize = stream.readInt()
-                    val andPredicates: List<ClaimPredicate> = decodeXdrElementsList(andPredicatesSize, stream, ClaimPredicate.decoder())
+                    val andPredicates: List<ClaimPredicate> =
+                        decodeXdrElementsList(andPredicatesSize, stream, ClaimPredicate.decoder())
                     And(andPredicates)
                 }
 
                 ClaimPredicateType.CLAIM_PREDICATE_OR -> {
                     val orPredicatesSize = stream.readInt()
-                    val orPredicates: List<ClaimPredicate> = decodeXdrElementsList(orPredicatesSize, stream, ClaimPredicate.decoder())
+                    val orPredicates: List<ClaimPredicate> =
+                        decodeXdrElementsList(orPredicatesSize, stream, ClaimPredicate.decoder())
                     Or(orPredicates)
                 }
 
@@ -128,7 +130,6 @@ sealed class ClaimPredicate(val type: ClaimPredicateType) : XdrElement {
                     BeforeRelativeTime(relBefore)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

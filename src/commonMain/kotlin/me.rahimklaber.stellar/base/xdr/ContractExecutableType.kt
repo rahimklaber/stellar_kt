@@ -20,8 +20,7 @@ enum class ContractExecutableType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<ContractExecutableType> {
         override fun decode(stream: XdrInputStream): ContractExecutableType {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> CONTRACT_EXECUTABLE_WASM
                 1 -> CONTRACT_EXECUTABLE_STELLAR_ASSET
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)

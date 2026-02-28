@@ -14,17 +14,18 @@ data class ManageSellOfferResponse(
     @SerialName("created_at") override val createdAt: String,
     @SerialName("type_i") override val typeI: Int,
     @SerialName("type") override val type: String,
-    val amount : String,
-    val price : String,
-    @SerialName("price_r") val priceR : PriceR,
+    val amount: String,
+    val price: String,
+    @SerialName("price_r") val priceR: PriceR,
     @SerialName("buying_asset_type") val buyingAssetType: String,
     @SerialName("buying_asset_code") val buyingAssetCode: String? = null,
-    @SerialName("buying_asset_issuer") val buyingAssetIssuer : String? = null,
+    @SerialName("buying_asset_issuer") val buyingAssetIssuer: String? = null,
     @SerialName("selling_asset_type") val sellingAssetType: String,
-    @SerialName("selling_asset_code") val sellingAssetCode : String? = null,
-    @SerialName("selling_asset_issuer") val sellingAssetIssuer : String? = null,
-    @SerialName("offer_id") val offerId : String? = null,
+    @SerialName("selling_asset_code") val sellingAssetCode: String? = null,
+    @SerialName("selling_asset_issuer") val sellingAssetIssuer: String? = null,
+    @SerialName("offer_id") val offerId: String? = null,
     @SerialName("_links") override val links: Links
 ) : OperationResponse
+
 @Serializable
-data class PriceR(val n : Long, val d: Long)
+data class PriceR(val n: Long, val d: Long)

@@ -188,7 +188,9 @@ data class Operation(
             }
         }
 
-        fun pathPaymentStrictReceiveOpOrNull(): PathPaymentStrictReceive? = if (this is PathPaymentStrictReceive) this else null
+        fun pathPaymentStrictReceiveOpOrNull(): PathPaymentStrictReceive? =
+            if (this is PathPaymentStrictReceive) this else null
+
         data class PathPaymentStrictReceive(
             val pathPaymentStrictReceiveOp: PathPaymentStrictReceiveOp,
         ) : OperationBody(OperationType.PATH_PAYMENT_STRICT_RECEIVE) {
@@ -208,7 +210,9 @@ data class Operation(
             }
         }
 
-        fun createPassiveSellOfferOpOrNull(): CreatePassiveSellOffer? = if (this is CreatePassiveSellOffer) this else null
+        fun createPassiveSellOfferOpOrNull(): CreatePassiveSellOffer? =
+            if (this is CreatePassiveSellOffer) this else null
+
         data class CreatePassiveSellOffer(
             val createPassiveSellOfferOp: CreatePassiveSellOfferOp,
         ) : OperationBody(OperationType.CREATE_PASSIVE_SELL_OFFER) {
@@ -304,7 +308,9 @@ data class Operation(
             }
         }
 
-        fun createClaimableBalanceOpOrNull(): CreateClaimableBalance? = if (this is CreateClaimableBalance) this else null
+        fun createClaimableBalanceOpOrNull(): CreateClaimableBalance? =
+            if (this is CreateClaimableBalance) this else null
+
         data class CreateClaimableBalance(
             val createClaimableBalanceOp: CreateClaimableBalanceOp,
         ) : OperationBody(OperationType.CREATE_CLAIMABLE_BALANCE) {
@@ -324,7 +330,9 @@ data class Operation(
             }
         }
 
-        fun beginSponsoringFutureReservesOpOrNull(): BeginSponsoringFutureReserves? = if (this is BeginSponsoringFutureReserves) this else null
+        fun beginSponsoringFutureReservesOpOrNull(): BeginSponsoringFutureReserves? =
+            if (this is BeginSponsoringFutureReserves) this else null
+
         data class BeginSponsoringFutureReserves(
             val beginSponsoringFutureReservesOp: BeginSponsoringFutureReservesOp,
         ) : OperationBody(OperationType.BEGIN_SPONSORING_FUTURE_RESERVES) {
@@ -360,7 +368,9 @@ data class Operation(
             }
         }
 
-        fun clawbackClaimableBalanceOpOrNull(): ClawbackClaimableBalance? = if (this is ClawbackClaimableBalance) this else null
+        fun clawbackClaimableBalanceOpOrNull(): ClawbackClaimableBalance? =
+            if (this is ClawbackClaimableBalance) this else null
+
         data class ClawbackClaimableBalance(
             val clawbackClaimableBalanceOp: ClawbackClaimableBalanceOp,
         ) : OperationBody(OperationType.CLAWBACK_CLAIMABLE_BALANCE) {
@@ -561,7 +571,6 @@ data class Operation(
                         RestoreFootprint(restoreFootprintOp)
                     }
 
-                    else -> throw IllegalArgumentException("unknown type: $type")
                 }
             }
         }

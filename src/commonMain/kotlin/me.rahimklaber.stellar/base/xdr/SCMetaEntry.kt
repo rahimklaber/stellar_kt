@@ -34,7 +34,6 @@ sealed class SCMetaEntry(val type: SCMetaKind) : XdrElement {
                     ScMetaV0(v0)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

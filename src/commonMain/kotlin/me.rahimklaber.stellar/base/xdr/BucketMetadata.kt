@@ -75,8 +75,7 @@ data class BucketMetadata(
 
         companion object : XdrElementDecoder<BucketMetadataExt> {
             override fun decode(stream: XdrInputStream): BucketMetadataExt {
-                val type = Int.decode(stream)
-                return when (type) {
+                return when (val type = Int.decode(stream)) {
                     0 -> BucketMetadataExtV0
                     1 -> {
                         val bucketListType = BucketListType.decode(stream)

@@ -43,7 +43,6 @@ sealed class SorobanCredentials(val type: SorobanCredentialsType) : XdrElement {
                     Address(address)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

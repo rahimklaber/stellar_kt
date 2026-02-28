@@ -51,8 +51,7 @@ sealed class TransactionEnvelope(val type: EnvelopeType) : XdrElement {
 
     companion object : XdrElementDecoder<TransactionEnvelope> {
         override fun decode(stream: XdrInputStream): TransactionEnvelope {
-            val type = EnvelopeType.decode(stream)
-            return when (type) {
+            return when (val type = EnvelopeType.decode(stream)) {
                 EnvelopeType.ENVELOPE_TYPE_TX_V0 -> {
                     val v0 = TransactionV0Envelope.decode(stream)
                     TxV0(v0)

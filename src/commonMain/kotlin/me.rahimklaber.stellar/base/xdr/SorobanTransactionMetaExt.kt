@@ -35,8 +35,7 @@ sealed class SorobanTransactionMetaExt(val type: Int) : XdrElement {
 
     companion object : XdrElementDecoder<SorobanTransactionMetaExt> {
         override fun decode(stream: XdrInputStream): SorobanTransactionMetaExt {
-            val type = Int.decode(stream)
-            return when (type) {
+            return when (val type = Int.decode(stream)) {
                 0 -> SorobanTransactionMetaExtV0
                 1 -> {
                     val v1 = me.rahimklaber.stellar.base.xdr.SorobanTransactionMetaExtV1.decode(stream)

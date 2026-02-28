@@ -18,8 +18,7 @@ enum class ClaimantType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<ClaimantType> {
         override fun decode(stream: XdrInputStream): ClaimantType {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> CLAIMANT_TYPE_V0
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)
             }

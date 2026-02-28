@@ -26,8 +26,7 @@ enum class MemoType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<MemoType> {
         override fun decode(stream: XdrInputStream): MemoType {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> MEMO_NONE
                 1 -> MEMO_TEXT
                 2 -> MEMO_ID

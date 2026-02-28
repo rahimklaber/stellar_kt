@@ -88,7 +88,6 @@ data class LiquidityPoolEntry(
                         ConstantProduct(constantProduct)
                     }
 
-                    else -> throw IllegalArgumentException("unknown type: $type")
                 }
             }
         }

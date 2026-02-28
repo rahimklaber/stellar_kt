@@ -25,13 +25,15 @@ sealed class RestoreFootprintResult(val type: RestoreFootprintResultCode) : XdrE
         }
     }
 
-    data object RestoreFootprintMalformed : RestoreFootprintResult(RestoreFootprintResultCode.RESTORE_FOOTPRINT_MALFORMED) {
+    data object RestoreFootprintMalformed :
+        RestoreFootprintResult(RestoreFootprintResultCode.RESTORE_FOOTPRINT_MALFORMED) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object RestoreFootprintResourceLimitExceeded : RestoreFootprintResult(RestoreFootprintResultCode.RESTORE_FOOTPRINT_RESOURCE_LIMIT_EXCEEDED) {
+    data object RestoreFootprintResourceLimitExceeded :
+        RestoreFootprintResult(RestoreFootprintResultCode.RESTORE_FOOTPRINT_RESOURCE_LIMIT_EXCEEDED) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
@@ -52,7 +54,6 @@ sealed class RestoreFootprintResult(val type: RestoreFootprintResultCode) : XdrE
                 RestoreFootprintResultCode.RESTORE_FOOTPRINT_MALFORMED -> RestoreFootprintMalformed
                 RestoreFootprintResultCode.RESTORE_FOOTPRINT_RESOURCE_LIMIT_EXCEEDED -> RestoreFootprintResourceLimitExceeded
                 RestoreFootprintResultCode.RESTORE_FOOTPRINT_INSUFFICIENT_REFUNDABLE_FEE -> RestoreFootprintInsufficientRefundableFee
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

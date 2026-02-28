@@ -97,7 +97,6 @@ sealed class Memo(val type: MemoType) : XdrElement {
                     Return(retHash)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

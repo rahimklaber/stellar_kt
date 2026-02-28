@@ -99,7 +99,6 @@ sealed class PaymentResult(val type: PaymentResultCode) : XdrElement {
                 PaymentResultCode.PAYMENT_NOT_AUTHORIZED -> PaymentNotAuthorized
                 PaymentResultCode.PAYMENT_LINE_FULL -> PaymentLineFull
                 PaymentResultCode.PAYMENT_NO_ISSUER -> PaymentNoIssuer
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

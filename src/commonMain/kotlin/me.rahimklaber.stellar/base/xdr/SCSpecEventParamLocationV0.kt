@@ -20,8 +20,7 @@ enum class SCSpecEventParamLocationV0(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<SCSpecEventParamLocationV0> {
         override fun decode(stream: XdrInputStream): SCSpecEventParamLocationV0 {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> SC_SPEC_EVENT_PARAM_LOCATION_DATA
                 1 -> SC_SPEC_EVENT_PARAM_LOCATION_TOPIC_LIST
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)

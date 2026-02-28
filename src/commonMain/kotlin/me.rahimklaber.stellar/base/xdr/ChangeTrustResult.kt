@@ -72,7 +72,8 @@ sealed class ChangeTrustResult(val type: ChangeTrustResultCode) : XdrElement {
         }
     }
 
-    data object ChangeTrustNotAuthMaintainLiabilities : ChangeTrustResult(ChangeTrustResultCode.CHANGE_TRUST_NOT_AUTH_MAINTAIN_LIABILITIES) {
+    data object ChangeTrustNotAuthMaintainLiabilities :
+        ChangeTrustResult(ChangeTrustResultCode.CHANGE_TRUST_NOT_AUTH_MAINTAIN_LIABILITIES) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
@@ -91,7 +92,6 @@ sealed class ChangeTrustResult(val type: ChangeTrustResultCode) : XdrElement {
                 ChangeTrustResultCode.CHANGE_TRUST_TRUST_LINE_MISSING -> ChangeTrustTrustLineMissing
                 ChangeTrustResultCode.CHANGE_TRUST_CANNOT_DELETE -> ChangeTrustCannotDelete
                 ChangeTrustResultCode.CHANGE_TRUST_NOT_AUTH_MAINTAIN_LIABILITIES -> ChangeTrustNotAuthMaintainLiabilities
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

@@ -89,8 +89,7 @@ enum class SCValType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<SCValType> {
         override fun decode(stream: XdrInputStream): SCValType {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> SCV_BOOL
                 1 -> SCV_VOID
                 2 -> SCV_ERROR

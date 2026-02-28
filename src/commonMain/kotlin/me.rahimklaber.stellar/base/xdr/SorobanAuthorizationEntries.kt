@@ -23,7 +23,8 @@ value class SorobanAuthorizationEntries(val value: List<SorobanAuthorizationEntr
     companion object : XdrElementDecoder<SorobanAuthorizationEntries> {
         override fun decode(stream: XdrInputStream): SorobanAuthorizationEntries {
             val valueSize = stream.readInt()
-            val value: List<SorobanAuthorizationEntry> = decodeXdrElementsList(valueSize, stream, SorobanAuthorizationEntry.decoder())
+            val value: List<SorobanAuthorizationEntry> =
+                decodeXdrElementsList(valueSize, stream, SorobanAuthorizationEntry.decoder())
             return SorobanAuthorizationEntries(value)
         }
     }

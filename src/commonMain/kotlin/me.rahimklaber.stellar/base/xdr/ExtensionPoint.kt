@@ -23,8 +23,7 @@ sealed class ExtensionPoint(val type: Int) : XdrElement {
 
     companion object : XdrElementDecoder<ExtensionPoint> {
         override fun decode(stream: XdrInputStream): ExtensionPoint {
-            val type = Int.decode(stream)
-            return when (type) {
+            return when (val type = Int.decode(stream)) {
                 0 -> ExtensionPointV0
                 else -> throw IllegalArgumentException("unknown type: $type")
             }

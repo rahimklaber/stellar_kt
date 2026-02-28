@@ -28,8 +28,7 @@ enum class SCSpecEntryKind(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<SCSpecEntryKind> {
         override fun decode(stream: XdrInputStream): SCSpecEntryKind {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> SC_SPEC_ENTRY_FUNCTION_V0
                 1 -> SC_SPEC_ENTRY_UDT_STRUCT_V0
                 2 -> SC_SPEC_ENTRY_UDT_UNION_V0

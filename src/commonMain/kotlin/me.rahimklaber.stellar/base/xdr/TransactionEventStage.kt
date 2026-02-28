@@ -27,8 +27,7 @@ enum class TransactionEventStage(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<TransactionEventStage> {
         override fun decode(stream: XdrInputStream): TransactionEventStage {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> TRANSACTION_EVENT_STAGE_BEFORE_ALL_TXS
                 1 -> TRANSACTION_EVENT_STAGE_AFTER_TX
                 2 -> TRANSACTION_EVENT_STAGE_AFTER_ALL_TXS

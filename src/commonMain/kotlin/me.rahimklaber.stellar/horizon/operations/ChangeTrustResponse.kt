@@ -17,7 +17,7 @@ data class ChangeTrustResponse(
     @SerialName("asset_type") val assetType: String,
     @SerialName("asset_code") val assetCode: String? = null,
     @SerialName("asset_issuer") val assetIssuer: String? = null,
-    @SerialName("_links") override val links : Links,
+    @SerialName("_links") override val links: Links,
     val limit: String,
     val trustee: String? = null,
     val trustor: String,

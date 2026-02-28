@@ -32,8 +32,7 @@ enum class SetTrustLineFlagsResultCode(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<SetTrustLineFlagsResultCode> {
         override fun decode(stream: XdrInputStream): SetTrustLineFlagsResultCode {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> SET_TRUST_LINE_FLAGS_SUCCESS
                 -1 -> SET_TRUST_LINE_FLAGS_MALFORMED
                 -2 -> SET_TRUST_LINE_FLAGS_NO_TRUST_LINE

@@ -18,8 +18,7 @@ enum class LiquidityPoolType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<LiquidityPoolType> {
         override fun decode(stream: XdrInputStream): LiquidityPoolType {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> LIQUIDITY_POOL_CONSTANT_PRODUCT
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)
             }

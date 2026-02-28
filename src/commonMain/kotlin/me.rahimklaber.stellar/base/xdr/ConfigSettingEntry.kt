@@ -47,7 +47,9 @@ ConfigSettingSCPTiming contractSCPTiming;
  * ```
  */
 sealed class ConfigSettingEntry(val type: ConfigSettingID) : XdrElement {
-    fun contractMaxSizeBytesOrNull(): ConfigSettingContractMaxSizeBytes? = if (this is ConfigSettingContractMaxSizeBytes) this else null
+    fun contractMaxSizeBytesOrNull(): ConfigSettingContractMaxSizeBytes? =
+        if (this is ConfigSettingContractMaxSizeBytes) this else null
+
     data class ConfigSettingContractMaxSizeBytes(
         val contractMaxSizeBytes: Uint32,
     ) : ConfigSettingEntry(ConfigSettingID.CONFIG_SETTING_CONTRACT_MAX_SIZE_BYTES) {
@@ -57,7 +59,9 @@ sealed class ConfigSettingEntry(val type: ConfigSettingID) : XdrElement {
         }
     }
 
-    fun contractComputeOrNull(): ConfigSettingContractComputeV0? = if (this is ConfigSettingContractComputeV0) this else null
+    fun contractComputeOrNull(): ConfigSettingContractComputeV0? =
+        if (this is ConfigSettingContractComputeV0) this else null
+
     data class ConfigSettingContractComputeV0(
         val contractCompute: me.rahimklaber.stellar.base.xdr.ConfigSettingContractComputeV0,
     ) : ConfigSettingEntry(ConfigSettingID.CONFIG_SETTING_CONTRACT_COMPUTE_V0) {
@@ -67,7 +71,9 @@ sealed class ConfigSettingEntry(val type: ConfigSettingID) : XdrElement {
         }
     }
 
-    fun contractLedgerCostOrNull(): ConfigSettingContractLedgerCostV0? = if (this is ConfigSettingContractLedgerCostV0) this else null
+    fun contractLedgerCostOrNull(): ConfigSettingContractLedgerCostV0? =
+        if (this is ConfigSettingContractLedgerCostV0) this else null
+
     data class ConfigSettingContractLedgerCostV0(
         val contractLedgerCost: me.rahimklaber.stellar.base.xdr.ConfigSettingContractLedgerCostV0,
     ) : ConfigSettingEntry(ConfigSettingID.CONFIG_SETTING_CONTRACT_LEDGER_COST_V0) {
@@ -77,7 +83,9 @@ sealed class ConfigSettingEntry(val type: ConfigSettingID) : XdrElement {
         }
     }
 
-    fun contractHistoricalDataOrNull(): ConfigSettingContractHistoricalDataV0? = if (this is ConfigSettingContractHistoricalDataV0) this else null
+    fun contractHistoricalDataOrNull(): ConfigSettingContractHistoricalDataV0? =
+        if (this is ConfigSettingContractHistoricalDataV0) this else null
+
     data class ConfigSettingContractHistoricalDataV0(
         val contractHistoricalData: me.rahimklaber.stellar.base.xdr.ConfigSettingContractHistoricalDataV0,
     ) : ConfigSettingEntry(ConfigSettingID.CONFIG_SETTING_CONTRACT_HISTORICAL_DATA_V0) {
@@ -87,7 +95,9 @@ sealed class ConfigSettingEntry(val type: ConfigSettingID) : XdrElement {
         }
     }
 
-    fun contractEventsOrNull(): ConfigSettingContractEventsV0? = if (this is ConfigSettingContractEventsV0) this else null
+    fun contractEventsOrNull(): ConfigSettingContractEventsV0? =
+        if (this is ConfigSettingContractEventsV0) this else null
+
     data class ConfigSettingContractEventsV0(
         val contractEvents: me.rahimklaber.stellar.base.xdr.ConfigSettingContractEventsV0,
     ) : ConfigSettingEntry(ConfigSettingID.CONFIG_SETTING_CONTRACT_EVENTS_V0) {
@@ -97,7 +107,9 @@ sealed class ConfigSettingEntry(val type: ConfigSettingID) : XdrElement {
         }
     }
 
-    fun contractBandwidthOrNull(): ConfigSettingContractBandwidthV0? = if (this is ConfigSettingContractBandwidthV0) this else null
+    fun contractBandwidthOrNull(): ConfigSettingContractBandwidthV0? =
+        if (this is ConfigSettingContractBandwidthV0) this else null
+
     data class ConfigSettingContractBandwidthV0(
         val contractBandwidth: me.rahimklaber.stellar.base.xdr.ConfigSettingContractBandwidthV0,
     ) : ConfigSettingEntry(ConfigSettingID.CONFIG_SETTING_CONTRACT_BANDWIDTH_V0) {
@@ -131,7 +143,9 @@ sealed class ConfigSettingEntry(val type: ConfigSettingID) : XdrElement {
         }
     }
 
-    fun contractDataKeySizeBytesOrNull(): ConfigSettingContractDataKeySizeBytes? = if (this is ConfigSettingContractDataKeySizeBytes) this else null
+    fun contractDataKeySizeBytesOrNull(): ConfigSettingContractDataKeySizeBytes? =
+        if (this is ConfigSettingContractDataKeySizeBytes) this else null
+
     data class ConfigSettingContractDataKeySizeBytes(
         val contractDataKeySizeBytes: Uint32,
     ) : ConfigSettingEntry(ConfigSettingID.CONFIG_SETTING_CONTRACT_DATA_KEY_SIZE_BYTES) {
@@ -153,7 +167,9 @@ sealed class ConfigSettingEntry(val type: ConfigSettingID) : XdrElement {
         }
     }
 
-    fun stateArchivalSettingsOrNull(): ConfigSettingStateArchival? = if (this is ConfigSettingStateArchival) this else null
+    fun stateArchivalSettingsOrNull(): ConfigSettingStateArchival? =
+        if (this is ConfigSettingStateArchival) this else null
+
     data class ConfigSettingStateArchival(
         val stateArchivalSettings: StateArchivalSettings,
     ) : ConfigSettingEntry(ConfigSettingID.CONFIG_SETTING_STATE_ARCHIVAL) {
@@ -163,7 +179,9 @@ sealed class ConfigSettingEntry(val type: ConfigSettingID) : XdrElement {
         }
     }
 
-    fun contractExecutionLanesOrNull(): ConfigSettingContractExecutionLanes? = if (this is ConfigSettingContractExecutionLanes) this else null
+    fun contractExecutionLanesOrNull(): ConfigSettingContractExecutionLanes? =
+        if (this is ConfigSettingContractExecutionLanes) this else null
+
     data class ConfigSettingContractExecutionLanes(
         val contractExecutionLanes: ConfigSettingContractExecutionLanesV0,
     ) : ConfigSettingEntry(ConfigSettingID.CONFIG_SETTING_CONTRACT_EXECUTION_LANES) {
@@ -187,7 +205,9 @@ sealed class ConfigSettingEntry(val type: ConfigSettingID) : XdrElement {
         }
     }
 
-    fun evictionIteratorOrNull(): ConfigSettingEvictionIterator? = if (this is ConfigSettingEvictionIterator) this else null
+    fun evictionIteratorOrNull(): ConfigSettingEvictionIterator? =
+        if (this is ConfigSettingEvictionIterator) this else null
+
     data class ConfigSettingEvictionIterator(
         val evictionIterator: EvictionIterator,
     ) : ConfigSettingEntry(ConfigSettingID.CONFIG_SETTING_EVICTION_ITERATOR) {
@@ -197,7 +217,9 @@ sealed class ConfigSettingEntry(val type: ConfigSettingID) : XdrElement {
         }
     }
 
-    fun contractParallelComputeOrNull(): ConfigSettingContractParallelComputeV0? = if (this is ConfigSettingContractParallelComputeV0) this else null
+    fun contractParallelComputeOrNull(): ConfigSettingContractParallelComputeV0? =
+        if (this is ConfigSettingContractParallelComputeV0) this else null
+
     data class ConfigSettingContractParallelComputeV0(
         val contractParallelCompute: me.rahimklaber.stellar.base.xdr.ConfigSettingContractParallelComputeV0,
     ) : ConfigSettingEntry(ConfigSettingID.CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0) {
@@ -207,7 +229,9 @@ sealed class ConfigSettingEntry(val type: ConfigSettingID) : XdrElement {
         }
     }
 
-    fun contractLedgerCostExtOrNull(): ConfigSettingContractLedgerCostExtV0? = if (this is ConfigSettingContractLedgerCostExtV0) this else null
+    fun contractLedgerCostExtOrNull(): ConfigSettingContractLedgerCostExtV0? =
+        if (this is ConfigSettingContractLedgerCostExtV0) this else null
+
     data class ConfigSettingContractLedgerCostExtV0(
         val contractLedgerCostExt: me.rahimklaber.stellar.base.xdr.ConfigSettingContractLedgerCostExtV0,
     ) : ConfigSettingEntry(ConfigSettingID.CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0) {
@@ -242,12 +266,14 @@ sealed class ConfigSettingEntry(val type: ConfigSettingID) : XdrElement {
                 }
 
                 ConfigSettingID.CONFIG_SETTING_CONTRACT_LEDGER_COST_V0 -> {
-                    val contractLedgerCost = me.rahimklaber.stellar.base.xdr.ConfigSettingContractLedgerCostV0.decode(stream)
+                    val contractLedgerCost =
+                        me.rahimklaber.stellar.base.xdr.ConfigSettingContractLedgerCostV0.decode(stream)
                     ConfigSettingContractLedgerCostV0(contractLedgerCost)
                 }
 
                 ConfigSettingID.CONFIG_SETTING_CONTRACT_HISTORICAL_DATA_V0 -> {
-                    val contractHistoricalData = me.rahimklaber.stellar.base.xdr.ConfigSettingContractHistoricalDataV0.decode(stream)
+                    val contractHistoricalData =
+                        me.rahimklaber.stellar.base.xdr.ConfigSettingContractHistoricalDataV0.decode(stream)
                     ConfigSettingContractHistoricalDataV0(contractHistoricalData)
                 }
 
@@ -257,7 +283,8 @@ sealed class ConfigSettingEntry(val type: ConfigSettingID) : XdrElement {
                 }
 
                 ConfigSettingID.CONFIG_SETTING_CONTRACT_BANDWIDTH_V0 -> {
-                    val contractBandwidth = me.rahimklaber.stellar.base.xdr.ConfigSettingContractBandwidthV0.decode(stream)
+                    val contractBandwidth =
+                        me.rahimklaber.stellar.base.xdr.ConfigSettingContractBandwidthV0.decode(stream)
                     ConfigSettingContractBandwidthV0(contractBandwidth)
                 }
 
@@ -293,7 +320,8 @@ sealed class ConfigSettingEntry(val type: ConfigSettingID) : XdrElement {
 
                 ConfigSettingID.CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW -> {
                     val liveSorobanStateSizeWindowSize = stream.readInt()
-                    val liveSorobanStateSizeWindow: List<Uint64> = decodeXdrElementsList(liveSorobanStateSizeWindowSize, stream, Uint64.decoder())
+                    val liveSorobanStateSizeWindow: List<Uint64> =
+                        decodeXdrElementsList(liveSorobanStateSizeWindowSize, stream, Uint64.decoder())
                     ConfigSettingLiveSorobanStateSizeWindow(liveSorobanStateSizeWindow)
                 }
 
@@ -303,12 +331,14 @@ sealed class ConfigSettingEntry(val type: ConfigSettingID) : XdrElement {
                 }
 
                 ConfigSettingID.CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0 -> {
-                    val contractParallelCompute = me.rahimklaber.stellar.base.xdr.ConfigSettingContractParallelComputeV0.decode(stream)
+                    val contractParallelCompute =
+                        me.rahimklaber.stellar.base.xdr.ConfigSettingContractParallelComputeV0.decode(stream)
                     ConfigSettingContractParallelComputeV0(contractParallelCompute)
                 }
 
                 ConfigSettingID.CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0 -> {
-                    val contractLedgerCostExt = me.rahimklaber.stellar.base.xdr.ConfigSettingContractLedgerCostExtV0.decode(stream)
+                    val contractLedgerCostExt =
+                        me.rahimklaber.stellar.base.xdr.ConfigSettingContractLedgerCostExtV0.decode(stream)
                     ConfigSettingContractLedgerCostExtV0(contractLedgerCostExt)
                 }
 
@@ -317,7 +347,6 @@ sealed class ConfigSettingEntry(val type: ConfigSettingID) : XdrElement {
                     ConfigSettingScpTiming(contractSCPTiming)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

@@ -24,8 +24,7 @@ enum class HotArchiveBucketEntryType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<HotArchiveBucketEntryType> {
         override fun decode(stream: XdrInputStream): HotArchiveBucketEntryType {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 -1 -> HOT_ARCHIVE_METAENTRY
                 0 -> HOT_ARCHIVE_ARCHIVED
                 1 -> HOT_ARCHIVE_LIVE

@@ -5,7 +5,7 @@ import me.rahimklaber.stellar.base.encodeMuxedAccount
 import me.rahimklaber.stellar.base.encodeToMuxedAccountXDR
 import me.rahimklaber.stellar.base.xdr.InvokeHostFunctionOp
 
-data class InvokeHostFunction(val xdr: InvokeHostFunctionOp, override val sourceAccount: String? = null): Operation {
+data class InvokeHostFunction(val xdr: InvokeHostFunctionOp, override val sourceAccount: String? = null) : Operation {
     override fun toXdr(): me.rahimklaber.stellar.base.xdr.Operation {
         val source = sourceAccount?.let {
             StrKey.encodeToMuxedAccountXDR(it)
@@ -17,7 +17,7 @@ data class InvokeHostFunction(val xdr: InvokeHostFunctionOp, override val source
         )
     }
 
-    companion object{
+    companion object {
         fun fromXdr(xdr: me.rahimklaber.stellar.base.xdr.Operation): InvokeHostFunction {
             require(xdr.body is me.rahimklaber.stellar.base.xdr.Operation.OperationBody.InvokeHostFunction)
             return InvokeHostFunction(

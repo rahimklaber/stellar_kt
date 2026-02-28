@@ -24,8 +24,7 @@ enum class ThresholdIndexes(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<ThresholdIndexes> {
         override fun decode(stream: XdrInputStream): ThresholdIndexes {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> THRESHOLD_MASTER_WEIGHT
                 1 -> THRESHOLD_LOW
                 2 -> THRESHOLD_MED

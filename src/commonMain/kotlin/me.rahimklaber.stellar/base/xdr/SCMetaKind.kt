@@ -18,8 +18,7 @@ enum class SCMetaKind(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<SCMetaKind> {
         override fun decode(stream: XdrInputStream): SCMetaKind {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> SC_META_V0
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)
             }

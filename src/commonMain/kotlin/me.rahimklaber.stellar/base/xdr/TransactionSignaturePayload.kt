@@ -78,8 +78,7 @@ data class TransactionSignaturePayload(
 
         companion object : XdrElementDecoder<TransactionSignaturePayloadTaggedTransaction> {
             override fun decode(stream: XdrInputStream): TransactionSignaturePayloadTaggedTransaction {
-                val type = EnvelopeType.decode(stream)
-                return when (type) {
+                return when (val type = EnvelopeType.decode(stream)) {
                     EnvelopeType.ENVELOPE_TYPE_TX -> {
                         val tx = Transaction.decode(stream)
                         Tx(tx)

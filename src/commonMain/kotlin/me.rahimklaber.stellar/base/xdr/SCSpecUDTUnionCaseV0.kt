@@ -51,7 +51,6 @@ sealed class SCSpecUDTUnionCaseV0(val type: SCSpecUDTUnionCaseV0Kind) : XdrEleme
                     ScSpecUdtUnionCaseTupleV0(tupleCase)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

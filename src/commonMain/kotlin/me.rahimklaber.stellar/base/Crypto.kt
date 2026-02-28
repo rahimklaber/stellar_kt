@@ -35,23 +35,23 @@ object Crypto {
         LibsodiumInitializer.initializeWithCallback {}
     }
 
-    fun sign(data: ByteArray, privateKey: ByteArray): ByteArray{
+    fun sign(data: ByteArray, privateKey: ByteArray): ByteArray {
         return Signature.sign(data.asUByteArray(), privateKey.asUByteArray()).asByteArray()
     }
 
-    fun randomKeyPair(): CryptoKeyPair{
+    fun randomKeyPair(): CryptoKeyPair {
         val generated = Signature.keypair()
 
         return CryptoKeyPair(generated.publicKey.asByteArray(), generated.secretKey.asByteArray())
     }
 
-    fun keyPairFromPrivate(privateKey: ByteArray): CryptoKeyPair{
+    fun keyPairFromPrivate(privateKey: ByteArray): CryptoKeyPair {
         val seeded = Signature.seedKeypair(privateKey.asUByteArray())
 
         return CryptoKeyPair(seeded.publicKey.asByteArray(), seeded.secretKey.asByteArray())
     }
 
-    fun sha256(data: ByteArray): ByteArray{
+    fun sha256(data: ByteArray): ByteArray {
         return Hash.sha256(data.asUByteArray()).asByteArray()
     }
 

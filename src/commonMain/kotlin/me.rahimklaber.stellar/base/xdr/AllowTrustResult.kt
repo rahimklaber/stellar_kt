@@ -75,7 +75,6 @@ sealed class AllowTrustResult(val type: AllowTrustResultCode) : XdrElement {
                 AllowTrustResultCode.ALLOW_TRUST_CANT_REVOKE -> AllowTrustCantRevoke
                 AllowTrustResultCode.ALLOW_TRUST_SELF_NOT_ALLOWED -> AllowTrustSelfNotAllowed
                 AllowTrustResultCode.ALLOW_TRUST_LOW_RESERVE -> AllowTrustLowReserve
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

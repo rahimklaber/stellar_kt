@@ -99,8 +99,7 @@ data class ClaimableBalanceEntry(
 
         companion object : XdrElementDecoder<ClaimableBalanceEntryExt> {
             override fun decode(stream: XdrInputStream): ClaimableBalanceEntryExt {
-                val type = Int.decode(stream)
-                return when (type) {
+                return when (val type = Int.decode(stream)) {
                     0 -> ClaimableBalanceEntryExtV0
                     1 -> {
                         val v1 = ClaimableBalanceEntryExtensionV1.decode(stream)

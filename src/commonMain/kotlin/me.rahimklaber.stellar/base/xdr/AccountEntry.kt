@@ -133,8 +133,7 @@ data class AccountEntry(
 
         companion object : XdrElementDecoder<AccountEntryExt> {
             override fun decode(stream: XdrInputStream): AccountEntryExt {
-                val type = Int.decode(stream)
-                return when (type) {
+                return when (val type = Int.decode(stream)) {
                     0 -> AccountEntryExtV0
                     1 -> {
                         val v1 = AccountEntryExtensionV1.decode(stream)

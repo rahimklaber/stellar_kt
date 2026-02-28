@@ -101,7 +101,7 @@ data class Transaction(
     fun toV1Xdr(): Transaction {
         val ext = if (sorobanData == null) {
             Transaction.TransactionExt.TransactionExtV0
-        }else{
+        } else {
             Transaction.TransactionExt.TransactionExtV1(sorobanData!!)
         }
 
@@ -156,16 +156,16 @@ data class Transaction(
         _signatures.add(keyPair.signDecorated(hash()))
     }
 
-    companion object{
-        fun fromEnvelope(envelope: TransactionEnvelope, network: Network): me.rahimklaber.stellar.base.Transaction  {
-            return when(envelope){
+    companion object {
+        fun fromEnvelope(envelope: TransactionEnvelope, network: Network): me.rahimklaber.stellar.base.Transaction {
+            return when (envelope) {
                 is TransactionEnvelope.Tx -> {
                     val tx = envelope.v1.tx
                     Transaction(
                         StrKey.encodeMuxedAccount(tx.sourceAccount),
                         tx.fee,
                         tx.seqNum.value,
-                        when(tx.cond){
+                        when (tx.cond) {
                             Preconditions.PrecondNone -> TransactionPreconditions.None
                             is Preconditions.PrecondV2 -> {
                                 val cond = tx.cond.v2
@@ -178,9 +178,10 @@ data class Transaction(
                                     cond.minSeqNum?.value,
                                 )
                             }
+
                             is Preconditions.PrecondTime -> TODO()
                         },
-                        when(tx.memo){
+                        when (tx.memo) {
                             is me.rahimklaber.stellar.base.xdr.Memo.Id -> Memo.Id(tx.memo.id)
                             is me.rahimklaber.stellar.base.xdr.Memo.Text -> Memo.Text(tx.memo.text)
                             me.rahimklaber.stellar.base.xdr.Memo.None -> Memo.None
@@ -189,12 +190,13 @@ data class Transaction(
                         },
                         tx.operations.map(Operation::fromXdr),
                         network,
-                        if(tx.ext is Transaction.TransactionExt.TransactionExtV1) tx.ext.sorobanData else null
+                        if (tx.ext is Transaction.TransactionExt.TransactionExtV1) tx.ext.sorobanData else null
 
                     ).apply {
                         _signatures.addAll(envelope.v1.signatures)
                     }
                 }
+
                 is TransactionEnvelope.TxFeeBump -> TODO()
                 else -> TODO()
             }

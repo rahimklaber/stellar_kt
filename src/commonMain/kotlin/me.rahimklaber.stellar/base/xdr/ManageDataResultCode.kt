@@ -30,8 +30,7 @@ enum class ManageDataResultCode(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<ManageDataResultCode> {
         override fun decode(stream: XdrInputStream): ManageDataResultCode {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> MANAGE_DATA_SUCCESS
                 -1 -> MANAGE_DATA_NOT_SUPPORTED_YET
                 -2 -> MANAGE_DATA_NAME_NOT_FOUND

@@ -38,31 +38,36 @@ sealed class ManageSellOfferResult(val type: ManageSellOfferResultCode) : XdrEle
         }
     }
 
-    data object ManageSellOfferMalformed : ManageSellOfferResult(ManageSellOfferResultCode.MANAGE_SELL_OFFER_MALFORMED) {
+    data object ManageSellOfferMalformed :
+        ManageSellOfferResult(ManageSellOfferResultCode.MANAGE_SELL_OFFER_MALFORMED) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object ManageSellOfferSellNoTrust : ManageSellOfferResult(ManageSellOfferResultCode.MANAGE_SELL_OFFER_SELL_NO_TRUST) {
+    data object ManageSellOfferSellNoTrust :
+        ManageSellOfferResult(ManageSellOfferResultCode.MANAGE_SELL_OFFER_SELL_NO_TRUST) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object ManageSellOfferBuyNoTrust : ManageSellOfferResult(ManageSellOfferResultCode.MANAGE_SELL_OFFER_BUY_NO_TRUST) {
+    data object ManageSellOfferBuyNoTrust :
+        ManageSellOfferResult(ManageSellOfferResultCode.MANAGE_SELL_OFFER_BUY_NO_TRUST) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object ManageSellOfferSellNotAuthorized : ManageSellOfferResult(ManageSellOfferResultCode.MANAGE_SELL_OFFER_SELL_NOT_AUTHORIZED) {
+    data object ManageSellOfferSellNotAuthorized :
+        ManageSellOfferResult(ManageSellOfferResultCode.MANAGE_SELL_OFFER_SELL_NOT_AUTHORIZED) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object ManageSellOfferBuyNotAuthorized : ManageSellOfferResult(ManageSellOfferResultCode.MANAGE_SELL_OFFER_BUY_NOT_AUTHORIZED) {
+    data object ManageSellOfferBuyNotAuthorized :
+        ManageSellOfferResult(ManageSellOfferResultCode.MANAGE_SELL_OFFER_BUY_NOT_AUTHORIZED) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
@@ -74,25 +79,29 @@ sealed class ManageSellOfferResult(val type: ManageSellOfferResultCode) : XdrEle
         }
     }
 
-    data object ManageSellOfferUnderfunded : ManageSellOfferResult(ManageSellOfferResultCode.MANAGE_SELL_OFFER_UNDERFUNDED) {
+    data object ManageSellOfferUnderfunded :
+        ManageSellOfferResult(ManageSellOfferResultCode.MANAGE_SELL_OFFER_UNDERFUNDED) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object ManageSellOfferCrossSelf : ManageSellOfferResult(ManageSellOfferResultCode.MANAGE_SELL_OFFER_CROSS_SELF) {
+    data object ManageSellOfferCrossSelf :
+        ManageSellOfferResult(ManageSellOfferResultCode.MANAGE_SELL_OFFER_CROSS_SELF) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object ManageSellOfferSellNoIssuer : ManageSellOfferResult(ManageSellOfferResultCode.MANAGE_SELL_OFFER_SELL_NO_ISSUER) {
+    data object ManageSellOfferSellNoIssuer :
+        ManageSellOfferResult(ManageSellOfferResultCode.MANAGE_SELL_OFFER_SELL_NO_ISSUER) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object ManageSellOfferBuyNoIssuer : ManageSellOfferResult(ManageSellOfferResultCode.MANAGE_SELL_OFFER_BUY_NO_ISSUER) {
+    data object ManageSellOfferBuyNoIssuer :
+        ManageSellOfferResult(ManageSellOfferResultCode.MANAGE_SELL_OFFER_BUY_NO_ISSUER) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
@@ -104,7 +113,8 @@ sealed class ManageSellOfferResult(val type: ManageSellOfferResultCode) : XdrEle
         }
     }
 
-    data object ManageSellOfferLowReserve : ManageSellOfferResult(ManageSellOfferResultCode.MANAGE_SELL_OFFER_LOW_RESERVE) {
+    data object ManageSellOfferLowReserve :
+        ManageSellOfferResult(ManageSellOfferResultCode.MANAGE_SELL_OFFER_LOW_RESERVE) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
@@ -131,7 +141,6 @@ sealed class ManageSellOfferResult(val type: ManageSellOfferResultCode) : XdrEle
                 ManageSellOfferResultCode.MANAGE_SELL_OFFER_BUY_NO_ISSUER -> ManageSellOfferBuyNoIssuer
                 ManageSellOfferResultCode.MANAGE_SELL_OFFER_NOT_FOUND -> ManageSellOfferNotFound
                 ManageSellOfferResultCode.MANAGE_SELL_OFFER_LOW_RESERVE -> ManageSellOfferLowReserve
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

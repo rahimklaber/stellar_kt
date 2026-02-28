@@ -20,8 +20,7 @@ enum class StellarValueType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<StellarValueType> {
         override fun decode(stream: XdrInputStream): StellarValueType {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> STELLAR_VALUE_BASIC
                 1 -> STELLAR_VALUE_SIGNED
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)

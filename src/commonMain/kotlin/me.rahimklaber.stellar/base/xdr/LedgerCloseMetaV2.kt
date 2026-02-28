@@ -70,9 +70,11 @@ data class LedgerCloseMetaV2(
             val ledgerHeader = LedgerHeaderHistoryEntry.decode(stream)
             val txSet = GeneralizedTransactionSet.decode(stream)
             val txProcessingSize = stream.readInt()
-            val txProcessing: List<TransactionResultMetaV1> = decodeXdrElementsList(txProcessingSize, stream, TransactionResultMetaV1.decoder())
+            val txProcessing: List<TransactionResultMetaV1> =
+                decodeXdrElementsList(txProcessingSize, stream, TransactionResultMetaV1.decoder())
             val upgradesProcessingSize = stream.readInt()
-            val upgradesProcessing: List<UpgradeEntryMeta> = decodeXdrElementsList(upgradesProcessingSize, stream, UpgradeEntryMeta.decoder())
+            val upgradesProcessing: List<UpgradeEntryMeta> =
+                decodeXdrElementsList(upgradesProcessingSize, stream, UpgradeEntryMeta.decoder())
             val scpInfoSize = stream.readInt()
             val scpInfo: List<SCPHistoryEntry> = decodeXdrElementsList(scpInfoSize, stream, SCPHistoryEntry.decoder())
             val totalByteSizeOfLiveSorobanState = Uint64.decode(stream)

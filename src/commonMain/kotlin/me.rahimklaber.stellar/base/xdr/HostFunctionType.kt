@@ -24,8 +24,7 @@ enum class HostFunctionType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<HostFunctionType> {
         override fun decode(stream: XdrInputStream): HostFunctionType {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> HOST_FUNCTION_TYPE_INVOKE_CONTRACT
                 1 -> HOST_FUNCTION_TYPE_CREATE_CONTRACT
                 2 -> HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM

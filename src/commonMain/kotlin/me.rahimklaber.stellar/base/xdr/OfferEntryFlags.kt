@@ -20,8 +20,7 @@ enum class OfferEntryFlags(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<OfferEntryFlags> {
         override fun decode(stream: XdrInputStream): OfferEntryFlags {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 1 -> PASSIVE_FLAG
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)
             }

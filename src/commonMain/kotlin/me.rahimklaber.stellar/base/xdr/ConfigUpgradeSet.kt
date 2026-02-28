@@ -25,7 +25,8 @@ value class ConfigUpgradeSet(val updatedEntry: List<ConfigSettingEntry>) : XdrEl
     companion object : XdrElementDecoder<ConfigUpgradeSet> {
         override fun decode(stream: XdrInputStream): ConfigUpgradeSet {
             val updatedEntrySize = stream.readInt()
-            val updatedEntry: List<ConfigSettingEntry> = decodeXdrElementsList(updatedEntrySize, stream, ConfigSettingEntry.decoder())
+            val updatedEntry: List<ConfigSettingEntry> =
+                decodeXdrElementsList(updatedEntrySize, stream, ConfigSettingEntry.decoder())
             return ConfigUpgradeSet(
                 updatedEntry,
             )

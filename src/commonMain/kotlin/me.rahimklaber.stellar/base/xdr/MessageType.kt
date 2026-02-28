@@ -72,8 +72,7 @@ enum class MessageType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<MessageType> {
         override fun decode(stream: XdrInputStream): MessageType {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> ERROR_MSG
                 2 -> AUTH
                 3 -> DONT_HAVE

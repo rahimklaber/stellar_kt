@@ -40,8 +40,7 @@ enum class ChangeTrustResultCode(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<ChangeTrustResultCode> {
         override fun decode(stream: XdrInputStream): ChangeTrustResultCode {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> CHANGE_TRUST_SUCCESS
                 -1 -> CHANGE_TRUST_MALFORMED
                 -2 -> CHANGE_TRUST_NO_ISSUER

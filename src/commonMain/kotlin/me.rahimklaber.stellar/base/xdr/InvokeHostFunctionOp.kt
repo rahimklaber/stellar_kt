@@ -31,7 +31,8 @@ data class InvokeHostFunctionOp(
         override fun decode(stream: XdrInputStream): InvokeHostFunctionOp {
             val hostFunction = HostFunction.decode(stream)
             val authSize = stream.readInt()
-            val auth: List<SorobanAuthorizationEntry> = decodeXdrElementsList(authSize, stream, SorobanAuthorizationEntry.decoder())
+            val auth: List<SorobanAuthorizationEntry> =
+                decodeXdrElementsList(authSize, stream, SorobanAuthorizationEntry.decoder())
             return InvokeHostFunctionOp(
                 hostFunction,
                 auth,

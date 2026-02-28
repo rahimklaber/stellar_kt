@@ -39,7 +39,8 @@ data class PersistedSCPStateV0(
             val quorumSetsSize = stream.readInt()
             val quorumSets: List<SCPQuorumSet> = decodeXdrElementsList(quorumSetsSize, stream, SCPQuorumSet.decoder())
             val txSetsSize = stream.readInt()
-            val txSets: List<StoredTransactionSet> = decodeXdrElementsList(txSetsSize, stream, StoredTransactionSet.decoder())
+            val txSets: List<StoredTransactionSet> =
+                decodeXdrElementsList(txSetsSize, stream, StoredTransactionSet.decoder())
             return PersistedSCPStateV0(
                 scpEnvelopes,
                 quorumSets,

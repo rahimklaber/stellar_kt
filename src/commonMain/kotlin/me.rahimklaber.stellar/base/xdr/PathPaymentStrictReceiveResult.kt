@@ -101,7 +101,9 @@ sealed class PathPaymentStrictReceiveResult(val type: PathPaymentStrictReceiveRe
         }
     }
 
-    fun noIssuerOrNull(): PathPaymentStrictReceiveNoIssuer? = if (this is PathPaymentStrictReceiveNoIssuer) this else null
+    fun noIssuerOrNull(): PathPaymentStrictReceiveNoIssuer? =
+        if (this is PathPaymentStrictReceiveNoIssuer) this else null
+
     data class PathPaymentStrictReceiveNoIssuer(
         val noIssuer: Asset,
     ) : PathPaymentStrictReceiveResult(PathPaymentStrictReceiveResultCode.PATH_PAYMENT_STRICT_RECEIVE_NO_ISSUER) {
@@ -157,7 +159,6 @@ sealed class PathPaymentStrictReceiveResult(val type: PathPaymentStrictReceiveRe
                 PathPaymentStrictReceiveResultCode.PATH_PAYMENT_STRICT_RECEIVE_TOO_FEW_OFFERS -> PathPaymentStrictReceiveTooFewOffers
                 PathPaymentStrictReceiveResultCode.PATH_PAYMENT_STRICT_RECEIVE_OFFER_CROSS_SELF -> PathPaymentStrictReceiveOfferCrossSelf
                 PathPaymentStrictReceiveResultCode.PATH_PAYMENT_STRICT_RECEIVE_OVER_SENDMAX -> PathPaymentStrictReceiveOverSendmax
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

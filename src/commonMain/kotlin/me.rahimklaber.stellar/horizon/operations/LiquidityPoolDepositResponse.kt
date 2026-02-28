@@ -27,6 +27,6 @@ data class LiquidityPoolDepositResponse(
 
 @Serializable
 data class LiquidityPoolResponseAsset(
-    val asset : String,
-    val amount : String,
+    val asset: String,
+    val amount: String,
 )

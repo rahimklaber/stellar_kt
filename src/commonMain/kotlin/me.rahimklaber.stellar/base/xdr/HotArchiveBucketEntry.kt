@@ -69,7 +69,6 @@ sealed class HotArchiveBucketEntry(val type: HotArchiveBucketEntryType) : XdrEle
                     HotArchiveMetaentry(metaEntry)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

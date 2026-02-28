@@ -15,19 +15,19 @@ class TransactionRequestBuilder(
         return client.get(buildUrl()).body()
     }
 
-    fun forAccount(accountId: String) = apply{
+    fun forAccount(accountId: String) = apply {
         addPath(accountId)
         addPath("transactions")
         urlExtension = "accounts"
     }
 
-    fun forLedger(ledger: ULong) = apply{
+    fun forLedger(ledger: ULong) = apply {
         addPath(ledger.toString())
         addPath("transactions")
         urlExtension = "ledgers"
     }
 
-    fun forLiquidityPool(poolId: String) = apply{
+    fun forLiquidityPool(poolId: String) = apply {
         addPath("$poolId/transactions")
         urlExtension = "liquidity_pools"
     }

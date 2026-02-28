@@ -87,7 +87,6 @@ object HrefSerializer : KSerializer<String> {
 }
 
 
-
 class PageSerializer<T>(val tSerializer: KSerializer<T>) : KSerializer<Page<T>> {
     val delegatedEmbeddedSerializer = EmbeddedSerializer(tSerializer)
     val delegatedLinkSerializer = Page.Links.serializer()
@@ -106,6 +105,7 @@ class PageSerializer<T>(val tSerializer: KSerializer<T>) : KSerializer<Page<T>> 
                     0 -> links = decoder.decodeSerializableValue(delegatedLinkSerializer)
                     1 -> records =
                         decoder.decodeSerializableValue(delegatedEmbeddedSerializer)._records
+
                     DECODE_DONE -> break
                     else -> continue
                 }

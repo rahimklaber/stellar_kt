@@ -10,9 +10,13 @@ data class ManageData(
     override val sourceAccount: String? = null,
     val name: String,
     val value: ByteArray?
-) : Operation{
+) : Operation {
 
-    constructor(sourceAccount: String? = null, name: String, data: String) : this(sourceAccount, name, data.encodeToByteArray())
+    constructor(sourceAccount: String? = null, name: String, data: String) : this(
+        sourceAccount,
+        name,
+        data.encodeToByteArray()
+    )
 
     override fun toXdr(): me.rahimklaber.stellar.base.xdr.Operation {
         return me.rahimklaber.stellar.base.xdr.Operation(

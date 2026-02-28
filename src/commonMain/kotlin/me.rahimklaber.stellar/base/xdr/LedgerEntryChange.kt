@@ -102,7 +102,6 @@ sealed class LedgerEntryChange(val type: LedgerEntryChangeType) : XdrElement {
                     LedgerEntryRestored(restored)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

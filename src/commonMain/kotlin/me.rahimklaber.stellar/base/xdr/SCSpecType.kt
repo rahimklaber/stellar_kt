@@ -74,8 +74,7 @@ enum class SCSpecType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<SCSpecType> {
         override fun decode(stream: XdrInputStream): SCSpecType {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> SC_SPEC_TYPE_VAL
                 1 -> SC_SPEC_TYPE_BOOL
                 2 -> SC_SPEC_TYPE_VOID

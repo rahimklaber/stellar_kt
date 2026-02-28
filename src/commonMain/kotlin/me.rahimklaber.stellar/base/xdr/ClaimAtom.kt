@@ -68,7 +68,6 @@ sealed class ClaimAtom(val type: ClaimAtomType) : XdrElement {
                     LiquidityPool(liquidityPool)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

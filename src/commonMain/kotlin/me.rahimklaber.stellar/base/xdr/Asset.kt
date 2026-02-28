@@ -51,8 +51,7 @@ sealed class Asset(val type: AssetType) : XdrElement {
 
     companion object : XdrElementDecoder<Asset> {
         override fun decode(stream: XdrInputStream): Asset {
-            val type = AssetType.decode(stream)
-            return when (type) {
+            return when (val type = AssetType.decode(stream)) {
                 AssetType.ASSET_TYPE_NATIVE -> Native
                 AssetType.ASSET_TYPE_CREDIT_ALPHANUM4 -> {
                     val alphaNum4 = AlphaNum4.decode(stream)

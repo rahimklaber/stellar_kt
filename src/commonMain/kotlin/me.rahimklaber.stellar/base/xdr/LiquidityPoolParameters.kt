@@ -34,7 +34,6 @@ sealed class LiquidityPoolParameters(val type: LiquidityPoolType) : XdrElement {
                     ConstantProduct(constantProduct)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

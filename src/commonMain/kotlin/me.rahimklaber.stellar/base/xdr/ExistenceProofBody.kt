@@ -48,9 +48,11 @@ data class ExistenceProofBody(
             val keysToProveSize = stream.readInt()
             val keysToProve: List<LedgerKey> = decodeXdrElementsList(keysToProveSize, stream, LedgerKey.decoder())
             val lowBoundEntriesSize = stream.readInt()
-            val lowBoundEntries: List<ColdArchiveBucketEntry> = decodeXdrElementsList(lowBoundEntriesSize, stream, ColdArchiveBucketEntry.decoder())
+            val lowBoundEntries: List<ColdArchiveBucketEntry> =
+                decodeXdrElementsList(lowBoundEntriesSize, stream, ColdArchiveBucketEntry.decoder())
             val highBoundEntriesSize = stream.readInt()
-            val highBoundEntries: List<ColdArchiveBucketEntry> = decodeXdrElementsList(highBoundEntriesSize, stream, ColdArchiveBucketEntry.decoder())
+            val highBoundEntries: List<ColdArchiveBucketEntry> =
+                decodeXdrElementsList(highBoundEntriesSize, stream, ColdArchiveBucketEntry.decoder())
             val proofLevelsSize = stream.readInt()
             val proofLevels: List<ProofLevel> = decodeXdrElementsList(proofLevelsSize, stream, ProofLevel.decoder())
             return ExistenceProofBody(

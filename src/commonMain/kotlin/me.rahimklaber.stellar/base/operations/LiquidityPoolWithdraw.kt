@@ -13,7 +13,7 @@ data class LiquidityPoolWithdraw(
     val amount: TokenAmount,
     val minAmountA: TokenAmount,
     val minAmountB: TokenAmount
-): Operation {
+) : Operation {
     override fun toXdr(): me.rahimklaber.stellar.base.xdr.Operation {
         val source = sourceAccount?.let {
             StrKey.encodeToMuxedAccountXDR(it)

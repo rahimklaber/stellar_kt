@@ -36,8 +36,7 @@ enum class LedgerEntryType(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<LedgerEntryType> {
         override fun decode(stream: XdrInputStream): LedgerEntryType {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> ACCOUNT
                 1 -> TRUSTLINE
                 2 -> OFFER

@@ -43,7 +43,6 @@ sealed class ContractExecutable(val type: ContractExecutableType) : XdrElement {
                 }
 
                 ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET -> StellarAsset
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

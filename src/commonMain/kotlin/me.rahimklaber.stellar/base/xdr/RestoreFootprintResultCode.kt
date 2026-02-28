@@ -27,8 +27,7 @@ enum class RestoreFootprintResultCode(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<RestoreFootprintResultCode> {
         override fun decode(stream: XdrInputStream): RestoreFootprintResultCode {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> RESTORE_FOOTPRINT_SUCCESS
                 -1 -> RESTORE_FOOTPRINT_MALFORMED
                 -2 -> RESTORE_FOOTPRINT_RESOURCE_LIMIT_EXCEEDED

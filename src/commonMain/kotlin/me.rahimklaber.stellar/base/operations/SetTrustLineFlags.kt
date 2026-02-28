@@ -12,7 +12,7 @@ data class SetTrustLineFlags(
     val asset: Asset,
     val clearFlags: UInt, //TrustLineFlags
     val setFlags: UInt, //TrustLineFlags
-): Operation {
+) : Operation {
     override fun toXdr(): me.rahimklaber.stellar.base.xdr.Operation {
         val source = sourceAccount?.let {
             StrKey.encodeToMuxedAccountXDR(it)

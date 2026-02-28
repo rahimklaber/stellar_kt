@@ -59,7 +59,6 @@ sealed class CreateAccountResult(val type: CreateAccountResultCode) : XdrElement
                 CreateAccountResultCode.CREATE_ACCOUNT_UNDERFUNDED -> CreateAccountUnderfunded
                 CreateAccountResultCode.CREATE_ACCOUNT_LOW_RESERVE -> CreateAccountLowReserve
                 CreateAccountResultCode.CREATE_ACCOUNT_ALREADY_EXIST -> CreateAccountAlreadyExist
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

@@ -23,7 +23,8 @@ value class ContractCostParams(val value: List<ContractCostParamEntry>) : XdrEle
     companion object : XdrElementDecoder<ContractCostParams> {
         override fun decode(stream: XdrInputStream): ContractCostParams {
             val valueSize = stream.readInt()
-            val value: List<ContractCostParamEntry> = decodeXdrElementsList(valueSize, stream, ContractCostParamEntry.decoder())
+            val value: List<ContractCostParamEntry> =
+                decodeXdrElementsList(valueSize, stream, ContractCostParamEntry.decoder())
             return ContractCostParams(value)
         }
     }

@@ -22,8 +22,7 @@ enum class SCSpecEventDataFormat(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<SCSpecEventDataFormat> {
         override fun decode(stream: XdrInputStream): SCSpecEventDataFormat {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> SC_SPEC_EVENT_DATA_FORMAT_SINGLE_VALUE
                 1 -> SC_SPEC_EVENT_DATA_FORMAT_VEC
                 2 -> SC_SPEC_EVENT_DATA_FORMAT_MAP

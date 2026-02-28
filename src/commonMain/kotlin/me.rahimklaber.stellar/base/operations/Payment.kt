@@ -1,9 +1,10 @@
 package me.rahimklaber.stellar.base.operations
 
-import me.rahimklaber.stellar.base.*
-import me.rahimklaber.stellar.base.xdr.MuxedAccount
+import me.rahimklaber.stellar.base.Asset
+import me.rahimklaber.stellar.base.StrKey
+import me.rahimklaber.stellar.base.TokenAmount
+import me.rahimklaber.stellar.base.encodeToMuxedAccountXDR
 import me.rahimklaber.stellar.base.xdr.PaymentOp
-import me.rahimklaber.stellar.base.xdr.toUint256
 
 data class Payment(
     val destination: String,

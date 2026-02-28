@@ -101,7 +101,6 @@ sealed class ColdArchiveBucketEntry(val type: ColdArchiveBucketEntryType) : XdrE
                     ColdArchiveHash(hashEntry)
                 }
 
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

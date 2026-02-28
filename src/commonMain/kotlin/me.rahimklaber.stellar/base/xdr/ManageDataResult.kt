@@ -59,7 +59,6 @@ sealed class ManageDataResult(val type: ManageDataResultCode) : XdrElement {
                 ManageDataResultCode.MANAGE_DATA_NAME_NOT_FOUND -> ManageDataNameNotFound
                 ManageDataResultCode.MANAGE_DATA_LOW_RESERVE -> ManageDataLowReserve
                 ManageDataResultCode.MANAGE_DATA_INVALID_NAME -> ManageDataInvalidName
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

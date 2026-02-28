@@ -19,13 +19,15 @@ void;
  * ```
  */
 sealed class ExtendFootprintTTLResult(val type: ExtendFootprintTTLResultCode) : XdrElement {
-    data object ExtendFootprintTtlSuccess : ExtendFootprintTTLResult(ExtendFootprintTTLResultCode.EXTEND_FOOTPRINT_TTL_SUCCESS) {
+    data object ExtendFootprintTtlSuccess :
+        ExtendFootprintTTLResult(ExtendFootprintTTLResultCode.EXTEND_FOOTPRINT_TTL_SUCCESS) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
     }
 
-    data object ExtendFootprintTtlMalformed : ExtendFootprintTTLResult(ExtendFootprintTTLResultCode.EXTEND_FOOTPRINT_TTL_MALFORMED) {
+    data object ExtendFootprintTtlMalformed :
+        ExtendFootprintTTLResult(ExtendFootprintTTLResultCode.EXTEND_FOOTPRINT_TTL_MALFORMED) {
         override fun encode(stream: XdrOutputStream) {
             type.encode(stream)
         }
@@ -53,7 +55,6 @@ sealed class ExtendFootprintTTLResult(val type: ExtendFootprintTTLResultCode) : 
                 ExtendFootprintTTLResultCode.EXTEND_FOOTPRINT_TTL_MALFORMED -> ExtendFootprintTtlMalformed
                 ExtendFootprintTTLResultCode.EXTEND_FOOTPRINT_TTL_RESOURCE_LIMIT_EXCEEDED -> ExtendFootprintTtlResourceLimitExceeded
                 ExtendFootprintTTLResultCode.EXTEND_FOOTPRINT_TTL_INSUFFICIENT_REFUNDABLE_FEE -> ExtendFootprintTtlInsufficientRefundableFee
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }

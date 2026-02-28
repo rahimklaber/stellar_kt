@@ -28,8 +28,7 @@ enum class ClaimClaimableBalanceResultCode(val value: Int) : XdrElement {
 
     companion object : XdrElementDecoder<ClaimClaimableBalanceResultCode> {
         override fun decode(stream: XdrInputStream): ClaimClaimableBalanceResultCode {
-            val value = stream.readInt()
-            return when (value) {
+            return when (val value = stream.readInt()) {
                 0 -> CLAIM_CLAIMABLE_BALANCE_SUCCESS
                 -1 -> CLAIM_CLAIMABLE_BALANCE_DOES_NOT_EXIST
                 -2 -> CLAIM_CLAIMABLE_BALANCE_CANNOT_CLAIM

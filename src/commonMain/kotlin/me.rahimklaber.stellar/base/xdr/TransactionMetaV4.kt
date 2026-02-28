@@ -59,7 +59,8 @@ data class TransactionMetaV4(
             val ext = ExtensionPoint.decode(stream)
             val txChangesBefore = LedgerEntryChanges.decode(stream)
             val operationsSize = stream.readInt()
-            val operations: List<OperationMetaV2> = decodeXdrElementsList(operationsSize, stream, OperationMetaV2.decoder())
+            val operations: List<OperationMetaV2> =
+                decodeXdrElementsList(operationsSize, stream, OperationMetaV2.decoder())
             val txChangesAfter = LedgerEntryChanges.decode(stream)
             val sorobanMetaPresent = stream.readInt()
             val sorobanMeta = if (sorobanMetaPresent != 0) {
@@ -70,7 +71,8 @@ data class TransactionMetaV4(
             val eventsSize = stream.readInt()
             val events: List<TransactionEvent> = decodeXdrElementsList(eventsSize, stream, TransactionEvent.decoder())
             val diagnosticEventsSize = stream.readInt()
-            val diagnosticEvents: List<DiagnosticEvent> = decodeXdrElementsList(diagnosticEventsSize, stream, DiagnosticEvent.decoder())
+            val diagnosticEvents: List<DiagnosticEvent> =
+                decodeXdrElementsList(diagnosticEventsSize, stream, DiagnosticEvent.decoder())
             return TransactionMetaV4(
                 ext,
                 txChangesBefore,

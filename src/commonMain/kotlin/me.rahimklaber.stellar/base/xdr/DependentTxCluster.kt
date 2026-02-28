@@ -23,7 +23,8 @@ value class DependentTxCluster(val value: List<TransactionEnvelope>) : XdrElemen
     companion object : XdrElementDecoder<DependentTxCluster> {
         override fun decode(stream: XdrInputStream): DependentTxCluster {
             val valueSize = stream.readInt()
-            val value: List<TransactionEnvelope> = decodeXdrElementsList(valueSize, stream, TransactionEnvelope.decoder())
+            val value: List<TransactionEnvelope> =
+                decodeXdrElementsList(valueSize, stream, TransactionEnvelope.decoder())
             return DependentTxCluster(value)
         }
     }

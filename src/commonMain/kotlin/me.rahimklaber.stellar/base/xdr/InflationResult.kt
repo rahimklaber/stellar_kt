@@ -41,12 +41,12 @@ sealed class InflationResult(val type: InflationResultCode) : XdrElement {
             return when (type) {
                 InflationResultCode.INFLATION_SUCCESS -> {
                     val payoutsSize = stream.readInt()
-                    val payouts: List<InflationPayout> = decodeXdrElementsList(payoutsSize, stream, InflationPayout.decoder())
+                    val payouts: List<InflationPayout> =
+                        decodeXdrElementsList(payoutsSize, stream, InflationPayout.decoder())
                     InflationSuccess(payouts)
                 }
 
                 InflationResultCode.INFLATION_NOT_TIME -> InflationNotTime
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }
