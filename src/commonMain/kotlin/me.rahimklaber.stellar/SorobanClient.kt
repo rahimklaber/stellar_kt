@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package me.rahimklaber.stellar
 
 import io.ktor.client.*
@@ -6,7 +8,15 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.*
 import me.rahimklaber.stellar.base.Account
 import me.rahimklaber.stellar.base.StrKey
@@ -24,12 +34,10 @@ val json = Json {
 @Serializable
 data class LatestLedgerResponse(
     val id: String,
-    val protocolVersion: Int,
     val sequence: Int,
-    val hash: String,
-    val ledgerCloseTime: String,
-    val oldestLedger: Int,
-    val oldestLedgerCloseTime: String
+    val closeTime: String,
+    val headerXdr: String? = null,
+    val metadataXdr: String? = null
 )
 
 @Serializable
@@ -42,15 +50,17 @@ data class Pagination(
 data class GetEventRequest(
     val filters: List<EventFilter>,
     val startLedger: Int? = null,
-    val pagination: Pagination? = null
+    val endLedger: Int? = null,
+    val pagination: Pagination? = null,
+    val xdrFormat: String? = null
 ) {
 
 
     @Serializable
     data class EventFilter(
-        val type: String,
-        val contractIds: List<String>,
-        val topics: List<List<String>>
+        val type: String? = null,
+        val contractIds: List<String>? = null,
+        val topics: List<List<String>>? = null
     )
 
 }
@@ -64,29 +74,22 @@ data class GetEventsResponse(
 
 @Serializable
 data class EventResponse(
-    val type: String, //contract/diagnostic/system
+    val type: String, //contract/system
     val ledger: Int,
     val ledgerClosedAt: String,
-    val contractId: String,
+    val contractId: String? = null,
     val id: String,
     val pagingToken: String,
-    val inSuccessfulContractCall: Boolean,
+    val transactionIndex: Int? = null,
+    val operationIndex: Int? = null,
+    val inSuccessfulContractCall: Boolean? = null,
     val topic: List<String>,
     val value: String,
     val txHash: String,
 )
 
 fun createLatestLedgerResponse(response: JsonObject): LatestLedgerResponse {
-    val result = response["result"]?.jsonObject!!
-    return LatestLedgerResponse(
-        result["id"]!!.jsonPrimitive.content,
-        result["protocolVersion"]!!.jsonPrimitive.int,
-        result["sequence"]!!.jsonPrimitive.int,
-        result["hash"]!!.jsonPrimitive.content,
-        result["ledgerCloseTime"]!!.jsonPrimitive.content,
-        result["oldestLedger"]!!.jsonPrimitive.int,
-        result["oldestLedgerCloseTime"]!!.jsonPrimitive.content,
-    )
+    return json.decodeFromJsonElement(response["result"]!!)
 }
 
 @Serializable
@@ -154,7 +157,8 @@ typealias GetLedgesRequest = GetLedgersRequest
 @Serializable
 data class GetLedgersRequest(
     val startLedger: Int?,
-    val pagination: Pagination? = null
+    val pagination: Pagination? = null,
+    val xdrFormat: String? = null
 )
 
 @Serializable
@@ -178,7 +182,10 @@ data class GetLedgersResponse(
 
 @Serializable
 data class GetHealthResponse(
-    val status: String
+    val status: String,
+    val latestLedger: Int? = null,
+    val oldestLedger: Int? = null,
+    val ledgerRetentionWindow: Int? = null
 )
 
 @Serializable
@@ -191,21 +198,25 @@ data class GetNetworkResponse(
 @Serializable
 data class GetTransactionsRequest(
     val startLedger: Int?,
-    val pagination: Pagination? = null
+    val pagination: Pagination? = null,
+    val xdrFormat: String? = null
 )
 
 @Serializable
 data class GetTransactionsResponse(
     val transactions: List<TransactionResult>,
     val latestLedger: Int,
+    @JsonNames("latestLedgerCloseTimestamp")
     val latestLedgerCloseTime: String,
     val oldestLedger: Int,
+    @JsonNames("oldestLedgerCloseTimestamp")
     val oldestLedgerCloseTime: String,
     val cursor: String
 ) {
     @Serializable
     data class TransactionResult(
         val status: String,
+        @JsonNames("txHash")
         val hash: String,
         val ledger: Int? = null,
         val createdAt: String? = null,
@@ -213,22 +224,72 @@ data class GetTransactionsResponse(
         val feeBump: Boolean? = null,
         val envelopeXdr: String? = null,
         val resultXdr: String? = null,
-        val resultMetaXdr: String? = null
+        val resultMetaXdr: String? = null,
+        val diagnosticEventsXdr: List<String>? = null,
+        val events: TransactionEvents? = null
     )
 }
+
+@Serializable
+data class TransactionEvents(
+    val transactionEventsXdr: List<String>? = null,
+    val contractEventsXdr: List<List<String>>? = null
+)
+
+@Serializable
+data class FeeDistribution(
+    val max: String,
+    val min: String,
+    val mode: String,
+    val p10: String,
+    val p20: String,
+    val p30: String,
+    val p40: String,
+    val p50: String,
+    val p60: String,
+    val p70: String,
+    val p80: String,
+    val p90: String,
+    val p95: String,
+    val p99: String,
+    val transactionCount: String,
+    val ledgerCount: Int,
+)
+
+@Serializable
+data class GetFeeStatsResponse(
+    val sorobanInclusionFee: FeeDistribution,
+    val inclusionFee: FeeDistribution,
+    val latestLedger: Int,
+)
+
+@Serializable
+data class GetVersionInfoResponse(
+    val version: String,
+    @SerialName("commit_hash")
+    val commitHash: String,
+    @SerialName("build_time_stamp")
+    val buildTimestamp: String,
+    @SerialName("captive_core_version")
+    val captiveCoreVersion: String,
+    @SerialName("protocol_version")
+    val protocolVersion: Int,
+)
 
 interface SorobanClient {
     suspend fun getAccount(account: String): Account
     suspend fun getAccounts(accounts: List<String>): List<Account>
     suspend fun getLatestLedger(): LatestLedgerResponse
     suspend fun getHealth(): GetHealthResponse
+    suspend fun getFeeStats(): GetFeeStatsResponse
     suspend fun getNetwork(): GetNetworkResponse
+    suspend fun getVersionInfo(): GetVersionInfoResponse
     suspend fun simulateTransaction(txXdr: String): SimulateTransactionResponse
     suspend fun simulateTransaction(request: SimulateTransactionRequest): SimulateTransactionResponse
     suspend fun sendTransaction(txXdr: String): SendTransactionResponse
-    suspend fun getTransaction(hash: String): GetTransactionResponse
+    suspend fun getTransaction(hash: String, xdrFormat: String? = null): GetTransactionResponse
     suspend fun getTransactions(request: GetTransactionsRequest): GetTransactionsResponse
-    suspend fun getLedgerEntries(keys: List<String>): GetLedgerEntriesResponse
+    suspend fun getLedgerEntries(keys: List<String>, xdrFormat: String? = null): GetLedgerEntriesResponse
     suspend fun getEvents(request: GetEventRequest): GetEventsResponse
     suspend fun getLedgers(request: GetLedgersRequest): GetLedgersResponse
 }
@@ -251,16 +312,22 @@ data class GetLedgerEntriesResponse(
 data class GetTransactionResponse(
     val status: String,
     val latestLedger: Int,
+    @JsonNames("latestLedgerCloseTimestamp")
     val latestLedgerCloseTime: String,
     val oldestLedger: Int,
+    @JsonNames("oldestLedgerCloseTimestamp")
     val oldestLedgerCloseTime: String,
+    @JsonNames("txHash")
+    val hash: String? = null,
     val ledger: Int? = null,
     val createdAt: String? = null,
     val applicationOrder: Int? = null,
     val feeBump: Boolean? = null,
     val envelopeXdr: String? = null,
     val resultXdr: String? = null,
-    val resultMetaXdr: String? = null
+    val resultMetaXdr: String? = null,
+    val diagnosticEventsXdr: List<String>? = null,
+    val events: TransactionEvents? = null
 )
 
 @Serializable
@@ -276,7 +343,14 @@ data class SendTransactionResponse(
 @Serializable
 data class SimulateTransactionRequest(
     val transaction: String,
-    val resourceConfig: JsonObject? = null
+    val resourceConfig: ResourceConfig? = null,
+    val xdrFormat: String? = null,
+    val authMode: String? = null
+)
+
+@Serializable
+data class ResourceConfig(
+    val instructionLeeway: Int? = null
 )
 
 @Serializable
@@ -296,6 +370,7 @@ data class SimulateTransactionResponse(
 
     @Serializable
     data class SorobanCost(
+        @JsonNames("cpuInsns")
         val cpuInstructions: String? = null,
         val memBytes: String? = null,
         val ledgerReadBytes: String? = null,
@@ -309,7 +384,7 @@ data class SimulateTransactionResponse(
 
     @Serializable
     data class LedgerEntryChange(
-        val type: Int,
+        val type: String,
         val key: String,
         val before: String? = null,
         val after: String? = null
@@ -359,8 +434,18 @@ class SorobanClientImpl(
         return json.decodeFromJsonElement(response["result"]!!)
     }
 
+    override suspend fun getFeeStats(): GetFeeStatsResponse {
+        val response = client.executeRequest(JsonRpcRequest("getFeeStats"))
+        return json.decodeFromJsonElement(response["result"]!!)
+    }
+
     override suspend fun getNetwork(): GetNetworkResponse {
         val response = client.executeRequest(JsonRpcRequest("getNetwork"))
+        return json.decodeFromJsonElement(response["result"]!!)
+    }
+
+    override suspend fun getVersionInfo(): GetVersionInfoResponse {
+        val response = client.executeRequest(JsonRpcRequest("getVersionInfo"))
         return json.decodeFromJsonElement(response["result"]!!)
     }
 
@@ -384,9 +469,10 @@ class SorobanClientImpl(
         return json.decodeFromJsonElement<SendTransactionResponse>(response["result"]!!)
     }
 
-    override suspend fun getTransaction(hash: String): GetTransactionResponse {
+    override suspend fun getTransaction(hash: String, xdrFormat: String?): GetTransactionResponse {
         val params = buildJsonObject {
             put("hash", JsonPrimitive(hash))
+            xdrFormat?.let { put("xdrFormat", JsonPrimitive(it)) }
         }
 
         val response = client.executeRequest(JsonRpcRequest("getTransaction", params))
@@ -400,9 +486,10 @@ class SorobanClientImpl(
         return json.decodeFromJsonElement(response["result"]!!)
     }
 
-    override suspend fun getLedgerEntries(keys: List<String>): GetLedgerEntriesResponse {
+    override suspend fun getLedgerEntries(keys: List<String>, xdrFormat: String?): GetLedgerEntriesResponse {
         val params = buildJsonObject {
             put("keys", JsonArray(keys.map { JsonPrimitive(it) }))
+            xdrFormat?.let { put("xdrFormat", JsonPrimitive(it)) }
         }
 
         val response = client.executeRequest(JsonRpcRequest("getLedgerEntries", params))
