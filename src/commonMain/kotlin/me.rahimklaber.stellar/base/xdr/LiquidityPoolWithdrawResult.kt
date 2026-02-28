@@ -72,7 +72,6 @@ sealed class LiquidityPoolWithdrawResult(val type: LiquidityPoolWithdrawResultCo
                 LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_UNDERFUNDED -> LiquidityPoolWithdrawUnderfunded
                 LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_LINE_FULL -> LiquidityPoolWithdrawLineFull
                 LiquidityPoolWithdrawResultCode.LIQUIDITY_POOL_WITHDRAW_UNDER_MINIMUM -> LiquidityPoolWithdrawUnderMinimum
-                else -> throw IllegalArgumentException("unknown type: $type")
             }
         }
     }
