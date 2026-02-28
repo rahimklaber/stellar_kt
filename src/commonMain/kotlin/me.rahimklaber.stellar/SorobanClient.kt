@@ -21,10 +21,15 @@ val json = Json {
     isLenient = true
 }
 
+@Serializable
 data class LatestLedgerResponse(
     val id: String,
     val protocolVersion: Int,
-    val sequence: Long
+    val sequence: Int,
+    val hash: String,
+    val ledgerCloseTime: String,
+    val oldestLedger: Int,
+    val oldestLedgerCloseTime: String
 )
 
 @Serializable
@@ -52,8 +57,9 @@ data class GetEventRequest(
 
 @Serializable
 data class GetEventsResponse(
+    val events: List<EventResponse>,
     val latestLedger: Int,
-    val events: List<EventResponse>
+    val cursor: String? = null
 )
 
 @Serializable
@@ -75,7 +81,11 @@ fun createLatestLedgerResponse(response: JsonObject): LatestLedgerResponse {
     return LatestLedgerResponse(
         result["id"]!!.jsonPrimitive.content,
         result["protocolVersion"]!!.jsonPrimitive.int,
-        result["sequence"]!!.jsonPrimitive.long,
+        result["sequence"]!!.jsonPrimitive.int,
+        result["hash"]!!.jsonPrimitive.content,
+        result["ledgerCloseTime"]!!.jsonPrimitive.content,
+        result["oldestLedger"]!!.jsonPrimitive.int,
+        result["oldestLedgerCloseTime"]!!.jsonPrimitive.content,
     )
 }
 
@@ -173,9 +183,9 @@ data class GetHealthResponse(
 
 @Serializable
 data class GetNetworkResponse(
+    val friendbotUrl: String? = null,
     val passphrase: String? = null,
-    val protocolVersion: Int? = null,
-    val friendbotUrl: String? = null
+    val protocolVersion: Int? = null
 )
 
 @Serializable
@@ -233,7 +243,8 @@ data class LedgerEntryResponse(
 
 @Serializable
 data class GetLedgerEntriesResponse(
-    val entries: List<LedgerEntryResponse>
+    val entries: List<LedgerEntryResponse>,
+    val latestLedger: Int
 )
 
 @Serializable
@@ -278,6 +289,7 @@ data class SimulateTransactionResponse(
     val cost: SorobanCost? = null,
     val error: String? = null,
     val restorePreamble: RestorePreamble? = null,
+    val stateChanges: List<LedgerEntryChange>? = null
 ) {
     @Serializable
     data class Result(val xdr: String, val auth: List<String>)
@@ -294,6 +306,14 @@ data class SimulateTransactionResponse(
 
     @Serializable
     data class RestorePreamble(val minResourceFee: String, val transactionData: String)
+
+    @Serializable
+    data class LedgerEntryChange(
+        val type: Int,
+        val key: String,
+        val before: String? = null,
+        val after: String? = null
+    )
 }
 
 class SorobanClientImpl(
