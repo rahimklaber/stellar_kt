@@ -1,10 +1,4 @@
-@file:OptIn(ExperimentalUnsignedTypes::class)
-
 package me.rahimklaber.stellar.base
-
-import com.ionspin.kotlin.crypto.LibsodiumInitializer
-import com.ionspin.kotlin.crypto.hash.Hash
-import com.ionspin.kotlin.crypto.signature.Signature
 
 data class CryptoKeyPair(
     val pub: ByteArray,
@@ -29,31 +23,9 @@ data class CryptoKeyPair(
     }
 }
 
-@OptIn(ExperimentalUnsignedTypes::class)
-object Crypto {
-    init {
-        LibsodiumInitializer.initializeWithCallback {}
-    }
-
-    fun sign(data: ByteArray, privateKey: ByteArray): ByteArray {
-        return Signature.sign(data.asUByteArray(), privateKey.asUByteArray()).asByteArray()
-    }
-
-    fun randomKeyPair(): CryptoKeyPair {
-        val generated = Signature.keypair()
-
-        return CryptoKeyPair(generated.publicKey.asByteArray(), generated.secretKey.asByteArray())
-    }
-
-    fun keyPairFromPrivate(privateKey: ByteArray): CryptoKeyPair {
-        val seeded = Signature.seedKeypair(privateKey.asUByteArray())
-
-        return CryptoKeyPair(seeded.publicKey.asByteArray(), seeded.secretKey.asByteArray())
-    }
-
-    fun sha256(data: ByteArray): ByteArray {
-        return Hash.sha256(data.asUByteArray()).asByteArray()
-    }
-
-
+expect object Crypto {
+    fun sign(data: ByteArray, privateKey: ByteArray): ByteArray
+    fun randomKeyPair(): CryptoKeyPair
+    fun keyPairFromPrivate(privateKey: ByteArray): CryptoKeyPair
+    fun sha256(data: ByteArray): ByteArray
 }

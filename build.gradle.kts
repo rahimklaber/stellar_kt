@@ -20,7 +20,7 @@ var encoding = "2.6.0"
 val coroutinesVersion = "1.10.2"
 val serializationVersion = "1.10.0"
 val datetimeVersion = "0.6.1"
-val cryptoVersion = "0.9.5"
+val bouncyCastleVersion = "1.80"
 val kotlinxIoVersion = "0.9.0"
 
 
@@ -47,7 +47,6 @@ kotlin {
 
                 implementation("org.jetbrains.kotlinx:kotlinx-io-core:$kotlinxIoVersion")
 
-                implementation("com.ionspin.kotlin:multiplatform-crypto-libsodium-bindings:$cryptoVersion")
                 implementation("io.matthewnelson.encoding:base32:${encoding}")
             }
         }
@@ -59,6 +58,7 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-cio-jvm:$ktor_version")
+                implementation("org.bouncycastle:bcprov-jdk18on:$bouncyCastleVersion")
             }
         }
         val jvmTest by getting{

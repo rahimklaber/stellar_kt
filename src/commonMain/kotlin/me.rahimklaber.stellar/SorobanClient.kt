@@ -4,6 +4,7 @@ package me.rahimklaber.stellar
 
 import io.ktor.client.*
 import io.ktor.client.call.*
+import io.ktor.client.statement.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.http.*
@@ -130,10 +131,14 @@ class JsonRpcClient(
     }
 
     suspend fun executeRequest(req: JsonRpcRequest): JsonObject {
-        val response: JsonObject = client.post(url) {
-            setBody(jsonFromReq(req))
-            contentType(ContentType.Application.Json)
-        }.body()
+        val bodyString = json.encodeToString(JsonObject.serializer(), jsonFromReq(req))
+        val response: JsonObject = json.decodeFromString(
+            JsonObject.serializer(),
+            client.post(url) {
+                setBody(bodyString)
+                contentType(ContentType.Application.Json)
+            }.bodyAsText()
+        )
 
         response["error"]?.let { errorElement ->
             val error = json.decodeFromJsonElement<JsonRpcError>(errorElement)
