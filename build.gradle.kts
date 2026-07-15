@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
-    kotlin("multiplatform") version "2.3.10"
-    kotlin("plugin.serialization") version "2.3.10"
+    kotlin("multiplatform") version "2.4.10"
+    kotlin("plugin.serialization") version "2.4.10"
     `maven-publish`
     signing
 }
@@ -15,12 +15,11 @@ repositories {
     maven("https://jitpack.io")
     maven("https://repo.kotlin.link")
 }
-val ktor_version = "3.4.0"
+val ktor_version = "3.5.0"
 var encoding = "2.6.0"
 val coroutinesVersion = "1.10.2"
-val serializationVersion = "1.10.0"
-val datetimeVersion = "0.6.1"
-val bouncyCastleVersion = "1.80"
+val serializationVersion = "1.10.1"
+val bouncyCastleVersion = "1.81"
 val kotlinxIoVersion = "0.9.0"
 
 
