@@ -10,25 +10,31 @@ package me.rahimklaber.stellar.base.xdr
  * enum SorobanCredentialsType
 {
 SOROBAN_CREDENTIALS_SOURCE_ACCOUNT = 0,
-SOROBAN_CREDENTIALS_ADDRESS = 1
+SOROBAN_CREDENTIALS_ADDRESS = 1,
+SOROBAN_CREDENTIALS_ADDRESS_V2 = 2,
+SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES = 3
 };
- * ```
- */
+* ```
+*/
 enum class SorobanCredentialsType(val value: Int) : XdrElement {
-    SOROBAN_CREDENTIALS_SOURCE_ACCOUNT(0),
-    SOROBAN_CREDENTIALS_ADDRESS(1);
+   SOROBAN_CREDENTIALS_SOURCE_ACCOUNT(0),
+   SOROBAN_CREDENTIALS_ADDRESS(1),
+   SOROBAN_CREDENTIALS_ADDRESS_V2(2),
+   SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES(3);
 
-    companion object : XdrElementDecoder<SorobanCredentialsType> {
-        override fun decode(stream: XdrInputStream): SorobanCredentialsType {
-            return when (val value = stream.readInt()) {
-                0 -> SOROBAN_CREDENTIALS_SOURCE_ACCOUNT
-                1 -> SOROBAN_CREDENTIALS_ADDRESS
-                else -> throw IllegalArgumentException("Unknown enum value: " + value)
-            }
-        }
-    }
+   companion object : XdrElementDecoder<SorobanCredentialsType> {
+       override fun decode(stream: XdrInputStream): SorobanCredentialsType {
+           return when (val value = stream.readInt()) {
+               0 -> SOROBAN_CREDENTIALS_SOURCE_ACCOUNT
+               1 -> SOROBAN_CREDENTIALS_ADDRESS
+               2 -> SOROBAN_CREDENTIALS_ADDRESS_V2
+               3 -> SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES
+               else -> throw IllegalArgumentException("Unknown enum value: " + value)
+           }
+       }
+   }
 
-    override fun encode(stream: XdrOutputStream) {
-        stream.writeInt(value)
-    }
+   override fun encode(stream: XdrOutputStream) {
+       stream.writeInt(value)
+   }
 }

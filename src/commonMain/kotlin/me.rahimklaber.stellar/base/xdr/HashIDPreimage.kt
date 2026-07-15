@@ -39,9 +39,18 @@ int64 nonce;
 uint32 signatureExpirationLedger;
 SorobanAuthorizedInvocation invocation;
 } sorobanAuthorization;
+case ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS:
+struct
+{
+Hash networkID;
+int64 nonce;
+uint32 signatureExpirationLedger;
+SCAddress address;
+SorobanAuthorizedInvocation invocation;
+} sorobanAuthorizationWithAddress;
 };
- * ```
- */
+* ```
+*/
 sealed class HashIDPreimage(val type: EnvelopeType) : XdrElement {
     fun operationIDOrNull(): OpId? = if (this is OpId) this else null
     data class OpId(
@@ -83,6 +92,16 @@ sealed class HashIDPreimage(val type: EnvelopeType) : XdrElement {
         }
     }
 
+    fun sorobanAuthorizationWithAddressOrNull(): SorobanAuthorizationWithAddress? = if (this is SorobanAuthorizationWithAddress) this else null
+    data class SorobanAuthorizationWithAddress(
+        val sorobanAuthorizationWithAddress: HashIDPreimageSorobanAuthorizationWithAddress,
+    ) : HashIDPreimage(EnvelopeType.ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS) {
+        override fun encode(stream: XdrOutputStream) {
+            type.encode(stream)
+            sorobanAuthorizationWithAddress.encode(stream)
+        }
+    }
+
     companion object : XdrElementDecoder<HashIDPreimage> {
         override fun decode(stream: XdrInputStream): HashIDPreimage {
             return when (val type = EnvelopeType.decode(stream)) {
@@ -104,6 +123,11 @@ sealed class HashIDPreimage(val type: EnvelopeType) : XdrElement {
                 EnvelopeType.ENVELOPE_TYPE_SOROBAN_AUTHORIZATION -> {
                     val sorobanAuthorization = HashIDPreimageSorobanAuthorization.decode(stream)
                     SorobanAuthorization(sorobanAuthorization)
+                }
+
+                EnvelopeType.ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS -> {
+                    val sorobanAuthorizationWithAddress = HashIDPreimageSorobanAuthorizationWithAddress.decode(stream)
+                    SorobanAuthorizationWithAddress(sorobanAuthorizationWithAddress)
                 }
 
                 else -> throw IllegalArgumentException("unknown type: $type")
@@ -262,6 +286,53 @@ sealed class HashIDPreimage(val type: EnvelopeType) : XdrElement {
                     networkID,
                     nonce,
                     signatureExpirationLedger,
+                    invocation,
+                )
+            }
+        }
+
+    }
+
+    /**
+     * HashIDPreimageSorobanAuthorizationWithAddress's original definition in the XDR file is:
+     * ```
+     * struct
+    {
+    Hash networkID;
+    int64 nonce;
+    uint32 signatureExpirationLedger;
+    SCAddress address;
+    SorobanAuthorizedInvocation invocation;
+    }
+     * ```
+     */
+    data class HashIDPreimageSorobanAuthorizationWithAddress(
+        val networkID: Hash,
+        val nonce: Int64,
+        val signatureExpirationLedger: Uint32,
+        val address: SCAddress,
+        val invocation: SorobanAuthorizedInvocation,
+    ) : XdrElement {
+        override fun encode(stream: XdrOutputStream) {
+            networkID.encode(stream)
+            nonce.encode(stream)
+            signatureExpirationLedger.encode(stream)
+            address.encode(stream)
+            invocation.encode(stream)
+        }
+
+        companion object : XdrElementDecoder<HashIDPreimageSorobanAuthorizationWithAddress> {
+            override fun decode(stream: XdrInputStream): HashIDPreimageSorobanAuthorizationWithAddress {
+                val networkID = Hash.decode(stream)
+                val nonce = Int64.decode(stream)
+                val signatureExpirationLedger = Uint32.decode(stream)
+                val address = SCAddress.decode(stream)
+                val invocation = SorobanAuthorizedInvocation.decode(stream)
+                return HashIDPreimageSorobanAuthorizationWithAddress(
+                    networkID,
+                    nonce,
+                    signatureExpirationLedger,
+                    address,
                     invocation,
                 )
             }

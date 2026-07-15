@@ -18,41 +18,44 @@ ENVELOPE_TYPE_TX_FEE_BUMP = 5,
 ENVELOPE_TYPE_OP_ID = 6,
 ENVELOPE_TYPE_POOL_REVOKE_OP_ID = 7,
 ENVELOPE_TYPE_CONTRACT_ID = 8,
-ENVELOPE_TYPE_SOROBAN_AUTHORIZATION = 9
+ENVELOPE_TYPE_SOROBAN_AUTHORIZATION = 9,
+ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS = 10
 };
- * ```
- */
+* ```
+*/
 enum class EnvelopeType(val value: Int) : XdrElement {
-    ENVELOPE_TYPE_TX_V0(0),
-    ENVELOPE_TYPE_SCP(1),
-    ENVELOPE_TYPE_TX(2),
-    ENVELOPE_TYPE_AUTH(3),
-    ENVELOPE_TYPE_SCPVALUE(4),
-    ENVELOPE_TYPE_TX_FEE_BUMP(5),
-    ENVELOPE_TYPE_OP_ID(6),
-    ENVELOPE_TYPE_POOL_REVOKE_OP_ID(7),
-    ENVELOPE_TYPE_CONTRACT_ID(8),
-    ENVELOPE_TYPE_SOROBAN_AUTHORIZATION(9);
+   ENVELOPE_TYPE_TX_V0(0),
+   ENVELOPE_TYPE_SCP(1),
+   ENVELOPE_TYPE_TX(2),
+   ENVELOPE_TYPE_AUTH(3),
+   ENVELOPE_TYPE_SCPVALUE(4),
+   ENVELOPE_TYPE_TX_FEE_BUMP(5),
+   ENVELOPE_TYPE_OP_ID(6),
+   ENVELOPE_TYPE_POOL_REVOKE_OP_ID(7),
+   ENVELOPE_TYPE_CONTRACT_ID(8),
+   ENVELOPE_TYPE_SOROBAN_AUTHORIZATION(9),
+   ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS(10);
 
-    companion object : XdrElementDecoder<EnvelopeType> {
-        override fun decode(stream: XdrInputStream): EnvelopeType {
-            return when (val value = stream.readInt()) {
-                0 -> ENVELOPE_TYPE_TX_V0
-                1 -> ENVELOPE_TYPE_SCP
-                2 -> ENVELOPE_TYPE_TX
-                3 -> ENVELOPE_TYPE_AUTH
-                4 -> ENVELOPE_TYPE_SCPVALUE
-                5 -> ENVELOPE_TYPE_TX_FEE_BUMP
-                6 -> ENVELOPE_TYPE_OP_ID
-                7 -> ENVELOPE_TYPE_POOL_REVOKE_OP_ID
-                8 -> ENVELOPE_TYPE_CONTRACT_ID
-                9 -> ENVELOPE_TYPE_SOROBAN_AUTHORIZATION
-                else -> throw IllegalArgumentException("Unknown enum value: " + value)
-            }
-        }
-    }
+   companion object : XdrElementDecoder<EnvelopeType> {
+       override fun decode(stream: XdrInputStream): EnvelopeType {
+           return when (val value = stream.readInt()) {
+               0 -> ENVELOPE_TYPE_TX_V0
+               1 -> ENVELOPE_TYPE_SCP
+               2 -> ENVELOPE_TYPE_TX
+               3 -> ENVELOPE_TYPE_AUTH
+               4 -> ENVELOPE_TYPE_SCPVALUE
+               5 -> ENVELOPE_TYPE_TX_FEE_BUMP
+               6 -> ENVELOPE_TYPE_OP_ID
+               7 -> ENVELOPE_TYPE_POOL_REVOKE_OP_ID
+               8 -> ENVELOPE_TYPE_CONTRACT_ID
+               9 -> ENVELOPE_TYPE_SOROBAN_AUTHORIZATION
+               10 -> ENVELOPE_TYPE_SOROBAN_AUTHORIZATION_WITH_ADDRESS
+               else -> throw IllegalArgumentException("Unknown enum value: " + value)
+           }
+       }
+   }
 
-    override fun encode(stream: XdrOutputStream) {
-        stream.writeInt(value)
-    }
+   override fun encode(stream: XdrOutputStream) {
+       stream.writeInt(value)
+   }
 }

@@ -13,37 +13,69 @@ case SOROBAN_CREDENTIALS_SOURCE_ACCOUNT:
 void;
 case SOROBAN_CREDENTIALS_ADDRESS:
 SorobanAddressCredentials address;
+case SOROBAN_CREDENTIALS_ADDRESS_V2:
+SorobanAddressCredentials addressV2;
+case SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES:
+SorobanAddressCredentialsWithDelegates addressWithDelegates;
 };
- * ```
- */
+* ```
+*/
 sealed class SorobanCredentials(val type: SorobanCredentialsType) : XdrElement {
-    data object SourceAccount : SorobanCredentials(SorobanCredentialsType.SOROBAN_CREDENTIALS_SOURCE_ACCOUNT) {
-        override fun encode(stream: XdrOutputStream) {
-            type.encode(stream)
+   data object SourceAccount : SorobanCredentials(SorobanCredentialsType.SOROBAN_CREDENTIALS_SOURCE_ACCOUNT) {
+       override fun encode(stream: XdrOutputStream) {
+           type.encode(stream)
+       }
+   }
+
+   fun addressOrNull(): Address? = if (this is Address) this else null
+   data class Address(
+       val address: SorobanAddressCredentials,
+   ) : SorobanCredentials(SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS) {
+       override fun encode(stream: XdrOutputStream) {
+           type.encode(stream)
+           address.encode(stream)
+       }
+   }
+
+   fun addressV2OrNull(): AddressV2? = if (this is AddressV2) this else null
+   data class AddressV2(
+       val addressV2: SorobanAddressCredentials,
+   ) : SorobanCredentials(SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2) {
+       override fun encode(stream: XdrOutputStream) {
+           type.encode(stream)
+           addressV2.encode(stream)
         }
     }
 
-    fun addressOrNull(): Address? = if (this is Address) this else null
-    data class Address(
-        val address: SorobanAddressCredentials,
-    ) : SorobanCredentials(SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS) {
-        override fun encode(stream: XdrOutputStream) {
-            type.encode(stream)
-            address.encode(stream)
-        }
-    }
+   fun addressWithDelegatesOrNull(): AddressWithDelegates? = if (this is AddressWithDelegates) this else null
+   data class AddressWithDelegates(
+       val addressWithDelegates: SorobanAddressCredentialsWithDelegates,
+   ) : SorobanCredentials(SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES) {
+       override fun encode(stream: XdrOutputStream) {
+           type.encode(stream)
+           addressWithDelegates.encode(stream)
+       }
+   }
 
-    companion object : XdrElementDecoder<SorobanCredentials> {
-        override fun decode(stream: XdrInputStream): SorobanCredentials {
-            val type = SorobanCredentialsType.decode(stream)
-            return when (type) {
-                SorobanCredentialsType.SOROBAN_CREDENTIALS_SOURCE_ACCOUNT -> SourceAccount
-                SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS -> {
-                    val address = SorobanAddressCredentials.decode(stream)
-                    Address(address)
-                }
+   companion object : XdrElementDecoder<SorobanCredentials> {
+       override fun decode(stream: XdrInputStream): SorobanCredentials {
+           val type = SorobanCredentialsType.decode(stream)
+           return when (type) {
+               SorobanCredentialsType.SOROBAN_CREDENTIALS_SOURCE_ACCOUNT -> SourceAccount
+               SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS -> {
+                   val address = SorobanAddressCredentials.decode(stream)
+                   Address(address)
+               }
+               SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2 -> {
+                   val addressV2 = SorobanAddressCredentials.decode(stream)
+                   AddressV2(addressV2)
+               }
+               SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES -> {
+                   val addressWithDelegates = SorobanAddressCredentialsWithDelegates.decode(stream)
+                   AddressWithDelegates(addressWithDelegates)
+               }
 
-            }
-        }
-    }
+           }
+       }
+   }
 }
