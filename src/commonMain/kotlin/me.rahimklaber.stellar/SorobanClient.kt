@@ -11,7 +11,6 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
@@ -35,6 +34,7 @@ val json = Json {
 @Serializable
 data class LatestLedgerResponse(
     val id: String,
+    val protocolVersion: Int? = null,
     val sequence: Int,
     val closeTime: String,
     val headerXdr: String? = null,
@@ -70,6 +70,9 @@ data class GetEventRequest(
 data class GetEventsResponse(
     val events: List<EventResponse>,
     val latestLedger: Int,
+    val oldestLedger: Int? = null,
+    val latestLedgerCloseTime: String? = null,
+    val oldestLedgerCloseTime: String? = null,
     val cursor: String? = null
 )
 
@@ -80,9 +83,9 @@ data class EventResponse(
     val ledgerClosedAt: String,
     val contractId: String? = null,
     val id: String,
-    val pagingToken: String,
     val transactionIndex: Int? = null,
     val operationIndex: Int? = null,
+    @Deprecated("Deprecated by Stellar RPC; may be removed in a future version.")
     val inSuccessfulContractCall: Boolean? = null,
     val topic: List<String>,
     val value: String,
@@ -170,9 +173,9 @@ data class GetLedgersRequest(
 data class GetLedgersResponse(
     val ledgers: List<GetLedgerResult>,
     val latestLedger: Int,
-    val latestLedgerCloseTime: String,
+    val latestLedgerCloseTime: Long,
     val oldestLedger: Int,
-    val oldestLedgerCloseTime: String,
+    val oldestLedgerCloseTime: Long,
     val cursor: String
 ) {
     @Serializable
@@ -189,7 +192,9 @@ data class GetLedgersResponse(
 data class GetHealthResponse(
     val status: String,
     val latestLedger: Int? = null,
+    val latestLedgerCloseTime: String? = null,
     val oldestLedger: Int? = null,
+    val oldestLedgerCloseTime: String? = null,
     val ledgerRetentionWindow: Int? = null
 )
 
@@ -212,10 +217,10 @@ data class GetTransactionsResponse(
     val transactions: List<TransactionResult>,
     val latestLedger: Int,
     @JsonNames("latestLedgerCloseTimestamp")
-    val latestLedgerCloseTime: String,
+    val latestLedgerCloseTime: Long,
     val oldestLedger: Int,
     @JsonNames("oldestLedgerCloseTimestamp")
-    val oldestLedgerCloseTime: String,
+    val oldestLedgerCloseTime: Long,
     val cursor: String
 ) {
     @Serializable
@@ -224,7 +229,7 @@ data class GetTransactionsResponse(
         @JsonNames("txHash")
         val hash: String,
         val ledger: Int? = null,
-        val createdAt: String? = null,
+        val createdAt: Long? = null,
         val applicationOrder: Int? = null,
         val feeBump: Boolean? = null,
         val envelopeXdr: String? = null,
@@ -271,13 +276,9 @@ data class GetFeeStatsResponse(
 @Serializable
 data class GetVersionInfoResponse(
     val version: String,
-    @SerialName("commit_hash")
     val commitHash: String,
-    @SerialName("build_time_stamp")
     val buildTimestamp: String,
-    @SerialName("captive_core_version")
     val captiveCoreVersion: String,
-    @SerialName("protocol_version")
     val protocolVersion: Int,
 )
 
