@@ -26,6 +26,14 @@ case STELLAR_VALUE_BASIC:
 void;
 case STELLAR_VALUE_SIGNED:
 LedgerCloseValueSignature lcValueSignature;
+case STELLAR_VALUE_EMPTY_TX_SET:
+struct
+{
+Hash txSetHash;
+Hash previousLedgerHash;
+uint32 previousLedgerVersion;
+LedgerCloseValueSignature lcValueSignature;
+} proposedValue;
 }
 ext;
 };
@@ -71,6 +79,14 @@ data class StellarValue(
     void;
     case STELLAR_VALUE_SIGNED:
     LedgerCloseValueSignature lcValueSignature;
+    case STELLAR_VALUE_EMPTY_TX_SET:
+    struct
+    {
+    Hash txSetHash;
+    Hash previousLedgerHash;
+    uint32 previousLedgerVersion;
+    LedgerCloseValueSignature lcValueSignature;
+    } proposedValue;
     }
      * ```
      */
@@ -91,6 +107,16 @@ data class StellarValue(
             }
         }
 
+        fun proposedValueOrNull(): EmptyTxSet? = if (this is EmptyTxSet) this else null
+        data class EmptyTxSet(
+            val proposedValue: StellarValueExtProposedValue,
+        ) : StellarValueExt(StellarValueType.STELLAR_VALUE_EMPTY_TX_SET) {
+            override fun encode(stream: XdrOutputStream) {
+                type.encode(stream)
+                proposedValue.encode(stream)
+            }
+        }
+
         companion object : XdrElementDecoder<StellarValueExt> {
             override fun decode(stream: XdrInputStream): StellarValueExt {
                 val type = StellarValueType.decode(stream)
@@ -101,6 +127,52 @@ data class StellarValue(
                         Signed(lcValueSignature)
                     }
 
+                    StellarValueType.STELLAR_VALUE_EMPTY_TX_SET -> {
+                        val proposedValue = StellarValueExtProposedValue.decode(stream)
+                        EmptyTxSet(proposedValue)
+                    }
+
+                }
+            }
+        }
+
+        /**
+         * StellarValueExtProposedValue's original definition in the XDR file is:
+         * ```
+         * struct
+        {
+        Hash txSetHash;
+        Hash previousLedgerHash;
+        uint32 previousLedgerVersion;
+        LedgerCloseValueSignature lcValueSignature;
+        }
+         * ```
+         */
+        data class StellarValueExtProposedValue(
+            val txSetHash: Hash,
+            val previousLedgerHash: Hash,
+            val previousLedgerVersion: Uint32,
+            val lcValueSignature: LedgerCloseValueSignature,
+        ) : XdrElement {
+            override fun encode(stream: XdrOutputStream) {
+                txSetHash.encode(stream)
+                previousLedgerHash.encode(stream)
+                previousLedgerVersion.encode(stream)
+                lcValueSignature.encode(stream)
+            }
+
+            companion object : XdrElementDecoder<StellarValueExtProposedValue> {
+                override fun decode(stream: XdrInputStream): StellarValueExtProposedValue {
+                    val txSetHash = Hash.decode(stream)
+                    val previousLedgerHash = Hash.decode(stream)
+                    val previousLedgerVersion = Uint32.decode(stream)
+                    val lcValueSignature = LedgerCloseValueSignature.decode(stream)
+                    return StellarValueExtProposedValue(
+                        txSetHash,
+                        previousLedgerHash,
+                        previousLedgerVersion,
+                        lcValueSignature,
+                    )
                 }
             }
         }

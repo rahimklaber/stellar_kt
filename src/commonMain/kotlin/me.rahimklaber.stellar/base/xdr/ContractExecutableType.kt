@@ -10,19 +10,22 @@ package me.rahimklaber.stellar.base.xdr
  * enum ContractExecutableType
 {
 CONTRACT_EXECUTABLE_WASM = 0,
-CONTRACT_EXECUTABLE_STELLAR_ASSET = 1
+CONTRACT_EXECUTABLE_STELLAR_ASSET = 1,
+CONTRACT_EXECUTABLE_EXTERNAL_REF = 2
 };
  * ```
  */
 enum class ContractExecutableType(val value: Int) : XdrElement {
     CONTRACT_EXECUTABLE_WASM(0),
-    CONTRACT_EXECUTABLE_STELLAR_ASSET(1);
+    CONTRACT_EXECUTABLE_STELLAR_ASSET(1),
+    CONTRACT_EXECUTABLE_EXTERNAL_REF(2);
 
     companion object : XdrElementDecoder<ContractExecutableType> {
         override fun decode(stream: XdrInputStream): ContractExecutableType {
             return when (val value = stream.readInt()) {
                 0 -> CONTRACT_EXECUTABLE_WASM
                 1 -> CONTRACT_EXECUTABLE_STELLAR_ASSET
+                2 -> CONTRACT_EXECUTABLE_EXTERNAL_REF
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)
             }
         }

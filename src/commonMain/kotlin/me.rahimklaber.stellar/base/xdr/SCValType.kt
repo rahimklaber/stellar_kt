@@ -59,7 +59,9 @@ SCV_CONTRACT_INSTANCE = 19,
 // symbolic SCVals used as the key for ledger entries for a contract's
 // instance and an address' nonce, respectively.
 SCV_LEDGER_KEY_CONTRACT_INSTANCE = 20,
-SCV_LEDGER_KEY_NONCE = 21
+SCV_LEDGER_KEY_NONCE = 21,
+
+SCV_EXECUTABLE_TAG = 22
 };
  * ```
  */
@@ -85,7 +87,8 @@ enum class SCValType(val value: Int) : XdrElement {
     SCV_ADDRESS(18),
     SCV_CONTRACT_INSTANCE(19),
     SCV_LEDGER_KEY_CONTRACT_INSTANCE(20),
-    SCV_LEDGER_KEY_NONCE(21);
+    SCV_LEDGER_KEY_NONCE(21),
+    SCV_EXECUTABLE_TAG(22);
 
     companion object : XdrElementDecoder<SCValType> {
         override fun decode(stream: XdrInputStream): SCValType {
@@ -112,6 +115,7 @@ enum class SCValType(val value: Int) : XdrElement {
                 19 -> SCV_CONTRACT_INSTANCE
                 20 -> SCV_LEDGER_KEY_CONTRACT_INSTANCE
                 21 -> SCV_LEDGER_KEY_NONCE
+                22 -> SCV_EXECUTABLE_TAG
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)
             }
         }

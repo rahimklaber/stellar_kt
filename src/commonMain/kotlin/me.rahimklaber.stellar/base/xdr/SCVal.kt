@@ -66,6 +66,9 @@ case SCV_LEDGER_KEY_CONTRACT_INSTANCE:
 void;
 case SCV_LEDGER_KEY_NONCE:
 SCNonceKey nonce_key;
+
+case SCV_EXECUTABLE_TAG:
+SCString executable_tag;
 };
  * ```
  */
@@ -292,6 +295,16 @@ sealed class SCVal(val type: SCValType) : XdrElement {
         }
     }
 
+    fun executableTagOrNull(): ExecutableTag? = if (this is ExecutableTag) this else null
+    data class ExecutableTag(
+        val executableTag: SCString,
+    ) : SCVal(SCValType.SCV_EXECUTABLE_TAG) {
+        override fun encode(stream: XdrOutputStream) {
+            type.encode(stream)
+            executableTag.encode(stream)
+        }
+    }
+
     companion object : XdrElementDecoder<SCVal> {
         override fun decode(stream: XdrInputStream): SCVal {
             val type = SCValType.decode(stream)
@@ -406,6 +419,11 @@ sealed class SCVal(val type: SCValType) : XdrElement {
                 SCValType.SCV_LEDGER_KEY_NONCE -> {
                     val nonce_key = SCNonceKey.decode(stream)
                     LedgerKeyNonce(nonce_key)
+                }
+
+                SCValType.SCV_EXECUTABLE_TAG -> {
+                    val executableTag = SCString.decode(stream)
+                    ExecutableTag(executableTag)
                 }
 
             }

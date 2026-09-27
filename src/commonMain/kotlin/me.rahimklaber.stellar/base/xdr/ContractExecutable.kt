@@ -13,6 +13,8 @@ case CONTRACT_EXECUTABLE_WASM:
 Hash wasm_hash;
 case CONTRACT_EXECUTABLE_STELLAR_ASSET:
 void;
+case CONTRACT_EXECUTABLE_EXTERNAL_REF:
+ContractExecutableExternalRef external_ref;
 };
  * ```
  */
@@ -33,6 +35,16 @@ sealed class ContractExecutable(val type: ContractExecutableType) : XdrElement {
         }
     }
 
+    fun externalRefOrNull(): ExternalRef? = if (this is ExternalRef) this else null
+    data class ExternalRef(
+        val externalRef: ContractExecutableExternalRef,
+    ) : ContractExecutable(ContractExecutableType.CONTRACT_EXECUTABLE_EXTERNAL_REF) {
+        override fun encode(stream: XdrOutputStream) {
+            type.encode(stream)
+            externalRef.encode(stream)
+        }
+    }
+
     companion object : XdrElementDecoder<ContractExecutable> {
         override fun decode(stream: XdrInputStream): ContractExecutable {
             val type = ContractExecutableType.decode(stream)
@@ -43,6 +55,12 @@ sealed class ContractExecutable(val type: ContractExecutableType) : XdrElement {
                 }
 
                 ContractExecutableType.CONTRACT_EXECUTABLE_STELLAR_ASSET -> StellarAsset
+
+                ContractExecutableType.CONTRACT_EXECUTABLE_EXTERNAL_REF -> {
+                    val external_ref = ContractExecutableExternalRef.decode(stream)
+                    ExternalRef(external_ref)
+                }
+
             }
         }
     }

@@ -10,19 +10,22 @@ package me.rahimklaber.stellar.base.xdr
  * enum StellarValueType
 {
 STELLAR_VALUE_BASIC = 0,
-STELLAR_VALUE_SIGNED = 1
+STELLAR_VALUE_SIGNED = 1,
+STELLAR_VALUE_EMPTY_TX_SET = 2
 };
  * ```
  */
 enum class StellarValueType(val value: Int) : XdrElement {
     STELLAR_VALUE_BASIC(0),
-    STELLAR_VALUE_SIGNED(1);
+    STELLAR_VALUE_SIGNED(1),
+    STELLAR_VALUE_EMPTY_TX_SET(2);
 
     companion object : XdrElementDecoder<StellarValueType> {
         override fun decode(stream: XdrInputStream): StellarValueType {
             return when (val value = stream.readInt()) {
                 0 -> STELLAR_VALUE_BASIC
                 1 -> STELLAR_VALUE_SIGNED
+                2 -> STELLAR_VALUE_EMPTY_TX_SET
                 else -> throw IllegalArgumentException("Unknown enum value: " + value)
             }
         }
